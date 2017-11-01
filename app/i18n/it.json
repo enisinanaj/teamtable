@@ -1,0 +1,25 @@
+{
+  "dashboard": {
+    "WELCOME": "Benvenuto a {{appName}}"
+  },
+  "topbar": {
+    "search": {
+      "PLACEHOLDER": "Scrivi e premi su invio.."
+    }
+  },
+  "sidebar": {
+    "WELCOME": "Benvenuto",
+    "heading": {
+      "HEADER": "Navigazione principale"
+    },
+    "nav": {
+      "SINGLEVIEW": "Singola view",
+      "menu": {
+        "MENU": "Menu",
+        "SUBMENU": "Sotto Menu",
+        "PRACTICES_MANAGEMENT": "Gestione pratiche",
+        "MY_ACTIVITIES": "Le mie attività"
+      }
+    }
+  }
+}
