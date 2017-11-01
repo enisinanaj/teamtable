@@ -1,8 +1,8 @@
 {
-  "name": "angle",
-  "version": "0.0.0",
-  "description": "Angle - Bootstrap Admin App + AngularJS",
-  "author": "@themicon_co",
+  "name": "teamtable",
+  "version": "0.0.1",
+  "description": "TeamTable - Gestione del team in cloud!",
+  "author": "@heisenerds",
   "devDependencies": {
     "bower-npm-resolver": "0.7.0",
     "browser-sync": "2.18.8",

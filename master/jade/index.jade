@@ -1,14 +1,14 @@
 doctype html
-html(lang="en", data-ng-app="angle")
+html(lang="it", data-ng-app="angle")
 
   head
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
 
     meta(name='description', content='{{app.description}}')
-    meta(name='keywords', content='app, responsive, angular, bootstrap, dashboard, admin')
+    meta(name='keywords', content='app, responsive, angular, bootstrap, dashboard, admin, time, team, management, activities, todo')
 
-    title(data-ng-bind="::pageTitle()") Angle - Angular Bootstrap Admin Template
+    title(data-ng-bind="::pageTitle()")
     // Bootstrap styles
     link(rel='stylesheet', href='app/css/bootstrap.css', data-ng-if="!app.layout.isRTL")
     link(rel='stylesheet', href='app/css/bootstrap-rtl.css', data-ng-if="app.layout.isRTL")

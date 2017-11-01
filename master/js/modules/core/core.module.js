@@ -14,7 +14,6 @@
             'cfp.loadingBar',
             'ngSanitize',
             'ngResource',
-            'tmh.dynamicLocale',
             'ui.utils',
             'ngAria',
             'ngMessages'

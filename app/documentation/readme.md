@@ -4,23 +4,40 @@ Angle
 Overview
 --------
 
-This is a summary of the original documentation to demonstrate the use of markdown reader and expose internal operational features of this template.
+This document aims to explain the best way to work with the product and its components.
+
+__All the best and enjoy coding.__
 
 ### Support
 
-In case you have pre-sale questions:
+In case you have questions
 
-[Send us a message >](https://wrapbootstrap.com/user/themicon)
-
-Or 
-
-[Add a comment >](https://wrapbootstrap.com/theme/angle-bootstrap-admin-app-angularjs-WB04HF123/comments)
+[Contact Support >](https://wrapbootstrap.com/user/themicon)
 
 
-*Both options needs a [Wrapbootstrap](https://wrapbootstrap.com/signin) account.
+Getting started
+---------------
 
-Structure
+### Tips
+
+- Do not start from scratch, use an existing asset and modify it to learn how it works.
+- Explore the sources for ideas and sample code.
+- Use Firebug or Chrome Developer Tools to find bugs on your website. Using one of those tools will help you to save time analyzing the site and finding elements structure, like classes, id or tags
+  - Quick tip: open your site with Chrome, press F12 and go to console tab, reload your page and if something goes wrong you will see your page errors in red text.
+- In case of error messages, someone might have seen it too, so you can try a Google search for a quick fix.
+
+### Starting the app
+
+Since this is AngularJS based application you need a server (Apache, IIS, xampp, etc)to serve the html files and perform http request to load all views.
+
+**Important!** Opening the index.html with a double click (i.e. using file:// protocol) will show you only a blank page because there's no server that response to the requests made for each view in order to display the app interface.
+
+Customizing
 -----------
+
+### Structure
+
+Before starting to customize the template, here are the project files organization structure:
 
 ```
 +-- app/
@@ -38,12 +55,14 @@ Structure
 |   |   +-- views/
 |   +-- js/
 |   |   +-- modules/
+|   |   |   +-- controllers/
+|   |   |   +-- directives/
+|   |   |   +-- services/
 |   |   +-- custom/
 |   +-- less/
 |   |   +-- app/
 |   |   +-- bootstrap/
 |   |   +-- themes/
-|   +-- sass/
 |   +-- gulpfile.js
 |   +-- package.json
 |   +-- bower.json
@@ -75,11 +94,9 @@ This folder contains the source files. You will find the following folders insid
 - jade/
 This folder contains JADE files. This files need to be compiled into html files to be displayed by a browser
 - less/
-This folder contains the LESS files for the core styles and bootstrap styles.
-- sass/
-This folder contains the SASS files (.scss) for the core styles and bootstrap styles. 
+This folder contains the LESS files for the core styles and bootstrap styles. 
 - js/
-Here you will find Javascript files for all features splitted into different modules/components.
+Here you will find pure JS files. All this files are concatenated into the file app.js. 
  
 __vendor/__ folder
  
@@ -114,7 +131,7 @@ __A note on updating__
 Build
 -----
 
-**Important!** This section is for those who want to work with JADE, LESS/SASS and JavaScript modules.
+**Important!** You only need to follow this instructions in case you want to work with JADE, LESS and concatenate all JS modules.
 
 __Node.js__ is a platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications.
 
@@ -126,109 +143,41 @@ The package includes under the master/ folder the file __gulpfile.js__,  __packa
 
 #### Installing tools
 
-This section describes all necessary steps to install required tools suchs a node, gulp, bower, etc in order to build the source code.
+The following steps are intended to be an orientation guide, if you are not experienced with this you will need to learn more about it from Google :)
 
-#### Main Gulp tasks
+- To install node and npm, go to http://nodejs.org/
+- Run __npm install -g bower__ to install bower to manage dependencies
+- Download and install GIT for your platform http://git-scm.com/downloads
 
- 
-This command will run the default task without minify assets
+Once  you have all tools installed
 
-`$ gulp`
+- Open a terminal, go the package __master/__ folder, then run the command __npm install__. This command will install gulp and all project dependencies. 
+- Then, to install vendor dependencies, run __bower install__
+- Finally run __gulp__ to start the task manager 
 
-This task will generate the assest wihout mininfy and with sourcemaps
+If everything goes fine, you should see the messages in the terminal telling you that most the task are done ok. The task will watch for files to compile them automatically all files when change.
 
-`$ gulp sourcemaps`
-
-This taks will generate the asset minified
-
-`$ gulp build`
-
-You can also mix task build and sourcemaps to get minified version with sourcemaps
-
-`$ gulp build sourcemaps`
-
-All tasks will end up watching source files for LiveReload
-
-#### AngularJS Template Cache
-
-To enable this feature, run gulp with the following command
-
-`$ gulp --usecache`
-
-**Note**: This flag is recommended to be combined with build task so you can generate the best optimized version for production enviroment.
-
+To enable the automatic page reload there is also included a LiveReload task that requires the Chrome plugin [Livereload](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei)
 
 ### Javascript
 
 The Javascript source is divided in two main files that controls the app
 
-__base.js__: contains the scripts to start the application(angularjs, jquery, etc.)
+__base.js__: contains the scripts to start the application
 
-__app.js__: contains the modules used in the application (controllers, directives, etc)
+__app.js__: contains the modules used in the application (controllers, directive, etc)
 
 __Note__ The edit the scripts included in base.js open the file vendor.base.json located under the master folder
 
 The app.js script build (concatenation) order is 
 
-All Javascript modules are concatenated in the following order
 ```
-// main app modules
-'master/js/app.module.js',
-// template modules
-'master/js/modules/**/*.module.js',
-'master/js/modules/**/*.js',
-// custom modules
-'master/js/custom/**/*.module.js',
-'master/js/custom/**/*.js'
-```
- 
-#### Modules organization
- 
-```
-angle --> [
-    app.core --> [
-        'ngRoute',
-        'ngAnimate',
-        'ngStorage',
-        'ngCookies',
-        'pascalprecht.translate',
-        'ui.bootstrap',
-        'ui.router',
-        'oc.lazyLoad',
-        'cfp.loadingBar',
-        'ngSanitize',
-        'ngResource',
-        'tmh.dynamicLocale',
-        'ui.utils'
-    ],
-    app.routes --> [
-        'app.lazyload'
-    ],
-    app.sidebar,
-    app.navsearch,
-    app.preloader,
-    app.loadingbar,
-    app.translate,
-    app.settings,
-    app.dashboard,
-    app.icons,
-    app.flatdoc,
-    app.notify,
-    app.bootstrapui,
-    app.elements,
-    app.panels,
-    app.charts,
-    app.forms,
-    app.locale,
-    app.maps,
-    app.pages,
-    app.tables,
-    app.extras,
-    app.mailbox,
-    app.utils --> [
-        'app.colors'
-    ]
-]
+'js/app.init.js'
+'js/modules/*.js'
+'js/modules/controllers/*.js'
+'js/modules/directives/*.js'
+'js/modules/services/*.js'
+'js/modules/filters/*.js'
 ```
 
 ### LESS
@@ -236,12 +185,6 @@ angle --> [
 The LESS files compiles into the file __app.css__. This file contains the bootstrap styles and the application custom styles.
 
 Also the __app-rtl.css__ is automatically generated with the same styles but inverted for RTL layout. To convert styles the node script css-flip is used.
-
-### SASS
- 
-To build the styles using the SCSS files version you have to use the following command
- 
-`gulp --usesass`
 
 ### Vendor
 
@@ -271,7 +214,7 @@ Usage
 
 ### Layout
 
-Layout can be changed via the following classes applied to the __body__ tag
+Layout can be changed via the following classed applied to the __body__ tag
 
 `.layout-fixed`: Makes navbars become fixed while the user can scroll only content
 
@@ -321,84 +264,25 @@ The following markup representation is in fact divided into views but this code 
 </html>
 ```
 
-### Preloader
-
- 
-The site preloader is used adding the following markup to the index file right below the body tag (as child)
-```
-<div data-preloader></div>
-```
-
-Background color and Image logo are easily customizable.
-
-
 ### Lazy Load
 
 This app requires only the necessary scripts according to the view that is loaded saving tons unnecessary request to the server.
 
 The lazy load is handled by a custom core function based on the plugin [ocLazyLoad](https://github.com/ocombe/ocLazyLoad)
 
-
-#### Adding new dependencies
-
-You can add a new AngularJS dependencies following two alternatives.
- 
-**1-** To inject a module in the app initialization (i.e. angular.module[] definition), which also means it will be available across all the application, you can:
-
-- a. Append the module content to the file base.js or add it to the file `/master/vendor.base.json` to generate it using Gulp
-
-- b. Or, you can edit the index.html (or jade) and append the new assets before the app.js 
- 
-**2-** If you want to use the new module __only when it is required__, you can use the lazy load system
- 
-- a. Install the new component using Bower and add the main files to `vendor.json` in order to copy them to the app vendor folder (via Gulp).
- 
-- b. Add a new entry into APP_REQUIRES constant
- 
-For AngularJS dependencies, use module property 
-
-```
-modules: { name: 'moduleName', files : ['path/file1', 'path/fileetc']) }
-```
-
-For jQuery based and standalone scripts, use scripts property 
-
-```
-scripts: { 'some-plugin': ['path/to/file'] }
-```
-
-- c. Now you can add a new route and use the custom resolveFor helper to request the new module files and you can  use the new module in your view/controller
-
-```
-.state('app.my-view ', {
-    url: '/my-view',
-    templateUrl: helper.basepath('my-view.html'),
-    resolve: helper.resolveFor('moduleName' )
-})
-```
+To configure the lazy scripts, you need to edit the constants `APP_REQUIRES` (constants.js)  
+Then edit the app configuration (config.js) where you will find the routes configuration and add or edit the params using the special function `resolveFor` which handles the scripts request order for the current route.
 
 ### RTL
 
 RTL support uses the a tool called [css-flip](https://github.com/twitter/css-flip) which inverts most the css properties to change the page orientation.  
+It's also a property `$rootScope.isRTL`  to detect when the site is in RTL mode. 
 
 ### Routes
 
 This app uses for routing the [AngularUI Router](https://github.com/angular-ui/ui-router) with nested states making more simple to manage the routing system and load resource in cascade.
 
-We have added a custom Helper for Routes to resolve easily all dependencies
-
-```
-.state('app.someroute', {
-  url: '/some_url',
-  templateUrl: helper.basepath('someroute_view.html'),
-  controller: 'someController',
-  resolve: angular.extend(
-    helper.resolveFor(), {
-    // YOUR RESOLVES GO HERE
-    }
-  )
-})
-```
+All routes are defined in the file __config.js__
 
 ### Translation
 
@@ -438,13 +322,18 @@ __JSON properties format:__
 ]
 ```
 
-This method is also useful if you pretend to generate a per user menu dynamically in the server.
+This is method is also useful if you pretend to generate a per user menu dynamically in the server.
 
 ### Markdown Docs
 
-This documentation is loaded from a Markdown source using [Flatdoc](http://ricostacruz.com/flatdoc/) plugin.  
+This documentation is loaded from a Markdown source using [Flatdoc](http://ricostacruz.com/flatdoc/) plugin.
 The menu and the content is generated automatically from the .md file and styled directly from custom css.
 
+Via the `flatdoc` directive you can use it like this
+
+``` html
+<flatdoc src="path/to/readme.md"></flatdoc>
+```
 
 ### Icons
 
@@ -475,8 +364,246 @@ If you want to change or add a new component color, just inspect the color using
 
 This files are prepared to change the basic color scheme (both sidebars and  top navbar) but if you want to make a more deep change I suggest you to check the LESS way which is more simple for multiple component changes.
 
+Directives
+----------
+
+This item include the following directives. 
+
+`[href]`  
+*File*: anchor.js  
+Disables null anchor behavior
+
+`[animate-enabled]`  
+*File*: animate-enabled.js  
+Enable or disables ngAnimate for element with directive
+
+`[chosen]`  
+*File*: chosen-select.js  
+Initializes the chose select plugin
+
+`[classyloader]`  
+*File*: classy-loader.js  
+Enable use of classyLoader directly from data attributes
+
+`[reset-key]`  
+*File*: clear-storage.js  
+Removes a key from the browser storage via element click
+
+`[filestyle]`  
+*File*: filestyle.js  
+Initializes the fielstyle plugin
+
+`[flatdoc]`  
+*File*: flatdoc.js  
+Creates the flatdoc markup and initializes the plugin
+
+`[form-wizard]`  
+*File*: form-wizard.js  
+Handles form wizard plugin and validation
+
+`[toggle-fullscreen]`  
+*File*: fullscreen.js  
+Toggle the fullscreen mode on/off
+
+`[gmap]`  
+*File*: gmap.js  
+Init Google Map plugin
+
+`[load-css]`  
+*File*: load-css.js  
+Request and load into the current page a css file
+
+`[markdownarea]`  
+*File*: markdownarea.js  
+Markdown Editor from UIKit adapted for Bootstrap Layout.
+
+`[masked]`  
+*File*: masked.js  
+Initializes the masked inputs
+
+`[search-open]`  
+*File*: navbar-search.js  
+Open the search in the top navbar. Use `[search-dismiss__]   in buttons a`t close it.
+
+`[notify]`  
+*File*: notify.js  
+Create a notifications that fade out automatically. Based on Notify addon from UIKit (http://getuikit.com/docs/addons_notify.html)
+
+`[now]`  
+*File*: now.js  
+Provides a simple way to display the current time formatted
+
+`[paneltool]`  
+*Module* panel-tools.js  
+Directive tools to control panels. Allows collapse, refresh and dismiss (remove) Saves panel state in browser storage.  
+Supports attributes [panel-dismiss] [panel-collapse] [panel-refresh]
+
+`[animate]`  
+*File*: play-animation.js  
+Provides a simple way to run animation with a trigger. Requires animo.js
+
+`[scrollable]`  
+*File*: scroll.js  
+Make a content box scrollable
+
+`[sidebar]`  
+*File*: sidebar.js  
+Wraps the sidebar and handles collapsed state
+
+`[skycon]`  
+*File*: skycons.js  
+Include any animated weather icon from Skycons
+
+`[sparkline]`  
+*File*: sparkline.js  
+SparkLines Mini Charts
+
+`[check-all]`  
+*File*: table-checkall.js  
+Tables check all checkbox
+
+`[tagsinput]`  
+*File*: tags-input.js  
+Initializes the tag inputs plugin
+
+`[toggle-state]`  
+*File*: toggle-state.js  
+Toggle a classname from the __body__ tag. Useful to change a state that affects globally the entire layout or more than one item.  
+Elements must have [toggle-state="CLASS-NAME-TO-TOGGLE"]. Use [no-persist] to avoid saving the sate in browser storage.
+
+`[ui-slider]`  
+*File*: ui-slider.js  
+Initializes the jQuery UI slider controls
+
+`[validate-form]`  
+*File*: validate-form.js  
+Initializes the validation plugin Parsley
+
+`[vector-map]`  
+*File*: vector-map.js.js  
+Initializes jQuery Vector Map plugin
+
+
+### Bootstrap
+
+This item include all directives from [Angular BootstrapUI].
+
+[Angular BootstrapUI]: http://github.com/api
+
+Constants
+---------
+
+### Colors
+
+`APP_COLORS`  
+Defines the brand colors used in the css accessible from JS
+
+``` js
+App.controller('ExampleCtrl', ['APP_COLORS', function(colors) {
+  console.log( colors.primary ); 
+  // prints #5d9cec
+}]);
+```
+
+This constant is used  together with the __service colors__ to provide access from the $scope to each color by its name
+
+Example 
+
+``` html
+<div sparkline data-bar-color="{{colorByName('primary')}}" ></div>
+```
+
+### Media Queries
+
+`APP_MEDIAQUERY`  
+Defines the media queries used in the css accessible from JS
+
+``` js
+App.controller('ExampleCtrl', ['APP_MEDIAQUERY', function(mq) {
+  console.log( mq.mobile ); 
+  // prints 480
+}]);
+```
+### Requires
+
+`APP_REQUIRES`  
+Defines the script used with the lazy load system. 
+
+Format:
+
+``` js
+// Put here all jQuery script (and not angular js)
+scripts: {
+  'friendly-name' : ['path/to/plugin.js', 'path/to/plugin.css', '...'],
+  ...
+}
+// Put here all angular js modules that needs to be instantiated
+modules: {
+  { 
+    name: 'toaster', files: ['path/to/module.js', 'path/to/module.css', '...']
+  },
+  ...
+}
+```
+
+Learn more by looking into the file __config.js__
 
 Credits
 -------
+<div class="row">
+<div class="col-lg-3">
+[Angular](https://angularjs.org/)  
+[Angular Docs](https://docs.angularjs.org/guide/)  
+[ocLazyLoad](https://github.com/ocombe/ocLazyLoad)  
+[uiRouter](https://github.com/angular-ui/ui-router)  
+[uiTranslate](https://github.com/angular-translate/angular-translate)  
+[uiBootstrap](http://angular-ui.github.io/bootstrap/)  
+[Toaster](https://github.com/jirikavi/AngularJS-Toaster)  
+[Angular Loading Bar](http://chieffancypants.github.io/angular-loading-bar/)  
+[Bootstrap](http://getbootstrap.com/)  
+[jQuery]( http://jquery.com/)  
+[Fastclick](https://github.com/ftlabs/fastclick)  
+[Animo](http://labs.bigroomstudios.com/libraries/animo-js)  
+[Animate.css](http://daneden.github.io/animate.css/)  
+[Chosen](http://harvesthq.github.io/chosen/)  
+[Codemirror](http://codemirror.net/)  
+[BS Filestyle](http://markusslima.github.io/bootstrap-filestyle/)  
+[FlotCharts](http://www.flotcharts.org/)  
+[gMap](http://github.com/marioestrada/jQuery-gMap)  
+[Marked](https://github.com/chjj/marked)  
+[ClassyLoader](http://www.class.pm/projects/jquery/classyloader/)  
+[CSSRadialBar](http://codepen.io/geedmo/pen/InFfd)  
+</div>
+<div class="col-lg-3">
+[Modernizr](http://modernizr.com/)  
+[MomentJs](http://momentjs.com/)  
+[Parsley](http://parsleyjs.org/)  
+[Bootstrap Slider](http://www.eyecon.ro/bootstrap-slider)  
+[Sparkline](http://omnipotent.net/jquery.sparkline/#s-about)  
+[BS Tags Input](http://timschlechter.github.io/bootstrap-tagsinput/examples/bootstrap3/)  
+[slimSCroll](http://rocha.la/jQuery-slimScroll)  
+[DataTables](https://datatables.net/.)  
+[FullCalendar](http://arshaw.com/fullcalendar/docs/)  
+[CsSpinner](http://jh3y.github.io/-cs-spinner/)  
+[InputMask](https://github.com/RobinHerbots/jquery.inputmask)  
+[jVectorMap](http://jvectormap.com/)  
+[FlatDoc](https://github.com/rstacruz/flatdoc)  
+[jQueryUI](http://jqueryui.com/sortable/)  
+[UiKit Upload](http://www.getuikit.com/docs/addons_upload.html)  
+[UiKit Notify](http://www.getuikit.com/docs/addons_notify.html)  
+[UiKit MarkdownArea](http://www.getuikit.com/docs/addons_markdownarea.html)  
+</div>
+<div class="col-lg-3">
+Icons  
 
-See the full list of credits [here](http://themicon.co/theme/angle/credits/)
+[Font Awesome](http://fortawesome.github.io/Font-Awesome/)  
+[Skycons](http://darkskyapp.github.io/skycons/)  
+[Weather Icons](http://erikflowers.github.io/weather-icons/)  
+<br>
+Demo images  
+
+[uiFaces](http://uifaces.com/)  
+[Raumrot](http://www.raumrot.com/10/)  
+[Unsplash](http://unsplash.com)  
+</div>
+</div>

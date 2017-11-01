@@ -1,10 +1,10 @@
 {
-  "name": "angle",
-  "version": "0.0.0",
+  "name": "teamtable",
+  "version": "0.0.1",
   "authors": [
-    "@themicon_co"
+    "@heisenerds"
   ],
-  "description": "Angle - Bootstrap Admin App + Material",
+  "description": "TeamTable - Gestione del team in cloud!",
   "main": "index.html",
   "keywords": [
     "bootstrap",

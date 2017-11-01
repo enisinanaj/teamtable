@@ -17,6 +17,7 @@
         listIsOpen: false,
         // list of available languages
         available: {
+          'it':       'Italiano',
           'en':       'English',
           'es_AR':    'Español'
         },
