@@ -7,3 +7,23 @@
   
 .container.container-md
   p.lead.m0 Gestisi il tuo team in cloud con uno strumento innovativo e veloce!
+  .row.md-welcome-row
+    .col-md-4
+      .card.animated.fadeInDown.anim-delay-20(md-ink-ripple)
+        .card-body 
+          p.lead.text-bold Nuova pratica
+          | Per creare una nuova pratica clicca il pulsante aggiungi.
+          div.clearfix
+          md-button.pull-right.md-raised.md-primary(md-no-ink='' href='{{$state.href("app.add_practice")}}')
+            em.icon-plus(style="margin-right: 3px")
+            | Aggiungi
+          div.clearfix
+    .col-md-4
+      .card.animated.fadeInDown.anim-delay-25(md-ink-ripple)
+        .card-body 
+          p.lead.text-bold Ricerca pratiche
+          | Ricerca le pratiche per nome, descrizione, data inserimento o altro
+          md-button.pull-right.md-raised.md-primary(md-no-ink='' href='{{$state.href("app.practices_management")}}')
+            em.icon-magnifier(style="margin-right: 3px")
+            | Esegui ricerca
+          div.clearfix

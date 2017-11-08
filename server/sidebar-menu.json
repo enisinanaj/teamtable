@@ -10,10 +10,10 @@
     "icon": "icon-tag"
   },
   {
-    "text": "Le mie attività",
-    "sref": "app.my_activities",
-    "translate": "sidebar.nav.menu.MY_ACTIVITIES",
-    "icon": "icon-check"
+    "text": "Aggiungi pratica",
+    "sref": "app.add_practice",
+    "translate": "sidebar.nav.menu.ADD_PRACTICE",
+    "icon": "icon-plus"
   },
   {
     "text": "Gestione pratiche",

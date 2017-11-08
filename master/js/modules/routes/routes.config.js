@@ -36,15 +36,25 @@
               title: 'Welcome',
               templateUrl: helper.basepath('welcome.html')
           })
-          .state('app.my_activities', {
-              url: '/lists',
-              title: 'My Activities',
-              templateUrl: helper.basepath('material.lists.html')
+          .state('app.add_practice', {
+              url: '/addPractice',
+              title: 'Add practice',
+              templateUrl: helper.basepath('add_practice.html')
+          })
+          .state('app.add_event', {
+              url: '/addEvent',
+              title: 'Add event',
+              templateUrl: helper.basepath('add_event.html')
+          })
+          .state('app.single_practice', {
+              url: '/practice',
+              title: 'Single practice',
+              templateUrl: helper.basepath('practice.html')
           })
           .state('app.practices_management', {
               url: '/practices',
-              title: 'Practeses',
-              templateUrl: helper.basepath('material.lists.html')
+              title: 'Practices',
+              templateUrl: helper.basepath('practices.html')
           })
           //
           // Material 
@@ -89,7 +99,33 @@
             url: '/ngmaterial',
             title: 'ngMaterial',
             templateUrl: helper.basepath( 'material.ngmaterial.html' )
-          })    
+          })
+          //
+          // Single Page Routes
+          // -----------------------------------
+          .state('page', {
+              url: '/page',
+              templateUrl: 'app/pages/page.html',
+              resolve: helper.resolveFor('modernizr', 'icons'),
+              controller: ['$rootScope', function($rootScope) {
+                  $rootScope.app.layout.isBoxed = false;
+              }]
+          })
+          .state('page.login', {
+              url: '/login',
+              title: 'Login',
+              templateUrl: 'app/pages/login.html'
+          })
+          .state('page.register', {
+              url: '/register',
+              title: 'Register',
+              templateUrl: 'app/pages/register.html'
+          })
+          .state('page.recover', {
+              url: '/recover',
+              title: 'Recover',
+              templateUrl: 'app/pages/recover.html'
+          })
           // 
           // CUSTOM RESOLVES
           //   Add your own resolves properties

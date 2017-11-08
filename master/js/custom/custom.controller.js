@@ -15,12 +15,14 @@
         // for controllerAs syntax
         // var vm = this;
 
+        var vm = this;
+
         activate();
 
         ////////////////
 
         function activate() {
-          $log.log('I\'m a line from custom.js');
-        }
+            
+        };
     }
 })();

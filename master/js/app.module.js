@@ -27,6 +27,8 @@
             'app.settings',
             'app.maps',
             'app.utils',
+            'app.pages',
+            'app.tables',
             'app.material'
         ]);
 })();
