@@ -59544,7 +59544,7 @@ angular.module('ngResource', ['ng']).
 })(window, window.angular);
 
 /*!
- * angular-translate - v2.15.1 - 2017-03-04
+ * angular-translate - v2.15.2 - 2017-06-22
  * 
  * Copyright (c) 2017 The angular-translate team, Pascal Precht; Licensed MIT
  */
@@ -59554,7 +59554,7 @@ angular.module('ngResource', ['ng']).
     define([], function () {
       return (factory());
     });
-  } else if (typeof exports === 'object') {
+  } else if (typeof module === 'object' && module.exports) {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node.
@@ -59918,6 +59918,8 @@ function $translateSanitizationProvider () {
       return result;
     } else if (angular.isNumber(value)) {
       return value;
+    } else if (value === true || value === false) {
+      return value;
     } else if (!angular.isUndefined(value) && value !== null) {
       return iteratee(value);
     } else {
@@ -59993,7 +59995,7 @@ function $translate($STORAGE_KEY, $windowProvider, $translateSanitizationProvide
       }
     };
 
-  var version = '2.15.1';
+  var version = '2.15.2';
 
   // tries to determine the browsers language
   var getFirstBrowserLanguage = function () {
@@ -61080,8 +61082,7 @@ function $translate($STORAGE_KEY, $windowProvider, $translateSanitizationProvide
         };
         promiseResolved.displayName = 'promiseResolved';
 
-        promiseToWaitFor['finally'](promiseResolved)
-          .catch(angular.noop); // we don't care about errors here, already handled
+        promiseToWaitFor['finally'](promiseResolved)['catch'](angular.noop); // we don't care about errors here, already handled
       }
       return deferred.promise;
     };
@@ -61836,7 +61837,7 @@ function $translate($STORAGE_KEY, $windowProvider, $translateSanitizationProvide
         });
         langPromises[key]['finally'](function () {
           clearNextLangAndPromise(key);
-        }).catch(angular.noop); // we don't care about errors (clearing)
+        })['catch'](angular.noop); // we don't care about errors (clearing)
       } else if (langPromises[key]) {
         // we are already loading this asynchronously
         // resolve our new deferred when the old langPromise is resolved
@@ -62006,7 +62007,7 @@ function $translate($STORAGE_KEY, $windowProvider, $translateSanitizationProvide
         },
         //handle rejection to appease the $q validation
         angular.noop
-      ).finally(
+      )['finally'](
         function () {
           $rootScope.$emit('$translateRefreshEnd', {language : langKey});
         }

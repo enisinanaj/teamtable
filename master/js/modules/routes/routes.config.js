@@ -54,7 +54,8 @@
           .state('app.practices_management', {
               url: '/practices',
               title: 'Practices',
-              templateUrl: helper.basepath('practices.html')
+              templateUrl: helper.basepath('practices.html'),
+              resolve: helper.resolveFor('datatables')
           })
           //
           // Material 
