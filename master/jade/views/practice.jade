@@ -1,0 +1,17 @@
+.container-md
+  .card
+    .card-heading.bg-primary
+      .card-title Pratica practice.nome
+    .card-body
+      div(ng-controller='DataTableController as table1')
+        table.row-border.hover(datatable='ng')
+          thead
+            tr
+              th Person ID
+              th First Name
+              th Last Name
+          tbody
+            tr(ng-repeat='person in table1.persons')
+              td {{ person.id }}
+              td {{ person.firstName }}
+              td {{ person.lastName }}

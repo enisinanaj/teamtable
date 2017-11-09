@@ -1,0 +1,18 @@
+.container-md
+  .card
+    .card-heading.bg-primary
+      .card-title Nuovo evento
+    .card-body
+      .row
+        .col-sm-12
+          .mda-form-group
+            input.mda-form-control(ng-model='event.description', tabindex='0', aria-invalid='false')
+            label Nome
+      .row
+        .col-sm-12
+          .mda-form-group
+            md-datepicker.mda-form-control(ng-model="birthday" style="border: none !important;")
+            label Data evento
+      .row
+        .col-sm-12
+          md-button.pull-right.md-raised.md-primary(md-no-ink='') Salva

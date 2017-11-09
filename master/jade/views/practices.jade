@@ -1,0 +1,35 @@
+h3 Elenco pratiche
+.container-md
+  .card
+    .card-body
+        .row
+            .col-sm-6.col-xm-12(style="margin-top: 15px")
+                span Filtra per codice urgenza
+                ul.filter-status(style="list-style: none; display:inline-block; padding: 0")
+                    li#red(style="display:inline-block")
+                        a.label.label-danger(href="#") Rosso
+                    li#orange(style="display:inline-block")
+                        a.label.label-warning(href="#") Arancione
+                    li#green(style="display:inline-block")
+                        a.label.label-success(href="#") Verde
+            
+            .col-sm-6.col-xm-12
+                form.aui.top-label#search(action="#")
+                    .mda-form-group.float-label
+                        input.mda-form-control(ng-model='practices.search_by_name', tabindex='0')
+                        label Cerca per nome pratica
+
+
+  .card
+    .card-body
+      .row
+        div(ng-controller='DataTableController as practices')
+          table.row-border.hover(datatable='ng')
+            thead
+              tr
+                th Pratica
+                th Note
+            tbody
+              tr(ng-repeat='practice in practices.elements')
+                td {{ practice.name }}
+                td {{ practice.description }}
