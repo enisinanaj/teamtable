@@ -47,7 +47,7 @@
               templateUrl: helper.basepath('add_event.html')
           })
           .state('app.single_practice', {
-              url: '/practice',
+              url: '/practice/:practiceId',
               title: 'Single practice',
               templateUrl: helper.basepath('practice.html')
           })
@@ -56,50 +56,6 @@
               title: 'Practices',
               templateUrl: helper.basepath('practices.html'),
               resolve: helper.resolveFor('datatables')
-          })
-          //
-          // Material 
-          // ----------------------------------- 
-          .state('app.cards', {
-            url: '/cards',
-            title: 'Material Cards',
-            templateUrl: helper.basepath( 'material.cards.html' )
-          })
-          .state('app.forms', {
-            url: '/forms',
-            title: 'Material Forms',
-            templateUrl: helper.basepath( 'material.forms.html' )
-          })
-          .state('app.whiteframe', {
-            url: '/whiteframe',
-            title: 'Material Whiteframe',
-            templateUrl: helper.basepath( 'material.whiteframe.html' )
-          })
-          .state('app.matcolors', {
-            url: '/matcolors',
-            title: 'Material Colors',
-            templateUrl: helper.basepath( 'material.colors.html' )
-          })
-          .state('app.lists', {
-            url: '/lists',
-            title: 'Material Lists',
-            templateUrl: helper.basepath( 'material.lists.html' )
-          })
-          .state('app.inputs', {
-            url: '/inputs',
-            title: 'Material Inputs',
-            templateUrl: helper.basepath( 'material.inputs.html' )
-          })
-          .state('app.matwidgets', {
-            url: '/matwidgets',
-            title: 'Material Widgets',
-            templateUrl: helper.basepath( 'material.widgets.html' ),
-            resolve: helper.resolveFor('weather-icons', 'loadGoogleMapsJS', function() { return loadGoogleMaps(); }, 'ui.map')
-          })
-          .state('app.ngmaterial', {
-            url: '/ngmaterial',
-            title: 'ngMaterial',
-            templateUrl: helper.basepath( 'material.ngmaterial.html' )
           })
           //
           // Single Page Routes
@@ -127,22 +83,6 @@
               title: 'Recover',
               templateUrl: 'app/pages/recover.html'
           })
-          // 
-          // CUSTOM RESOLVES
-          //   Add your own resolves properties
-          //   following this object extend
-          //   method
-          // ----------------------------------- 
-          // .state('app.someroute', {
-          //   url: '/some_url',
-          //   templateUrl: 'path_to_template.html',
-          //   controller: 'someController',
-          //   resolve: angular.extend(
-          //     helper.resolveFor(), {
-          //     // YOUR RESOLVES GO HERE
-          //     }
-          //   )
-          // })
           ;
 
     } // routesConfig

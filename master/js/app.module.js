@@ -29,7 +29,8 @@
             'app.utils',
             'app.pages',
             'app.tables',
-            'app.material'
+            'app.material',
+            'app.practices'
         ]);
 })();
 

@@ -15,12 +15,10 @@
           },
           // Angular based script (use the right module name)
           modules: [
-            // {name: 'toaster', files: ['vendor/angularjs-toaster/toaster.js', 'vendor/angularjs-toaster/toaster.css']}
             {name: 'ui.map',                    files: ['vendor/angular-ui-map/ui-map.js']},
             {name: 'datatables',                files: ['vendor/datatables/media/css/jquery.dataTables.css',
                                                         'vendor/datatables/media/js/jquery.dataTables.js',
                                                         'vendor/datatables-buttons/js/dataTables.buttons.js',
-                                                        //'vendor/datatables-buttons/css/buttons.bootstrap.css',
                                                         'vendor/datatables-buttons/js/buttons.bootstrap.js',
                                                         'vendor/datatables-buttons/js/buttons.colVis.js',
                                                         'vendor/datatables-buttons/js/buttons.flash.js',
