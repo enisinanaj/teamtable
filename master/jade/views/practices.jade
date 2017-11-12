@@ -17,15 +17,17 @@ h3 Elenco pratiche
   .card
     .card-body
       div(ng-controller='PracticesController as practices')
-        table.row-border.hover(datatable='ng', dt-options='practices.dtOptions')
+        table.row-border.hover(datatable='ng', dt-options='practices.dtOptions' dt-column-defs='practices.dtColumnDefs')
           thead
             tr
+              th Operatore inserimento
               th Pratica
               th Note
           tbody
             tr(ng-repeat='practice in practices.elements')
+              td {{ practice.creator.username }}
               td
-                a(ng-click="setCurrentPractice(practice.name)") {{ practice.name }}
+                a(ng-href="{{$state.href('app.single_practice', {practiceId: practice.id})}}") {{ practice.name }}
               td {{ practice.description }}
 
       .row.card-body

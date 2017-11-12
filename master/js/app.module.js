@@ -30,7 +30,8 @@
             'app.pages',
             'app.tables',
             'app.material',
-            'app.practices'
+            'app.practices',
+            'app.practice'
         ]);
 })();
 

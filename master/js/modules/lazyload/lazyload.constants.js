@@ -11,12 +11,13 @@
                                    'vendor/simple-line-icons/css/simple-line-icons.css'],
             'weather-icons':      ['vendor/weather-icons/css/weather-icons.min.css',
                                    'vendor/weather-icons/css/weather-icons-wind.min.css'],
-            'loadGoogleMapsJS':   ['vendor/load-google-maps/load-google-maps.js']
+            'loadGoogleMapsJS':   ['vendor/load-google-maps/load-google-maps.js'],
+            'moment' :            ['vendor/moment/min/moment-with-locales.min.js']
           },
           // Angular based script (use the right module name)
           modules: [
             {name: 'ui.map',                    files: ['vendor/angular-ui-map/ui-map.js']},
-            {name: 'datatables',                files: ['vendor/datatables/media/css/jquery.dataTables.css',
+            {name: 'practices',                files: ['vendor/datatables/media/css/jquery.dataTables.css',
                                                         'vendor/datatables/media/js/jquery.dataTables.js',
                                                         'vendor/datatables-buttons/js/dataTables.buttons.js',
                                                         'vendor/datatables-buttons/js/buttons.bootstrap.js',

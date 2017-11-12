@@ -40,6 +40,7 @@
           asideScrollbar: false,
           isCollapsedText: false
         },
+        apiUrl: 'http://localhost:8000/teamtable/api/',
         useFullLayout: false,
         hiddenFooter: false,
         offsidebarOpen: false,
@@ -49,16 +50,6 @@
 
       // Setup the layout mode
       $rootScope.app.layout.horizontal = ( $rootScope.$stateParams.layout === 'app-h') ;
-
-      // Restore layout settings [*** UNCOMMENT TO ENABLE ***]
-      // if( angular.isDefined($localStorage.layout) )
-      //   $rootScope.app.layout = $localStorage.layout;
-      // else
-      //   $localStorage.layout = $rootScope.app.layout;
-      //
-      // $rootScope.$watch('app.layout', function () {
-      //   $localStorage.layout = $rootScope.app.layout;
-      // }, true);
 
       // Close submenu when sidebar change from collapsed to normal
       $rootScope.$watch('app.layout.isCollapsed', function(newValue) {

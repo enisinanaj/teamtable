@@ -7,18 +7,21 @@
 
     angular
         .module('app.practices')
-        .service('Practice', Practice);
+        .service('PracticesService', PracticesService);
 
-    function Practice() {
-    	var self = this;
+    PracticesService.$inject = ['$resource', '$rootScope', '$http'];
+    function PracticesService($resource, $rootScope, $http) {
+        this.getPractices = getPractices;
 
-    	this.getPractice = function() {
-    		return self.currentPractice;
-    	}
+        function getPractices(params, onReady) {
+          var practicesApi = $rootScope.app.apiUrl + 'legalPractices' + params;
 
-    	this.setPractice = function(practice) {
-    		self.currentPractice = practice;
-    	}
+          var onError = function() { alert('Failure loading practice'); };
+
+          $http
+            .get(practicesApi)
+            .then(onReady, onError);
+        }
     }
 
 })();

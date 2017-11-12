@@ -1,6 +1,25 @@
-.container-md(ng-controller='PracticesController as practice')
+.container-md(ng-controller='PracticeController as controller')
   .card
     .card-heading.bg-primary
-      .card-title Dettaglio pratica
+      .card-title Dettaglio pratica 
+        strong {{controller.practice.name}}
+        span.pull-right
+          em Operatore di inserimento
+            strong {{controller.practice.creator.username}}
     .card-body
-      
+      div
+        table.row-border.hover(datatable='ng', dt-options='controller.dtOptions' dt-column-defs='controller.dtColumnDefs')
+          thead
+            tr
+              th Operatore inserimento
+              th Evento
+              th Data
+              th Dettaglio
+          tbody
+            tr(ng-repeat='event in controller.events')
+              td {{event.creator.username}}
+              td {{event.description}}
+              td {{event.eventDate}}
+              td 
+                a.btn.btn-primary(ng-href="{{$state.href('app.single_event', {practiceId: event.id})}}")
+                  i.icon-magnifier

@@ -10,11 +10,11 @@
         .module('app.practices')
         .controller('PracticesController', PracticesController);
 
-    PracticesController.$inject = ['$scope', '$state', 
-      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'Practice'];
+    PracticesController.$inject = ['$scope', '$window', '$state', 
+      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'PracticesService'];
     
-    function PracticesController($scope, $state,
-      $resource, DTOptionsBuilder, DTColumnDefBuilder, Practice) {
+    function PracticesController($scope, $window, $state,
+      $resource, DTOptionsBuilder, DTColumnDefBuilder, PracticesService) {
         
         var vm = this;
 
@@ -26,9 +26,19 @@
 
           // Ajax
 
-          $resource('server/datatable.json').query().$promise.then(function(practices) {
-             vm.elements = practices;
-          });
+          PracticesService.getPractices("", onDone);
+
+          function onDone (practices) {
+            vm.elements = practices.data;
+
+            for (var i = vm.elements.length - 1; i >= 0; i--) {
+              vm.elements[i].id = extractId(vm.elements[i].hRef);
+            }
+          };
+
+          function extractId(hRef) {
+            return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
+          }
 
           vm.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType('full_numbers')
@@ -38,14 +48,14 @@
                 {extend: 'copy',  className: 'btn-sm', text: 'Copia'},
                 {extend: 'csv',   className: 'btn-sm'},
                 {extend: 'print', className: 'btn-sm'}
-            ]);
+            ])
+            .withOption("info", false);
 
-          $scope.setCurrentPractice = function(practice) {
-            //Practice.setCurrentPractice("aaaa");
-            console.log("Practice name: " + practice);
-            console.log("SAVED CURRENT PRACTICE");
-          };
-
+          vm.dtColumnDefs = [
+              DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
+              DTColumnDefBuilder.newColumnDef(1).withOption('width', '200px'),
+              DTColumnDefBuilder.newColumnDef(2)
+          ];
         }
     }
 })();

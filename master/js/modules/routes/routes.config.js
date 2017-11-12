@@ -49,13 +49,26 @@
           .state('app.single_practice', {
               url: '/practice/:practiceId',
               title: 'Single practice',
-              templateUrl: helper.basepath('practice.html')
+              templateUrl: helper.basepath('practice.html'),
+              resolve: helper.resolveFor('practices', 'moment')
           })
           .state('app.practices_management', {
               url: '/practices',
               title: 'Practices',
               templateUrl: helper.basepath('practices.html'),
-              resolve: helper.resolveFor('datatables')
+              resolve: helper.resolveFor('practices')
+          })
+          .state('app.single_event', {
+              url: '/event/:eventId',
+              title: 'Single event',
+              templateUrl: helper.basepath('event.html'),
+              resolve: helper.resolveFor('practices')
+          })
+          .state('app.events', {
+              url: '/events',
+              title: 'Events',
+              templateUrl: helper.basepath('events.html'),
+              resolve: helper.resolveFor('practices')
           })
           //
           // Single Page Routes

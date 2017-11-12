@@ -30,7 +30,8 @@
             'app.pages',
             'app.tables',
             'app.material',
-            'app.practices'
+            'app.practices',
+            'app.practice'
         ]);
 })();
 
@@ -40,12 +41,6 @@
 
     angular
         .module('app.colors', []);
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('app.lazyload', []);
 })();
 (function() {
     'use strict';
@@ -67,6 +62,12 @@
             'ngAria',
             'ngMessages'
         ]);
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('app.lazyload', []);
 })();
 (function() {
     'use strict';
@@ -104,16 +105,22 @@
     'use strict';
 
     angular
-        .module('app.preloader', []);
+        .module('app.practice', []);
 })();
-
-
 (function() {
     'use strict';
 
     angular
         .module('app.practices', []);
 })();
+(function() {
+    'use strict';
+
+    angular
+        .module('app.preloader', []);
+})();
+
+
 (function() {
     'use strict';
 
@@ -202,60 +209,6 @@
           return (APP_COLORS[name] || '#fff');
         }
     }
-
-})();
-
-(function() {
-    'use strict';
-
-    angular
-        .module('app.lazyload')
-        .config(lazyloadConfig);
-
-    lazyloadConfig.$inject = ['$ocLazyLoadProvider', 'APP_REQUIRES'];
-    function lazyloadConfig($ocLazyLoadProvider, APP_REQUIRES){
-
-      // Lazy Load modules configuration
-      $ocLazyLoadProvider.config({
-        debug: false,
-        events: true,
-        modules: APP_REQUIRES.modules
-      });
-
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('app.lazyload')
-        .constant('APP_REQUIRES', {
-          // jQuery based and standalone scripts
-          scripts: {
-            'modernizr':          ['vendor/modernizr/modernizr.custom.js'],
-            'icons':              ['vendor/fontawesome/css/font-awesome.min.css',
-                                   'vendor/simple-line-icons/css/simple-line-icons.css'],
-            'weather-icons':      ['vendor/weather-icons/css/weather-icons.min.css',
-                                   'vendor/weather-icons/css/weather-icons-wind.min.css'],
-            'loadGoogleMapsJS':   ['vendor/load-google-maps/load-google-maps.js']
-          },
-          // Angular based script (use the right module name)
-          modules: [
-            {name: 'ui.map',                    files: ['vendor/angular-ui-map/ui-map.js']},
-            {name: 'datatables',                files: ['vendor/datatables/media/css/jquery.dataTables.css',
-                                                        'vendor/datatables/media/js/jquery.dataTables.js',
-                                                        'vendor/datatables-buttons/js/dataTables.buttons.js',
-                                                        'vendor/datatables-buttons/js/buttons.bootstrap.js',
-                                                        'vendor/datatables-buttons/js/buttons.colVis.js',
-                                                        'vendor/datatables-buttons/js/buttons.flash.js',
-                                                        'vendor/datatables-buttons/js/buttons.html5.js',
-                                                        'vendor/datatables-buttons/js/buttons.print.js',
-                                                        'vendor/angular-datatables/dist/angular-datatables.js',
-                                                        'vendor/angular-datatables/dist/plugins/buttons/angular-datatables.buttons.js'],
-                                                        serie: true}
-          ]
-        })
-        ;
 
 })();
 
@@ -375,6 +328,61 @@
 
 })();
 
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.lazyload')
+        .config(lazyloadConfig);
+
+    lazyloadConfig.$inject = ['$ocLazyLoadProvider', 'APP_REQUIRES'];
+    function lazyloadConfig($ocLazyLoadProvider, APP_REQUIRES){
+
+      // Lazy Load modules configuration
+      $ocLazyLoadProvider.config({
+        debug: false,
+        events: true,
+        modules: APP_REQUIRES.modules
+      });
+
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('app.lazyload')
+        .constant('APP_REQUIRES', {
+          // jQuery based and standalone scripts
+          scripts: {
+            'modernizr':          ['vendor/modernizr/modernizr.custom.js'],
+            'icons':              ['vendor/fontawesome/css/font-awesome.min.css',
+                                   'vendor/simple-line-icons/css/simple-line-icons.css'],
+            'weather-icons':      ['vendor/weather-icons/css/weather-icons.min.css',
+                                   'vendor/weather-icons/css/weather-icons-wind.min.css'],
+            'loadGoogleMapsJS':   ['vendor/load-google-maps/load-google-maps.js'],
+            'moment' :            ['vendor/moment/min/moment-with-locales.min.js']
+          },
+          // Angular based script (use the right module name)
+          modules: [
+            {name: 'ui.map',                    files: ['vendor/angular-ui-map/ui-map.js']},
+            {name: 'practices',                files: ['vendor/datatables/media/css/jquery.dataTables.css',
+                                                        'vendor/datatables/media/js/jquery.dataTables.js',
+                                                        'vendor/datatables-buttons/js/dataTables.buttons.js',
+                                                        'vendor/datatables-buttons/js/buttons.bootstrap.js',
+                                                        'vendor/datatables-buttons/js/buttons.colVis.js',
+                                                        'vendor/datatables-buttons/js/buttons.flash.js',
+                                                        'vendor/datatables-buttons/js/buttons.html5.js',
+                                                        'vendor/datatables-buttons/js/buttons.print.js',
+                                                        'vendor/angular-datatables/dist/angular-datatables.js',
+                                                        'vendor/angular-datatables/dist/plugins/buttons/angular-datatables.buttons.js'],
+                                                        serie: true}
+          ]
+        })
+        ;
+
+})();
 
 (function() {
     'use strict';
@@ -1542,6 +1550,209 @@
     }
 })();
 
+/**=========================================================
+ * Module: datatable,js
+ * Angular Datatable controller
+ =========================================================*/
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.practice')
+        .controller('PracticeController', PracticeController);
+
+    PracticeController.$inject = ['$scope', '$window', '$state', '$stateParams', 
+      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'PracticeService'];
+    
+    function PracticeController($scope, $window, $state, $stateParams, 
+      $resource, DTOptionsBuilder, DTColumnDefBuilder, PracticeService) {
+        
+        var vm = this;
+
+        activate();
+
+        ////////////////
+
+        function activate() {
+
+          vm.practice = {};
+
+          function onLoad(result) {
+            console.log(JSON.stringify(result));
+            vm.practice = result.data;
+          };
+
+          PracticeService.loadPractice($stateParams.practiceId, onLoad);
+
+          PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
+
+          function onLoadEvents (events) {
+            vm.events = events.data;
+
+            for (var i = vm.events.length - 1; i >= 0; i--) {
+              vm.events[i].id = extractId(vm.events[i].hRef);
+              vm.events[i].eventDate = parseEventDate(vm.events[i].eventDate);
+            }
+          }
+
+          function extractId(hRef) {
+            return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
+          }
+
+          function parseEventDate(date) {
+            return moment().locale('it').calendar(date);
+          }
+
+          vm.dtOptions = DTOptionsBuilder.newOptions()
+            .withPaginationType('full_numbers')
+            .withLanguageSource("//cdn.datatables.net/plug-ins/1.10.16/i18n/Italian.json")
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                {extend: 'copy',  className: 'btn-sm', text: 'Copia'},
+                {extend: 'csv',   className: 'btn-sm'},
+                {extend: 'print', className: 'btn-sm'}
+            ])
+            .withOption("info", false);
+
+          vm.dtColumnDefs = [
+              DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
+              DTColumnDefBuilder.newColumnDef(1),
+              DTColumnDefBuilder.newColumnDef(2).withOption('width', '80px'),
+              DTColumnDefBuilder.newColumnDef(3).withOption('width', '50px')
+          ];
+          
+        }
+    }
+})();
+
+// Practices service
+// angular.module("app").factory;
+
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.practice')
+        .service('PracticeService', PracticeService);
+
+    PracticeService.$inject = ['$resource', '$http', '$rootScope'];
+    function PracticeService($resource, $http, $rootScope) {
+        this.loadPractice = loadPractice;
+        this.loadEvents = loadEvents;
+
+        function loadPractice(id, onReady) {
+          var practicesApi = $rootScope.app.apiUrl + 'legalPractices/' + id;
+
+          var onError = function() { console.log('Failure loading practice'); };
+
+          $http
+            .get(practicesApi)
+            .then(onReady, onError);
+        }
+
+        function loadEvents(filter, onReady) {
+          var eventsApi = $rootScope.app.apiUrl + 'events/' + filter;
+
+          var onError = function() { console.log('Failure loading practice'); };
+
+          $http
+            .get(eventsApi)
+            .then(onReady, onError);
+        }
+    }
+
+})();
+/**=========================================================
+ * Module: datatable,js
+ * Angular Datatable controller
+ =========================================================*/
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.practices')
+        .controller('PracticesController', PracticesController);
+
+    PracticesController.$inject = ['$scope', '$window', '$state', 
+      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'PracticesService'];
+    
+    function PracticesController($scope, $window, $state,
+      $resource, DTOptionsBuilder, DTColumnDefBuilder, PracticesService) {
+        
+        var vm = this;
+
+        activate();
+
+        ////////////////
+
+        function activate() {
+
+          // Ajax
+
+          PracticesService.getPractices("", onDone);
+
+          function onDone (practices) {
+            vm.elements = practices.data;
+
+            for (var i = vm.elements.length - 1; i >= 0; i--) {
+              vm.elements[i].id = extractId(vm.elements[i].hRef);
+            }
+          };
+
+          function extractId(hRef) {
+            return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
+          }
+
+          vm.dtOptions = DTOptionsBuilder.newOptions()
+            .withPaginationType('full_numbers')
+            .withLanguageSource("//cdn.datatables.net/plug-ins/1.10.16/i18n/Italian.json")
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                {extend: 'copy',  className: 'btn-sm', text: 'Copia'},
+                {extend: 'csv',   className: 'btn-sm'},
+                {extend: 'print', className: 'btn-sm'}
+            ])
+            .withOption("info", false);
+
+          vm.dtColumnDefs = [
+              DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
+              DTColumnDefBuilder.newColumnDef(1).withOption('width', '200px'),
+              DTColumnDefBuilder.newColumnDef(2)
+          ];
+        }
+    }
+})();
+
+// Practices service
+// angular.module("app").factory;
+
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.practices')
+        .service('PracticesService', PracticesService);
+
+    PracticesService.$inject = ['$resource', '$rootScope', '$http'];
+    function PracticesService($resource, $rootScope, $http) {
+        this.getPractices = getPractices;
+
+        function getPractices(params, onReady) {
+          var practicesApi = $rootScope.app.apiUrl + 'legalPractices' + params;
+
+          var onError = function() { alert('Failure loading practice'); };
+
+          $http
+            .get(practicesApi)
+            .then(onReady, onError);
+        }
+    }
+
+})();
 (function() {
     'use strict';
 
@@ -1632,82 +1843,6 @@
           }
 
         } //link
-    }
-
-})();
-/**=========================================================
- * Module: datatable,js
- * Angular Datatable controller
- =========================================================*/
-
-(function() {
-    'use strict';
-
-    angular
-        .module('app.practices')
-        .controller('PracticesController', PracticesController);
-
-    PracticesController.$inject = ['$scope', '$state', 
-      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'Practice'];
-    
-    function PracticesController($scope, $state,
-      $resource, DTOptionsBuilder, DTColumnDefBuilder, Practice) {
-        
-        var vm = this;
-
-        activate();
-
-        ////////////////
-
-        function activate() {
-
-          // Ajax
-
-          $resource('server/datatable.json').query().$promise.then(function(practices) {
-             vm.elements = practices;
-          });
-
-          vm.dtOptions = DTOptionsBuilder.newOptions()
-            .withPaginationType('full_numbers')
-            .withLanguageSource("//cdn.datatables.net/plug-ins/1.10.16/i18n/Italian.json")
-            .withDOM('<"html5buttons"B>lTfgitp')
-            .withButtons([
-                {extend: 'copy',  className: 'btn-sm', text: 'Copia'},
-                {extend: 'csv',   className: 'btn-sm'},
-                {extend: 'print', className: 'btn-sm'}
-            ]);
-
-          $scope.setCurrentPractice = function(practice) {
-            //Practice.setCurrentPractice("aaaa");
-            console.log("Practice name: " + practice);
-            console.log("SAVED CURRENT PRACTICE");
-          };
-
-        }
-    }
-})();
-
-// Practices service
-// angular.module("app").factory;
-
-
-(function() {
-    'use strict';
-
-    angular
-        .module('app.practices')
-        .service('Practice', Practice);
-
-    function Practice() {
-    	var self = this;
-
-    	this.getPractice = function() {
-    		return self.currentPractice;
-    	}
-
-    	this.setPractice = function(practice) {
-    		self.currentPractice = practice;
-    	}
     }
 
 })();
@@ -1846,13 +1981,26 @@
           .state('app.single_practice', {
               url: '/practice/:practiceId',
               title: 'Single practice',
-              templateUrl: helper.basepath('practice.html')
+              templateUrl: helper.basepath('practice.html'),
+              resolve: helper.resolveFor('practices', 'moment')
           })
           .state('app.practices_management', {
               url: '/practices',
               title: 'Practices',
               templateUrl: helper.basepath('practices.html'),
-              resolve: helper.resolveFor('datatables')
+              resolve: helper.resolveFor('practices')
+          })
+          .state('app.single_event', {
+              url: '/event/:eventId',
+              title: 'Single event',
+              templateUrl: helper.basepath('event.html'),
+              resolve: helper.resolveFor('practices')
+          })
+          .state('app.events', {
+              url: '/events',
+              title: 'Events',
+              templateUrl: helper.basepath('events.html'),
+              resolve: helper.resolveFor('practices')
           })
           //
           // Single Page Routes
@@ -1929,6 +2077,7 @@
           asideScrollbar: false,
           isCollapsedText: false
         },
+        apiUrl: 'http://localhost:8000/teamtable/api/',
         useFullLayout: false,
         hiddenFooter: false,
         offsidebarOpen: false,
@@ -1938,16 +2087,6 @@
 
       // Setup the layout mode
       $rootScope.app.layout.horizontal = ( $rootScope.$stateParams.layout === 'app-h') ;
-
-      // Restore layout settings [*** UNCOMMENT TO ENABLE ***]
-      // if( angular.isDefined($localStorage.layout) )
-      //   $rootScope.app.layout = $localStorage.layout;
-      // else
-      //   $localStorage.layout = $rootScope.app.layout;
-      //
-      // $rootScope.$watch('app.layout', function () {
-      //   $localStorage.layout = $rootScope.app.layout;
-      // }, true);
 
       // Close submenu when sidebar change from collapsed to normal
       $rootScope.$watch('app.layout.isCollapsed', function(newValue) {
