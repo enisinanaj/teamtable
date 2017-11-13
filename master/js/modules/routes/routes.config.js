@@ -62,12 +62,24 @@
               url: '/event/:eventId',
               title: 'Single event',
               templateUrl: helper.basepath('event.html'),
-              resolve: helper.resolveFor('practices')
+              resolve: helper.resolveFor('practices', 'moment')
           })
           .state('app.events', {
               url: '/events',
               title: 'Events',
               templateUrl: helper.basepath('events.html'),
+              resolve: helper.resolveFor('practices')
+          })
+          .state('app.single_activity', {
+              url: '/activity/:activityId',
+              title: 'Single activity',
+              templateUrl: helper.basepath('activity.html'),
+              resolve: helper.resolveFor('practices', 'moment')
+          })
+          .state('app.activities', {
+              url: '/activities',
+              title: 'Activities',
+              templateUrl: helper.basepath('activities.html'),
               resolve: helper.resolveFor('practices')
           })
           //

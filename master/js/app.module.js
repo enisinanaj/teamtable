@@ -31,7 +31,8 @@
             'app.tables',
             'app.material',
             'app.practices',
-            'app.practice'
+            'app.practice',
+            'app.event'
         ]);
 })();
 
