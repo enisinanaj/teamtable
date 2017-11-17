@@ -51,7 +51,7 @@
           }
 
           function parseEventDate(date) {
-            return moment().locale('it').calendar(date);
+            return moment(date).format('DD/MM/YYYY');
           }
 
           vm.dtOptions = DTOptionsBuilder.newOptions()

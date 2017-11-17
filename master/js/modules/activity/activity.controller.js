@@ -31,6 +31,9 @@
             vm.activity = result.data;
             vm.activity.event.id = extractId(vm.activity.event.hRef);
             vm.activity.event.practice.id = extractId(vm.activity.event.practice.hRef);
+            vm.activity.creationDate = parseEventDate(vm.activity.creationDate);
+            vm.activity.completionDate = parseEventDate(vm.activity.complationDate);
+            vm.activity.expirationDate = parseEventDate(vm.activity.expirationDate);
           };
 
           ActivityService.loadActivity($stateParams.activityId, onLoad);
@@ -40,7 +43,7 @@
           }
 
           function parseEventDate(date) {
-            return moment().locale('it').calendar(date);
+            return moment(date).format('DD/MM/YYYY');
           }
 
           vm.dtOptions = DTOptionsBuilder.newOptions()

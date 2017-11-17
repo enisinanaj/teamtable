@@ -10,4 +10,38 @@
         span Evento
           strong
             a(ng-href="{{$state.href('app.single_event', {eventId: controller.activity.event.id})}}" style="color:#000!important") {{controller.activity.event.description}}
-          
+    .card(ng-controller='MDInputCtrl')
+    .card-heading.bg-primary
+      .card-title {{controller.activity.name}}
+    .card-body
+      .row  
+      form(name='userForm')
+        div(layout='', layout-sm='column')
+          md-input-container(flex='')
+            label Nome Attività
+            input(ng-model='controller.activity.name', disabled='')
+        div(layout='', layout-sm='column')
+          md-input-container(flex='')
+            label Stato Attività
+            input(ng-model='controller.activity.status', disabled='')
+          md-input-container(flex='')
+            label Tipo Attività
+            input(ng-model='controller.activity.activityType', disabled='')
+        div(layout='', layout-sm='column')
+          md-input-container(flex='')
+            label Operatore incaricato
+            input(ng-model='controller.activity.assignee.username', disabled='')
+          md-input-container(flex='')
+            label Data creazione
+            input(ng-model='controller.activity.creationDate', disabled='')
+          md-input-container(flex='')
+            label Data scadenza
+            input(ng-model='controller.activity.expirationDate', disabled='')
+    fieldset
+      .form-group
+        .col-sm-12
+          label.col-sm-4.control-label Descrizione attività
+          .panel
+            .panel-body
+              textarea.form-control.note-editor(rows="10")
+                |{{controller.activity.description}}
