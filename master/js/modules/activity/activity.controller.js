@@ -7,14 +7,14 @@
     'use strict';
 
     angular
-        .module('app.event')
-        .controller('EventController', EventController);
+        .module('app.activity')
+        .controller('ActivityController', ActivityController);
 
-    EventController.$inject = ['$scope', '$window', '$state', '$stateParams', 
-      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'EventService'];
+    ActivityController.$inject = ['$scope', '$window', '$state', '$stateParams', 
+      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'ActivityService'];
     
-    function EventController($scope, $window, $state, $stateParams, 
-      $resource, DTOptionsBuilder, DTColumnDefBuilder, EventService) {
+    function ActivityController($scope, $window, $state, $stateParams, 
+      $resource, DTOptionsBuilder, DTColumnDefBuilder, ActivityService) {
         
         var vm = this;
 
@@ -24,27 +24,16 @@
 
         function activate() {
 
-          vm.event = {};
+          vm.activity = {};
 
           function onLoad(result) {
             console.log(JSON.stringify(result));
-            vm.event = result.data;
-
-            vm.event.practice.id = extractId(vm.event.practice.hRef);
+            vm.activity = result.data;
+            vm.activity.event.id = extractId(vm.activity.event.hRef);
+            vm.activity.event.practice.id = extractId(vm.activity.event.practice.hRef);
           };
 
-          EventService.loadEvent($stateParams.eventId, onLoad);
-
-          EventService.loadActivities("?event=" + $stateParams.eventId, onLoadActivities);
-
-          function onLoadActivities (activities) {
-            vm.activities = activities.data;
-
-            for (var i = vm.activities.length - 1; i >= 0; i--) {
-              vm.activities[i].id = extractId(vm.activities[i].hRef);
-              //vm.events[i].eventDate = parseEventDate(vm.events[i].eventDate);
-            }
-          }
+          ActivityService.loadActivity($stateParams.activityId, onLoad);
 
           function extractId(hRef) {
             return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
@@ -63,15 +52,13 @@
                 {extend: 'csv',   className: 'btn-sm'},
                 {extend: 'print', className: 'btn-sm'}
             ])*/
-            .withOption("lengthChange", false)
             .withOption("info", false);
 
           vm.dtColumnDefs = [
               DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
               DTColumnDefBuilder.newColumnDef(1),
               DTColumnDefBuilder.newColumnDef(2).withOption('width', '80px'),
-              DTColumnDefBuilder.newColumnDef(3).withOption('width', '50px'),
-              DTColumnDefBuilder.newColumnDef(4).withOption('width', '50px')
+              DTColumnDefBuilder.newColumnDef(3).withOption('width', '50px')
           ];
           
         }

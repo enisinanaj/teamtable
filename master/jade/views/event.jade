@@ -18,7 +18,7 @@
               th Stato attività
               th Dettaglio
           tbody
-            tr(ng-repeat='activity in controller.event.activities')
+            tr(ng-repeat='activity in controller.activities')
               td {{activity.description}}
               td {{activity.activityType}}
               td {{activity.assignee.username}}

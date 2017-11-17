@@ -1,0 +1,13 @@
+.container-md(ng-controller='ActivityController as controller')
+  .card
+    .card-heading.bg-primary
+      .card-title Pratica
+
+        strong 
+          a(ng-href="{{$state.href('app.single_practice', {practiceId: controller.activity.event.practice.id})}}" style="color:#FFF!important") {{controller.activity.event.practice.name}}
+    .card-body
+      div
+        span Evento
+          strong
+            a(ng-href="{{$state.href('app.single_event', {eventId: controller.activity.event.id})}}" style="color:#000!important") {{controller.activity.event.description}}
+          
