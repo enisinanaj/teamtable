@@ -1,0 +1,28 @@
+.container-md(ng-controller='EventController as controller')
+  .card
+    .card-heading.bg-primary
+      .card-title Pratica
+
+        strong 
+          a(ng-href="{{$state.href('app.single_practice', {practiceId: controller.event.practice.id})}}" style="color:#FFF!important") {{controller.event.practice.name}}
+    .card-body
+      div
+        span Evento
+          strong {{controller.event.description}}
+        table.row-border.hover(datatable='ng', dt-options='controller.dtOptions' dt-column-defs='controller.dtColumnDefs')
+          thead
+            tr
+              th Attività
+              th Tipo attività
+              th Operatore incaricato
+              th Stato attività
+              th Dettaglio
+          tbody
+            tr(ng-repeat='activity in controller.event.activities')
+              td {{activity.description}}
+              td {{activity.activityType}}
+              td {{activity.assignee.username}}
+              td {{activity.status}}
+              td 
+                a.btn.btn-primary(ng-href="{{$state.href('app.single_activity', {activityId: activity.id})}}")
+                  i.icon-magnifier
