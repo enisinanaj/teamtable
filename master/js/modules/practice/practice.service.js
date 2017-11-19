@@ -54,7 +54,7 @@
         }
 
         function savePractice(practice, onReady) {
-          var practiceEndpoint = $rootScope.app.apiUrl + 'legalPractices/' + (practice.id || '');
+          var practiceEndpoint = $rootScope.app.apiUrl + 'legalPractices/' + getId(practice);
           var config = {
               headers: {
                   'Content-Type': 'application/json;',
@@ -66,10 +66,21 @@
 
           var onError = function() { console.log('Failure sending practice data'); };
           addCreatorIdToModel(practice);
-          var data = $.param(practice);
+
+          practice.creatorId = "OQ";
+
+          //var data = $.param(practice);
+
+          function getId(practice) {
+            if (practice.id == undefined || practice.id == null) {
+              return "";
+            }
+
+            return practice.id;
+          };
 
           $http
-            .post(practiceEndpoint, data, config)
+            .post(practiceEndpoint, practice, config)
             .then(onReady, onError);
         }
 

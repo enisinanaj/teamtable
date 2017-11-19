@@ -46,16 +46,16 @@
         .module('app.activity', []);
 })();
 (function() {
-	'use strict';
-
-    angular
-        .module('app.authentication', []);
-})();
-(function() {
     'use strict';
 
     angular
         .module('app.colors', []);
+})();
+(function() {
+	'use strict';
+
+    angular
+        .module('app.authentication', []);
 })();
 (function() {
     'use strict';
@@ -166,13 +166,13 @@
     'use strict';
 
     angular
-        .module('app.tables', []);
+        .module('app.translate', []);
 })();
 (function() {
     'use strict';
 
     angular
-        .module('app.translate', []);
+        .module('app.tables', []);
 })();
 (function() {
     'use strict';
@@ -290,43 +290,6 @@
 
 })();
 (function() {
-	'user strinct';
-
-
-	angular.module("app.authentication")
-		.constant('AUTH', {
-			"secret_key": "secret_key",
-			"api_key": "api_key"
-		});
-
-})();
-(function() {
-	'use strict';
-
-	angular.module('app.authentication')
-		.service('AuthenticationService', AuthenticationService);
-
-
-	AuthenticationService.$inject = ['$rootScope', '$window', '$state', '$stateParams', '$resource', 'AUTH'];
-
-	function AuthenticationService($rootScope, $window, $state, $stateParams, $resource, AUTH) {
-
-		var vm = this;
-		var ss = AUTH['secret_key'];
-		var apiKey = AUTH['api_key'];
-
-		vm.generateToken = generateToken;
-
-		function generateToken() {
-			var querytime = Math.floor(new Date().getTime() / 1000);
-			var toHash = apiKey + ss + querytime;
-			return CryptoJS.SHA256(toHash);
-		}
-
-	};
-
-})();
-(function() {
     'use strict';
 
     angular
@@ -376,6 +339,43 @@
 
 })();
 
+(function() {
+	'user strinct';
+
+
+	angular.module("app.authentication")
+		.constant('AUTH', {
+			"secret_key": "secret_key",
+			"api_key": "api_key"
+		});
+
+})();
+(function() {
+	'use strict';
+
+	angular.module('app.authentication')
+		.service('AuthenticationService', AuthenticationService);
+
+
+	AuthenticationService.$inject = ['$rootScope', '$window', '$state', '$stateParams', '$resource', 'AUTH'];
+
+	function AuthenticationService($rootScope, $window, $state, $stateParams, $resource, AUTH) {
+
+		var vm = this;
+		var ss = AUTH['secret_key'];
+		var apiKey = AUTH['api_key'];
+
+		vm.generateToken = generateToken;
+
+		function generateToken() {
+			var querytime = Math.floor(new Date().getTime() / 1000);
+			var toHash = apiKey + ss + querytime;
+			return CryptoJS.SHA256(toHash);
+		}
+
+	};
+
+})();
 (function() {
     'use strict';
 
@@ -2003,7 +2003,7 @@
         }
 
         function savePractice(practice, onReady) {
-          var practiceEndpoint = $rootScope.app.apiUrl + 'legalPractices/' + (practice.id || '');
+          var practiceEndpoint = $rootScope.app.apiUrl + 'legalPractices/' + getId(practice);
           var config = {
               headers: {
                   'Content-Type': 'application/json;',
@@ -2015,10 +2015,21 @@
 
           var onError = function() { console.log('Failure sending practice data'); };
           addCreatorIdToModel(practice);
-          var data = $.param(practice);
+
+          practice.creatorId = "OQ";
+
+          //var data = $.param(practice);
+
+          function getId(practice) {
+            if (practice.id == undefined || practice.id == null) {
+              return "";
+            }
+
+            return practice.id;
+          };
 
           $http
-            .post(practiceEndpoint, data, config)
+            .post(practiceEndpoint, practice, config)
             .then(onReady, onError);
         }
 
@@ -2841,6 +2852,71 @@
     }
 })();
 
+(function() {
+    'use strict';
+
+    angular
+        .module('app.translate')
+        .config(translateConfig)
+        ;
+    translateConfig.$inject = ['$translateProvider'];
+    function translateConfig($translateProvider){
+
+      $translateProvider.useStaticFilesLoader({
+          prefix : 'app/i18n/',
+          suffix : '.json'
+      });
+
+      $translateProvider.preferredLanguage('it');
+      $translateProvider.useLocalStorage();
+      $translateProvider.usePostCompiling(true);
+      $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
+
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('app.translate')
+        .run(translateRun)
+        ;
+    translateRun.$inject = ['$rootScope', '$translate'];
+    
+    function translateRun($rootScope, $translate){
+
+      // Internationalization
+      // ----------------------
+
+      $rootScope.language = {
+        // Handles language dropdown
+        listIsOpen: false,
+        // list of available languages
+        available: {
+          'it':       'Italiano',
+          'en':       'English',
+          'es_AR':    'Español'
+        },
+        // display always the current ui language
+        init: function () {
+          var proposedLanguage = $translate.proposedLanguage() || $translate.use();
+          var preferredLanguage = $translate.preferredLanguage(); // we know we have set a preferred one in app.config
+          $rootScope.language.selected = $rootScope.language.available[ (proposedLanguage || preferredLanguage) ];
+        },
+        set: function (localeId) {
+          // Set the new idiom
+          $translate.use(localeId);
+          // save a reference for the current language
+          $rootScope.language.selected = $rootScope.language.available[localeId];
+          // finally toggle dropdown
+          $rootScope.language.listIsOpen = ! $rootScope.language.listIsOpen;
+        }
+      };
+
+      $rootScope.language.init();
+
+    }
+})();
 /**=========================================================
  * Module: angular-grid.js
  * Example for Angular Grid
@@ -3681,71 +3757,6 @@
             });
 
         }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('app.translate')
-        .config(translateConfig)
-        ;
-    translateConfig.$inject = ['$translateProvider'];
-    function translateConfig($translateProvider){
-
-      $translateProvider.useStaticFilesLoader({
-          prefix : 'app/i18n/',
-          suffix : '.json'
-      });
-
-      $translateProvider.preferredLanguage('it');
-      $translateProvider.useLocalStorage();
-      $translateProvider.usePostCompiling(true);
-      $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
-
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('app.translate')
-        .run(translateRun)
-        ;
-    translateRun.$inject = ['$rootScope', '$translate'];
-    
-    function translateRun($rootScope, $translate){
-
-      // Internationalization
-      // ----------------------
-
-      $rootScope.language = {
-        // Handles language dropdown
-        listIsOpen: false,
-        // list of available languages
-        available: {
-          'it':       'Italiano',
-          'en':       'English',
-          'es_AR':    'Español'
-        },
-        // display always the current ui language
-        init: function () {
-          var proposedLanguage = $translate.proposedLanguage() || $translate.use();
-          var preferredLanguage = $translate.preferredLanguage(); // we know we have set a preferred one in app.config
-          $rootScope.language.selected = $rootScope.language.available[ (proposedLanguage || preferredLanguage) ];
-        },
-        set: function (localeId) {
-          // Set the new idiom
-          $translate.use(localeId);
-          // save a reference for the current language
-          $rootScope.language.selected = $rootScope.language.available[localeId];
-          // finally toggle dropdown
-          $rootScope.language.listIsOpen = ! $rootScope.language.listIsOpen;
-        }
-      };
-
-      $rootScope.language.init();
-
     }
 })();
 /**=========================================================
