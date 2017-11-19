@@ -27,7 +27,7 @@
           vm.practice = {};
 
           //LOAD DATA
-          if (idPresent()) {
+          if (true) { //idPresent()) {
             PracticeService.loadPractice($stateParams.practiceId, onLoad);
             PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
           }

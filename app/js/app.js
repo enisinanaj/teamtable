@@ -30,6 +30,7 @@
             'app.pages',
             'app.tables',
             'app.material',
+            'app.authentication',
             'app.practices',
             'app.practice',
             'app.event',
@@ -43,6 +44,12 @@
 
     angular
         .module('app.activity', []);
+})();
+(function() {
+	'use strict';
+
+    angular
+        .module('app.authentication', []);
 })();
 (function() {
     'use strict';
@@ -257,20 +264,66 @@
         .module('app.activity')
         .service('ActivityService', ActivityService);
 
-    ActivityService.$inject = ['$resource', '$http', '$rootScope'];
-    function ActivityService($resource, $http, $rootScope) {
+    ActivityService.$inject = ['$resource', '$http', '$rootScope', 'AuthenticationService', 'AUTH'];
+    function ActivityService($resource, $http, $rootScope, AuthenticationService, AUTH) {
         this.loadActivity = loadActivity;
+        var vm = this;
 
         function loadActivity(id, onReady) {
           var activitiesApi = $rootScope.app.apiUrl + 'activities/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
 
           var onError = function() { console.log('Failure loading activity'); };
 
           $http
-            .get(activitiesApi)
+            .get(activitiesApi, config)
             .then(onReady, onError);
         }
     }
+
+})();
+(function() {
+	'user strinct';
+
+
+	angular.module("app.authentication")
+		.constant('AUTH', {
+			"secret_key": "secret_key",
+			"api_key": "api_key"
+		});
+
+})();
+(function() {
+	'use strict';
+
+	angular.module('app.authentication')
+		.service('AuthenticationService', AuthenticationService);
+
+
+	AuthenticationService.$inject = ['$rootScope', '$window', '$state', '$stateParams', '$resource', 'AUTH'];
+
+	function AuthenticationService($rootScope, $window, $state, $stateParams, $resource, AUTH) {
+
+		var vm = this;
+		var ss = AUTH['secret_key'];
+		var apiKey = AUTH['api_key'];
+
+		vm.generateToken = generateToken;
+
+		function generateToken() {
+			var querytime = Math.floor(new Date().getTime() / 1000);
+			var toHash = apiKey + ss + querytime;
+			return CryptoJS.SHA256(toHash);
+		}
+
+	};
 
 })();
 (function() {
@@ -531,28 +584,45 @@
         .module('app.event')
         .service('EventService', EventService);
 
-    EventService.$inject = ['$resource', '$http', '$rootScope'];
-    function EventService($resource, $http, $rootScope) {
+    EventService.$inject = ['$resource', '$http', '$rootScope', 'AuthenticationService', 'AUTH'];
+    function EventService($resource, $http, $rootScope, AuthenticationService, AUTH) {
         this.loadEvent = loadEvent;
         this.loadActivities = loadActivities;
+        var vm = this;
 
         function loadEvent(id, onReady) {
           var eventsApi = $rootScope.app.apiUrl + 'events/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
 
           var onError = function() { console.log('Failure loading event'); };
 
           $http
-            .get(eventsApi)
+            .get(eventsApi, config)
             .then(onReady, onError);
         }
 
         function loadActivities(filter, onReady) {
           var activitiesApi = $rootScope.app.apiUrl + 'activities/' + filter;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
 
           var onError = function() { console.log('Failure loading event'); };
 
           $http
-            .get(activitiesApi)
+            .get(activitiesApi, config)
             .then(onReady, onError);
         }
     }
@@ -1808,7 +1878,7 @@
           vm.practice = {};
 
           //LOAD DATA
-          if (idPresent()) {
+          if (true) { //idPresent()) {
             PracticeService.loadPractice($stateParams.practiceId, onLoad);
             PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
           }
@@ -1888,45 +1958,64 @@
         .module('app.practice')
         .service('PracticeService', PracticeService);
 
-    PracticeService.$inject = ['$resource', '$http', '$rootScope'];
-    function PracticeService($resource, $http, $rootScope) {
+    PracticeService.$inject = ['$resource', '$http', '$rootScope', 'AuthenticationService', 'AUTH'];
+    function PracticeService($resource, $http, $rootScope, AuthenticationService, AUTH) {
         this.loadPractice = loadPractice;
         this.loadEvents = loadEvents;
         this.savePractice = savePractice;
 
+        var vm = this;
+
         function loadPractice(id, onReady) {
           var practicesApi = $rootScope.app.apiUrl + 'legalPractices/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
 
           var onError = function() { console.log('Failure loading practice'); };
 
           $http
-            .get(practicesApi)
+            .get(practicesApi, config)
             .then(onReady, onError);
         }
 
         function loadEvents(filter, onReady) {
           var eventsApi = $rootScope.app.apiUrl + 'events/' + filter;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
 
           var onError = function() { console.log('Failure loading practice\'s events'); };
 
           $http
-            .get(eventsApi)
+            .get(eventsApi, config)
             .then(onReady, onError);
         }
 
         function savePractice(practice, onReady) {
           var practiceEndpoint = $rootScope.app.apiUrl + 'legalPractices/' + (practice.id || '');
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
 
           var onError = function() { console.log('Failure sending practice data'); };
-
           addCreatorIdToModel(practice);
-
           var data = $.param(practice);
-          var config = {
-              headers : {
-                  'Content-Type': 'application/json;'
-              }
-          };
 
           $http
             .post(practiceEndpoint, data, config)
@@ -2012,17 +2101,26 @@
         .module('app.practices')
         .service('PracticesService', PracticesService);
 
-    PracticesService.$inject = ['$resource', '$rootScope', '$http'];
-    function PracticesService($resource, $rootScope, $http) {
+    PracticesService.$inject = ['$resource', '$rootScope', '$http', 'AuthenticationService', 'AUTH'];
+    function PracticesService($resource, $rootScope, $http, AuthenticationService, AUTH) {
         this.getPractices = getPractices;
+        var vm = this;
 
         function getPractices(params, onReady) {
           var practicesApi = $rootScope.app.apiUrl + 'legalPractices' + params;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
 
           var onError = function() { console.log('Failure loading practice'); };
 
           $http
-            .get(practicesApi)
+            .get(practicesApi, config)
             .then(onReady, onError);
         }
     }
@@ -2332,8 +2430,6 @@
     settingsRun.$inject = ['$rootScope', '$localStorage'];
 
     function settingsRun($rootScope, $localStorage){
-
-
       // User Settings
       // -----------------------------------
       $rootScope.user = {

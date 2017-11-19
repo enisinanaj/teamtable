@@ -8,8 +8,6 @@
     settingsRun.$inject = ['$rootScope', '$localStorage'];
 
     function settingsRun($rootScope, $localStorage){
-
-
       // User Settings
       // -----------------------------------
       $rootScope.user = {
