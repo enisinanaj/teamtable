@@ -1,18 +1,25 @@
 .container-md(ng-controller='ActivityController as controller')
   .card
     .card-heading.bg-primary
-      .card-title Pratica
-
-        strong 
-          a(ng-href="{{$state.href('app.single_practice', {practiceId: controller.activity.event.practice.id})}}" style="color:#FFF!important") {{controller.activity.event.practice.name}}
-    .card-body
-      div
-        span Evento
-          strong
-            a(ng-href="{{$state.href('app.single_event', {eventId: controller.activity.event.id})}}" style="color:#000!important") {{controller.activity.event.description}}
-    .card(ng-controller='MDInputCtrl')
-    .card-heading.bg-primary
-      .card-title {{controller.activity.name}}
+      .row.list-icon
+        .col-md-1.col-sm-4
+          a(ng-href="{{$state.href('app.single_practice', {practiceId: controller.activity.event.practice.id})}}" style="color:#FFF!important;")
+            em.icon-arrow-left-circle(style="font-size:24px!important;")
+        .card-title(style="font-size:20px!important;") Pratica
+          strong {{controller.activity.event.practice.name}}
+    .card-heading.bg-info
+      .row.list-icon
+        .col-md-1.col-sm-4
+          a(ng-href="{{$state.href('app.single_event', {eventId: controller.activity.event.id})}}" style="color:#E8EAF6!important")
+            em.icon-arrow-left-circle(style="font-size:24px!important;")
+        .card-title(style="font-size:20px!important; color:#E8EAF6!important") Evento
+          strong {{controller.activity.event.description}}
+    .card(ng-controller='MDInputCtrl', style="margin-bottom:0px;")
+    .card-heading(style="border-bottom-color: #2196F3!important; border-bottom-style:solid!important; border-bottom-width:thin!important;")
+      .row.list-icon
+        .col-md-1.col-sm-4
+          em.icon-check(style="font-size:24px!important; color:#3F51B5!important;")
+        .card-title(style="font-size:20px!important; color:#3F51B5!important") Dettaglio Attività
     .card-body
       .row  
       form(name='userForm')
@@ -22,26 +29,26 @@
             input(ng-model='controller.activity.name', disabled='')
         div(layout='', layout-sm='column')
           md-input-container(flex='')
-            label Stato Attività
-            input(ng-model='controller.activity.status', disabled='')
-          md-input-container(flex='')
             label Tipo Attività
             input(ng-model='controller.activity.activityType', disabled='')
-        div(layout='', layout-sm='column')
           md-input-container(flex='')
             label Operatore incaricato
             input(ng-model='controller.activity.assignee.username', disabled='')
+        div(layout='', layout-sm='column')
           md-input-container(flex='')
-            label Data creazione
-            input(ng-model='controller.activity.creationDate', disabled='')
+            label Stato Attività
+            input(ng-model='controller.activity.status', disabled='')
+          md-input-container(flex='')
+            label Data chiusura
+            input(ng-model='controller.activity.completionDate', disabled='')
           md-input-container(flex='')
             label Data scadenza
             input(ng-model='controller.activity.expirationDate', disabled='')
     fieldset
       .form-group
         .col-sm-12
-          label.col-sm-4.control-label Descrizione attività
+          label.col-sm-4.control-label(style="color:rgba(0,0,0,0.38)") Descrizione attività
           .panel
             .panel-body
-              textarea.form-control.note-editor(rows="10")
+              textarea.form-control.note-editor(rows="10", disabled='', style="cursor:text!important; background-color:#FFF!important; color:rgba(0,0,0,0.38); resize:none")
                 |{{controller.activity.description}}
