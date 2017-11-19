@@ -16,7 +16,7 @@
         function getPractices(params, onReady) {
           var practicesApi = $rootScope.app.apiUrl + 'legalPractices' + params;
 
-          var onError = function() { alert('Failure loading practice'); };
+          var onError = function() { console.log('Failure loading practice'); };
 
           $http
             .get(practicesApi)

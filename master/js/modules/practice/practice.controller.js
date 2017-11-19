@@ -26,14 +26,16 @@
 
           vm.practice = {};
 
+          //LOAD DATA
+          if (idPresent()) {
+            PracticeService.loadPractice($stateParams.practiceId, onLoad);
+            PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
+          }
+
           function onLoad(result) {
             console.log(JSON.stringify(result));
             vm.practice = result.data;
           };
-
-          PracticeService.loadPractice($stateParams.practiceId, onLoad);
-
-          PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
 
           function onLoadEvents (events) {
             vm.events = events.data;
@@ -42,7 +44,25 @@
               vm.events[i].id = extractId(vm.events[i].hRef);
               vm.events[i].eventDate = parseEventDate(vm.events[i].eventDate);
             }
+          };
+
+          function idPresent() {
+            return $stateParams.id != null;
           }
+
+          //INSERTION
+
+          vm.savePractice = savePractice;
+
+          function savePractice() {
+            PracticeService.savePractice(vm.practice);
+
+            function onSave(result) {
+              alert("Pratica salvata con successo");
+            };
+          }
+
+          //UTILITIES
 
           function extractId(hRef) {
             return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
@@ -51,6 +71,8 @@
           function parseEventDate(date) {
             return moment(date).format('DD/MM/YYYY');
           }
+
+          //DATATABLE
 
           vm.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType('full_numbers')
