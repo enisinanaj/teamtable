@@ -30,6 +30,7 @@
             'app.pages',
             'app.tables',
             'app.material',
+            'app.authentication',
             'app.practices',
             'app.practice',
             'app.event',

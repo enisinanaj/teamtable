@@ -1,20 +1,20 @@
 .container-md
-  .card
+  .card(ng-controller='PracticeController as practiceController')
     .card-heading.bg-primary
       .card-title Nuova pratica
     .card-body
       .row
         .col-sm-12
           .mda-form-group
-            input.mda-form-control(ng-model='practice.name', tabindex='0', aria-invalid='false')
+            input.mda-form-control(ng-model='practiceController.practice.name', tabindex='0', aria-invalid='false')
             label Nome
             span.mda-form-msg.right Es. Nome cliente/Controparte
       .row
         .col-sm-12
           .mda-form-group
-            textarea.mda-form-control(ng-model='practice.description', rows='4', aria-multiline='true', tabindex='0', aria-invalid='false')
+            textarea.mda-form-control(ng-model='practiceController.practice.description', rows='4', aria-multiline='true', tabindex='0', aria-invalid='false')
             label Note
             span.mda-form-msg.right La descrizione della pratica
       .row
         .col-sm-12
-          md-button.pull-right.md-raised.md-primary(md-no-ink='') Salva
+          md-button.pull-right.md-raised.md-primary(md-no-ink='', ng-click="practiceController.savePractice()") Salva

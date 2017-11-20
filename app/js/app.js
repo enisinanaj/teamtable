@@ -30,8 +30,11 @@
             'app.pages',
             'app.tables',
             'app.material',
+            'app.authentication',
             'app.practices',
-            'app.practice'
+            'app.practice',
+            'app.event',
+            'app.activity'
         ]);
 })();
 
@@ -40,7 +43,19 @@
     'use strict';
 
     angular
+        .module('app.activity', []);
+})();
+(function() {
+    'use strict';
+
+    angular
         .module('app.colors', []);
+})();
+(function() {
+	'use strict';
+
+    angular
+        .module('app.authentication', []);
 })();
 (function() {
     'use strict';
@@ -62,6 +77,12 @@
             'ngAria',
             'ngMessages'
         ]);
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('app.event', []);
 })();
 (function() {
     'use strict';
@@ -145,13 +166,13 @@
     'use strict';
 
     angular
-        .module('app.tables', []);
+        .module('app.translate', []);
 })();
 (function() {
     'use strict';
 
     angular
-        .module('app.translate', []);
+        .module('app.tables', []);
 })();
 (function() {
     'use strict';
@@ -162,6 +183,112 @@
           ]);
 })();
 
+/**=========================================================
+ * Module: datatable,js
+ * Angular Datatable controller
+ =========================================================*/
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.activity')
+        .controller('ActivityController', ActivityController);
+
+    ActivityController.$inject = ['$scope', '$window', '$state', '$stateParams', 
+      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'ActivityService'];
+    
+    function ActivityController($scope, $window, $state, $stateParams, 
+      $resource, DTOptionsBuilder, DTColumnDefBuilder, ActivityService) {
+        
+        var vm = this;
+
+        activate();
+
+        ////////////////
+
+        function activate() {
+
+          vm.activity = {};
+
+          function onLoad(result) {
+            console.log(JSON.stringify(result));
+            vm.activity = result.data;
+            vm.activity.event.id = extractId(vm.activity.event.hRef);
+            vm.activity.event.practice.id = extractId(vm.activity.event.practice.hRef);
+            vm.activity.creationDate = parseEventDate(vm.activity.creationDate);
+            vm.activity.completionDate = parseEventDate(vm.activity.complationDate);
+            vm.activity.expirationDate = parseEventDate(vm.activity.expirationDate);
+          };
+
+          ActivityService.loadActivity($stateParams.activityId, onLoad);
+
+          function extractId(hRef) {
+            return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
+          }
+
+          function parseEventDate(date) {
+            return moment(date).format('DD/MM/YYYY');
+          }
+
+          vm.dtOptions = DTOptionsBuilder.newOptions()
+            .withPaginationType('full_numbers')
+            .withLanguageSource("//cdn.datatables.net/plug-ins/1.10.16/i18n/Italian.json")
+            /*.withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                {extend: 'copy',  className: 'btn-sm', text: 'Copia'},
+                {extend: 'csv',   className: 'btn-sm'},
+                {extend: 'print', className: 'btn-sm'}
+            ])*/
+            .withOption("info", false);
+
+          vm.dtColumnDefs = [
+              DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
+              DTColumnDefBuilder.newColumnDef(1),
+              DTColumnDefBuilder.newColumnDef(2).withOption('width', '80px'),
+              DTColumnDefBuilder.newColumnDef(3).withOption('width', '50px')
+          ];
+          
+        }
+    }
+})();
+
+// Practices service
+// angular.module("app").factory;
+
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.activity')
+        .service('ActivityService', ActivityService);
+
+    ActivityService.$inject = ['$resource', '$http', '$rootScope', 'AuthenticationService', 'AUTH'];
+    function ActivityService($resource, $http, $rootScope, AuthenticationService, AUTH) {
+        this.loadActivity = loadActivity;
+        var vm = this;
+
+        function loadActivity(id, onReady) {
+          var activitiesApi = $rootScope.app.apiUrl + 'activities/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure loading activity'); };
+
+          $http
+            .get(activitiesApi, config)
+            .then(onReady, onError);
+        }
+    }
+
+})();
 (function() {
     'use strict';
 
@@ -212,6 +339,43 @@
 
 })();
 
+(function() {
+	'user strinct';
+
+
+	angular.module("app.authentication")
+		.constant('AUTH', {
+			"secret_key": "secret_key",
+			"api_key": "api_key"
+		});
+
+})();
+(function() {
+	'use strict';
+
+	angular.module('app.authentication')
+		.service('AuthenticationService', AuthenticationService);
+
+
+	AuthenticationService.$inject = ['$rootScope', '$window', '$state', '$stateParams', '$resource', 'AUTH'];
+
+	function AuthenticationService($rootScope, $window, $state, $stateParams, $resource, AUTH) {
+
+		var vm = this;
+		var ss = AUTH['secret_key'];
+		var apiKey = AUTH['api_key'];
+
+		vm.generateToken = generateToken;
+
+		function generateToken() {
+			var querytime = Math.floor(new Date().getTime() / 1000);
+			var toHash = apiKey + ss + querytime;
+			return CryptoJS.SHA256(toHash);
+		}
+
+	};
+
+})();
 (function() {
     'use strict';
 
@@ -329,6 +493,141 @@
 })();
 
 
+/**=========================================================
+ * Module: datatable,js
+ * Angular Datatable controller
+ =========================================================*/
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.event')
+        .controller('EventController', EventController);
+
+    EventController.$inject = ['$scope', '$window', '$state', '$stateParams', 
+      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'EventService'];
+    
+    function EventController($scope, $window, $state, $stateParams, 
+      $resource, DTOptionsBuilder, DTColumnDefBuilder, EventService) {
+        
+        var vm = this;
+
+        activate();
+
+        ////////////////
+
+        function activate() {
+
+          vm.event = {};
+
+          function onLoad(result) {
+            console.log(JSON.stringify(result));
+            vm.event = result.data;
+
+            vm.event.practice.id = extractId(vm.event.practice.hRef);
+          };
+
+          EventService.loadEvent($stateParams.eventId, onLoad);
+
+          EventService.loadActivities("?event=" + $stateParams.eventId, onLoadActivities);
+
+          function onLoadActivities (activities) {
+            vm.activities = activities.data;
+
+            for (var i = vm.activities.length - 1; i >= 0; i--) {
+              vm.activities[i].id = extractId(vm.activities[i].hRef);
+              //vm.events[i].eventDate = parseEventDate(vm.events[i].eventDate);
+            }
+          }
+
+          function extractId(hRef) {
+            return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
+          }
+
+          function parseEventDate(date) {
+            return moment(date).format('DD/MM/YYYY');
+          }
+
+          vm.dtOptions = DTOptionsBuilder.newOptions()
+            .withPaginationType('full_numbers')
+            .withLanguageSource("//cdn.datatables.net/plug-ins/1.10.16/i18n/Italian.json")
+            /*.withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                {extend: 'copy',  className: 'btn-sm', text: 'Copia'},
+                {extend: 'csv',   className: 'btn-sm'},
+                {extend: 'print', className: 'btn-sm'}
+            ])*/
+            .withOption("lengthChange", false)
+            .withOption("info", false);
+
+          vm.dtColumnDefs = [
+              DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
+              DTColumnDefBuilder.newColumnDef(1),
+              DTColumnDefBuilder.newColumnDef(2).withOption('width', '80px'),
+              DTColumnDefBuilder.newColumnDef(3).withOption('width', '50px'),
+              DTColumnDefBuilder.newColumnDef(4).withOption('width', '50px')
+          ];
+          
+        }
+    }
+})();
+
+// Events service
+// angular.module("app").factory;
+
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.event')
+        .service('EventService', EventService);
+
+    EventService.$inject = ['$resource', '$http', '$rootScope', 'AuthenticationService', 'AUTH'];
+    function EventService($resource, $http, $rootScope, AuthenticationService, AUTH) {
+        this.loadEvent = loadEvent;
+        this.loadActivities = loadActivities;
+        var vm = this;
+
+        function loadEvent(id, onReady) {
+          var eventsApi = $rootScope.app.apiUrl + 'events/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure loading event'); };
+
+          $http
+            .get(eventsApi, config)
+            .then(onReady, onError);
+        }
+
+        function loadActivities(filter, onReady) {
+          var activitiesApi = $rootScope.app.apiUrl + 'activities/' + filter;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure loading event'); };
+
+          $http
+            .get(activitiesApi, config)
+            .then(onReady, onError);
+        }
+    }
+
+})();
 (function() {
     'use strict';
 
@@ -356,28 +655,28 @@
         .constant('APP_REQUIRES', {
           // jQuery based and standalone scripts
           scripts: {
-            'modernizr':          ['vendor/modernizr/modernizr.custom.js'],
-            'icons':              ['vendor/fontawesome/css/font-awesome.min.css',
-                                   'vendor/simple-line-icons/css/simple-line-icons.css'],
-            'weather-icons':      ['vendor/weather-icons/css/weather-icons.min.css',
-                                   'vendor/weather-icons/css/weather-icons-wind.min.css'],
-            'loadGoogleMapsJS':   ['vendor/load-google-maps/load-google-maps.js'],
-            'moment' :            ['vendor/moment/min/moment-with-locales.min.js']
+            'modernizr':        ['vendor/modernizr/modernizr.custom.js'],
+            'icons':            ['vendor/fontawesome/css/font-awesome.min.css',
+                                 'vendor/simple-line-icons/css/simple-line-icons.css'],
+            'weather-icons':    ['vendor/weather-icons/css/weather-icons.min.css',
+                                 'vendor/weather-icons/css/weather-icons-wind.min.css'],
+            'loadGoogleMapsJS': ['vendor/load-google-maps/load-google-maps.js'],
+            'moment' :          ['vendor/moment/min/moment-with-locales.min.js']
           },
           // Angular based script (use the right module name)
           modules: [
-            {name: 'ui.map',                    files: ['vendor/angular-ui-map/ui-map.js']},
-            {name: 'practices',                files: ['vendor/datatables/media/css/jquery.dataTables.css',
-                                                        'vendor/datatables/media/js/jquery.dataTables.js',
-                                                        'vendor/datatables-buttons/js/dataTables.buttons.js',
-                                                        'vendor/datatables-buttons/js/buttons.bootstrap.js',
-                                                        'vendor/datatables-buttons/js/buttons.colVis.js',
-                                                        'vendor/datatables-buttons/js/buttons.flash.js',
-                                                        'vendor/datatables-buttons/js/buttons.html5.js',
-                                                        'vendor/datatables-buttons/js/buttons.print.js',
-                                                        'vendor/angular-datatables/dist/angular-datatables.js',
-                                                        'vendor/angular-datatables/dist/plugins/buttons/angular-datatables.buttons.js'],
-                                                        serie: true}
+            {name: 'ui.map',    files: ['vendor/angular-ui-map/ui-map.js']},
+            {name: 'practices', files: ['vendor/datatables/media/css/jquery.dataTables.css',
+                                        'vendor/datatables/media/js/jquery.dataTables.js',
+                                        'vendor/datatables-buttons/js/dataTables.buttons.js',
+                                        'vendor/datatables-buttons/js/buttons.bootstrap.js',
+                                        'vendor/datatables-buttons/js/buttons.colVis.js',
+                                        'vendor/datatables-buttons/js/buttons.flash.js',
+                                        'vendor/datatables-buttons/js/buttons.html5.js',
+                                        'vendor/datatables-buttons/js/buttons.print.js',
+                                        'vendor/angular-datatables/dist/angular-datatables.js',
+                                        'vendor/angular-datatables/dist/plugins/buttons/angular-datatables.buttons.js'],
+                                        serie: true}
           ]
         })
         ;
@@ -1578,14 +1877,16 @@
 
           vm.practice = {};
 
+          //LOAD DATA
+          if (true) { //idPresent()) {
+            PracticeService.loadPractice($stateParams.practiceId, onLoad);
+            PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
+          }
+
           function onLoad(result) {
             console.log(JSON.stringify(result));
             vm.practice = result.data;
           };
-
-          PracticeService.loadPractice($stateParams.practiceId, onLoad);
-
-          PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
 
           function onLoadEvents (events) {
             vm.events = events.data;
@@ -1594,15 +1895,35 @@
               vm.events[i].id = extractId(vm.events[i].hRef);
               vm.events[i].eventDate = parseEventDate(vm.events[i].eventDate);
             }
+          };
+
+          function idPresent() {
+            return $stateParams.id != null;
           }
+
+          //INSERTION
+
+          vm.savePractice = savePractice;
+
+          function savePractice() {
+            PracticeService.savePractice(vm.practice);
+
+            function onSave(result) {
+              alert("Pratica salvata con successo");
+            };
+          }
+
+          //UTILITIES
 
           function extractId(hRef) {
             return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
           }
 
           function parseEventDate(date) {
-            return moment().locale('it').calendar(date);
+            return moment(date).format('DD/MM/YYYY');
           }
+
+          //DATATABLE
 
           vm.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType('full_numbers')
@@ -1637,29 +1958,83 @@
         .module('app.practice')
         .service('PracticeService', PracticeService);
 
-    PracticeService.$inject = ['$resource', '$http', '$rootScope'];
-    function PracticeService($resource, $http, $rootScope) {
+    PracticeService.$inject = ['$resource', '$http', '$rootScope', 'AuthenticationService', 'AUTH'];
+    function PracticeService($resource, $http, $rootScope, AuthenticationService, AUTH) {
         this.loadPractice = loadPractice;
         this.loadEvents = loadEvents;
+        this.savePractice = savePractice;
+
+        var vm = this;
 
         function loadPractice(id, onReady) {
           var practicesApi = $rootScope.app.apiUrl + 'legalPractices/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
 
           var onError = function() { console.log('Failure loading practice'); };
 
           $http
-            .get(practicesApi)
+            .get(practicesApi, config)
             .then(onReady, onError);
         }
 
         function loadEvents(filter, onReady) {
           var eventsApi = $rootScope.app.apiUrl + 'events/' + filter;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
 
-          var onError = function() { console.log('Failure loading practice'); };
+          var onError = function() { console.log('Failure loading practice\'s events'); };
 
           $http
-            .get(eventsApi)
+            .get(eventsApi, config)
             .then(onReady, onError);
+        }
+
+        function savePractice(practice, onReady) {
+          var practiceEndpoint = $rootScope.app.apiUrl + 'legalPractices/' + getId(practice);
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure sending practice data'); };
+          addCreatorIdToModel(practice);
+
+          practice.creatorId = "OQ";
+
+          //var data = $.param(practice);
+
+          function getId(practice) {
+            if (practice.id == undefined || practice.id == null) {
+              return "";
+            }
+
+            return practice.id;
+          };
+
+          $http
+            .post(practiceEndpoint, practice, config)
+            .then(onReady, onError);
+        }
+
+        function addCreatorIdToModel(model) {
+          model.id = $rootScope.user.id;
         }
     }
 
@@ -1737,17 +2112,26 @@
         .module('app.practices')
         .service('PracticesService', PracticesService);
 
-    PracticesService.$inject = ['$resource', '$rootScope', '$http'];
-    function PracticesService($resource, $rootScope, $http) {
+    PracticesService.$inject = ['$resource', '$rootScope', '$http', 'AuthenticationService', 'AUTH'];
+    function PracticesService($resource, $rootScope, $http, AuthenticationService, AUTH) {
         this.getPractices = getPractices;
+        var vm = this;
 
         function getPractices(params, onReady) {
           var practicesApi = $rootScope.app.apiUrl + 'legalPractices' + params;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
 
-          var onError = function() { alert('Failure loading practice'); };
+          var onError = function() { console.log('Failure loading practice'); };
 
           $http
-            .get(practicesApi)
+            .get(practicesApi, config)
             .then(onReady, onError);
         }
     }
@@ -1950,58 +2334,10 @@
         // You may have to set <base> tag in index and a routing configuration in your server
         $locationProvider.html5Mode(false);
 
-        // defaults to dashboard
-        $urlRouterProvider.otherwise('/app/welcome');
+        //defaults to
+        $urlRouterProvider.otherwise('/page/login');
 
-        // 
-        // Application Routes
-        // -----------------------------------   
         $stateProvider
-          .state('app', {
-              url: '/app',
-              abstract: true,
-              templateUrl: helper.basepath('app.html'),
-              resolve: helper.resolveFor('modernizr', 'icons')
-          })
-          .state('app.welcome', {
-              url: '/welcome',
-              title: 'Welcome',
-              templateUrl: helper.basepath('welcome.html')
-          })
-          .state('app.add_practice', {
-              url: '/addPractice',
-              title: 'Add practice',
-              templateUrl: helper.basepath('add_practice.html')
-          })
-          .state('app.add_event', {
-              url: '/addEvent',
-              title: 'Add event',
-              templateUrl: helper.basepath('add_event.html')
-          })
-          .state('app.single_practice', {
-              url: '/practice/:practiceId',
-              title: 'Single practice',
-              templateUrl: helper.basepath('practice.html'),
-              resolve: helper.resolveFor('practices', 'moment')
-          })
-          .state('app.practices_management', {
-              url: '/practices',
-              title: 'Practices',
-              templateUrl: helper.basepath('practices.html'),
-              resolve: helper.resolveFor('practices')
-          })
-          .state('app.single_event', {
-              url: '/event/:eventId',
-              title: 'Single event',
-              templateUrl: helper.basepath('event.html'),
-              resolve: helper.resolveFor('practices')
-          })
-          .state('app.events', {
-              url: '/events',
-              title: 'Events',
-              templateUrl: helper.basepath('events.html'),
-              resolve: helper.resolveFor('practices')
-          })
           //
           // Single Page Routes
           // -----------------------------------
@@ -2028,7 +2364,67 @@
               title: 'Recover',
               templateUrl: 'app/pages/recover.html'
           })
-          ;
+          // 
+          // Application Routes
+          // -----------------------------------   
+          .state('app', {
+              url: '/app',
+              abstract: true,
+              templateUrl: helper.basepath('app.html'),
+              resolve: helper.resolveFor('modernizr', 'icons')
+          })
+          .state('app.welcome', {
+              url: '/welcome',
+              title: 'Welcome',
+              templateUrl: helper.basepath('welcome.html')
+          })
+          .state('app.add_practice', {
+              url: '/addPractice',
+              title: 'Add practice',
+              templateUrl: helper.basepath('add_practice.html'),
+              resolve: helper.resolveFor('practices', 'moment')
+          })
+          .state('app.add_event', {
+              url: '/addEvent',
+              title: 'Add event',
+              templateUrl: helper.basepath('add_event.html')
+          })
+          .state('app.single_practice', {
+              url: '/practice/:practiceId',
+              title: 'Single practice',
+              templateUrl: helper.basepath('practice.html'),
+              resolve: helper.resolveFor('practices', 'moment')
+          })
+          .state('app.practices_management', {
+              url: '/practices',
+              title: 'Practices',
+              templateUrl: helper.basepath('practices.html'),
+              resolve: helper.resolveFor('practices')
+          })
+          .state('app.single_event', {
+              url: '/event/:eventId',
+              title: 'Single event',
+              templateUrl: helper.basepath('event.html'),
+              resolve: helper.resolveFor('practices', 'moment')
+          })
+          .state('app.events', {
+              url: '/events',
+              title: 'Events',
+              templateUrl: helper.basepath('events.html'),
+              resolve: helper.resolveFor('practices')
+          })
+          .state('app.single_activity', {
+              url: '/activity/:activityId',
+              title: 'Single activity',
+              templateUrl: helper.basepath('activity.html'),
+              resolve: helper.resolveFor('practices', 'moment')
+          })
+          .state('app.activities', {
+              url: '/activities',
+              title: 'Activities',
+              templateUrl: helper.basepath('activities.html'),
+              resolve: helper.resolveFor('practices')
+          });
 
     } // routesConfig
 
@@ -2045,8 +2441,6 @@
     settingsRun.$inject = ['$rootScope', '$localStorage'];
 
     function settingsRun($rootScope, $localStorage){
-
-
       // User Settings
       // -----------------------------------
       $rootScope.user = {
@@ -2458,6 +2852,71 @@
     }
 })();
 
+(function() {
+    'use strict';
+
+    angular
+        .module('app.translate')
+        .config(translateConfig)
+        ;
+    translateConfig.$inject = ['$translateProvider'];
+    function translateConfig($translateProvider){
+
+      $translateProvider.useStaticFilesLoader({
+          prefix : 'app/i18n/',
+          suffix : '.json'
+      });
+
+      $translateProvider.preferredLanguage('it');
+      $translateProvider.useLocalStorage();
+      $translateProvider.usePostCompiling(true);
+      $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
+
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('app.translate')
+        .run(translateRun)
+        ;
+    translateRun.$inject = ['$rootScope', '$translate'];
+    
+    function translateRun($rootScope, $translate){
+
+      // Internationalization
+      // ----------------------
+
+      $rootScope.language = {
+        // Handles language dropdown
+        listIsOpen: false,
+        // list of available languages
+        available: {
+          'it':       'Italiano',
+          'en':       'English',
+          'es_AR':    'Español'
+        },
+        // display always the current ui language
+        init: function () {
+          var proposedLanguage = $translate.proposedLanguage() || $translate.use();
+          var preferredLanguage = $translate.preferredLanguage(); // we know we have set a preferred one in app.config
+          $rootScope.language.selected = $rootScope.language.available[ (proposedLanguage || preferredLanguage) ];
+        },
+        set: function (localeId) {
+          // Set the new idiom
+          $translate.use(localeId);
+          // save a reference for the current language
+          $rootScope.language.selected = $rootScope.language.available[localeId];
+          // finally toggle dropdown
+          $rootScope.language.listIsOpen = ! $rootScope.language.listIsOpen;
+        }
+      };
+
+      $rootScope.language.init();
+
+    }
+})();
 /**=========================================================
  * Module: angular-grid.js
  * Example for Angular Grid
@@ -3298,71 +3757,6 @@
             });
 
         }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('app.translate')
-        .config(translateConfig)
-        ;
-    translateConfig.$inject = ['$translateProvider'];
-    function translateConfig($translateProvider){
-
-      $translateProvider.useStaticFilesLoader({
-          prefix : 'app/i18n/',
-          suffix : '.json'
-      });
-
-      $translateProvider.preferredLanguage('it');
-      $translateProvider.useLocalStorage();
-      $translateProvider.usePostCompiling(true);
-      $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
-
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('app.translate')
-        .run(translateRun)
-        ;
-    translateRun.$inject = ['$rootScope', '$translate'];
-    
-    function translateRun($rootScope, $translate){
-
-      // Internationalization
-      // ----------------------
-
-      $rootScope.language = {
-        // Handles language dropdown
-        listIsOpen: false,
-        // list of available languages
-        available: {
-          'it':       'Italiano',
-          'en':       'English',
-          'es_AR':    'Español'
-        },
-        // display always the current ui language
-        init: function () {
-          var proposedLanguage = $translate.proposedLanguage() || $translate.use();
-          var preferredLanguage = $translate.preferredLanguage(); // we know we have set a preferred one in app.config
-          $rootScope.language.selected = $rootScope.language.available[ (proposedLanguage || preferredLanguage) ];
-        },
-        set: function (localeId) {
-          // Set the new idiom
-          $translate.use(localeId);
-          // save a reference for the current language
-          $rootScope.language.selected = $rootScope.language.available[localeId];
-          // finally toggle dropdown
-          $rootScope.language.listIsOpen = ! $rootScope.language.listIsOpen;
-        }
-      };
-
-      $rootScope.language.init();
-
     }
 })();
 /**=========================================================
