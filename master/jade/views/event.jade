@@ -1,28 +1,43 @@
 .container-md(ng-controller='EventController as controller')
   .card
     .card-heading.bg-primary
-      .card-title Pratica
-
-        strong 
-          a(ng-href="{{$state.href('app.single_practice', {practiceId: controller.event.practice.id})}}" style="color:#FFF!important") {{controller.event.practice.name}}
-    .card-body
-      div
-        span Evento
-          strong {{controller.event.description}}
-        table.row-border.hover(datatable='ng', dt-options='controller.dtOptions' dt-column-defs='controller.dtColumnDefs')
-          thead
-            tr
-              th Attività
-              th Tipo attività
-              th Operatore incaricato
-              th Stato attività
-              th Dettaglio
-          tbody
-            tr(ng-repeat='activity in controller.activities')
-              td {{activity.description}}
-              td {{activity.activityType}}
-              td {{activity.assignee.username}}
-              td {{activity.status}}
-              td 
-                a.btn.btn-primary(ng-href="{{$state.href('app.single_activity', {activityId: activity.id})}}")
-                  i.icon-magnifier
+      .row.list-icon
+        .col-md-1.col-sm-4
+          a(ng-href="{{$state.href('app.single_practice', {practiceId: controller.event.practice.id})}}" style="color:#FFF!important;")
+            em.icon-arrow-left-circle(style="font-size:24px!important;")
+        .card-title(style="font-size:20px!important;") Pratica
+          strong {{controller.event.practice.name}}
+    .card-heading.bg-info
+      .row.list-icon
+        .col-md-1.col-sm-4
+          em.icon-check(style="font-size:24px!important; color:#E8EAF6!important;")
+        .card-title(style="font-size:20px!important; color:#E8EAF6!important;") Dettaglio Evento
+    .card-body(style="padding-bottom:0px;")
+      .row  
+      form(name='userForm')
+        div(layout='', layout-sm='column')
+          md-input-container(flex='')
+            label Nome Evento
+            input(ng-model='controller.event.description', disabled='')
+          md-input-container
+            label Data Evento
+            input(ng-model='controller.event.eventDate', disabled='')
+    .card-body(style="padding-top:0px!important; text-align:center!important;")
+      table.row-border.hover(datatable='ng', dt-options='controller.dtOptions' dt-column-defs='controller.dtColumnDefs')
+        thead 
+          strong(style="font-size:20px!important;") Elenco Attività
+          tr  
+            th Attività
+            th Tipo attività
+            th Operatore incaricato
+            th Stato attività
+            th Dettaglio
+        tbody
+          tr(ng-repeat='activity in controller.activities')
+            td {{activity.description}}
+            td {{activity.activityType}}
+            td {{activity.assignee.username}}
+            td {{activity.status}}
+            td 
+              a.btn.btn-primary(ng-href="{{$state.href('app.single_activity', {activityId: activity.id})}}")
+                i.icon-magnifier

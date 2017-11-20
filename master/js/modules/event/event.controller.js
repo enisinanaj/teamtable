@@ -31,6 +31,7 @@
             vm.event = result.data;
 
             vm.event.practice.id = extractId(vm.event.practice.hRef);
+            vm.event.eventDate = parseEventDate(vm.event.eventDate);
           };
 
           EventService.loadEvent($stateParams.eventId, onLoad);
@@ -42,7 +43,6 @@
 
             for (var i = vm.activities.length - 1; i >= 0; i--) {
               vm.activities[i].id = extractId(vm.activities[i].hRef);
-              //vm.events[i].eventDate = parseEventDate(vm.events[i].eventDate);
             }
           }
 
@@ -64,6 +64,7 @@
                 {extend: 'print', className: 'btn-sm'}
             ])*/
             .withOption("lengthChange", false)
+            .withOption("paging", false)
             .withOption("info", false);
 
           vm.dtColumnDefs = [
