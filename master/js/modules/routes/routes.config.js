@@ -19,7 +19,7 @@
         $locationProvider.html5Mode(false);
 
         //defaults to
-        $urlRouterProvider.otherwise('/page/login');
+        $urlRouterProvider.otherwise('/app/welcome');
 
         $stateProvider
           //
@@ -36,17 +36,20 @@
           .state('page.login', {
               url: '/login',
               title: 'Login',
-              templateUrl: 'app/pages/login.html'
+              templateUrl: 'app/pages/login.html',
+              resolve: helper.resolveFor('modernizr', 'icons')
           })
           .state('page.register', {
               url: '/register',
               title: 'Register',
-              templateUrl: 'app/pages/register.html'
+              templateUrl: 'app/pages/register.html',
+              resolve: helper.resolveFor('modernizr', 'icons')
           })
           .state('page.recover', {
               url: '/recover',
               title: 'Recover',
-              templateUrl: 'app/pages/recover.html'
+              templateUrl: 'app/pages/recover.html',
+              resolve: helper.resolveFor('modernizr', 'icons')
           })
           // 
           // Application Routes
@@ -54,8 +57,7 @@
           .state('app', {
               url: '/app',
               abstract: true,
-              templateUrl: helper.basepath('app.html'),
-              resolve: helper.resolveFor('modernizr', 'icons')
+              templateUrl: helper.basepath('app.html')
           })
           .state('app.welcome', {
               url: '/welcome',
@@ -65,8 +67,7 @@
           .state('app.add_practice', {
               url: '/addPractice',
               title: 'Add practice',
-              templateUrl: helper.basepath('add_practice.html'),
-              resolve: helper.resolveFor('practices', 'moment')
+              templateUrl: helper.basepath('add_practice.html')
           })
           .state('app.add_event', {
               url: '/addEvent',
@@ -83,7 +84,7 @@
               url: '/practices',
               title: 'Practices',
               templateUrl: helper.basepath('practices.html'),
-              resolve: helper.resolveFor('practices')
+              resolve: helper.resolveForAuthenticated('practices', 'moment')
           })
           .state('app.single_event', {
               url: '/event/:eventId',

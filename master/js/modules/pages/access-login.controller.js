@@ -10,8 +10,8 @@
         .module('app.pages')
         .controller('LoginFormController', LoginFormController);
 
-    LoginFormController.$inject = ['$http', '$state'];
-    function LoginFormController($http, $state) {
+    LoginFormController.$inject = ['$http', '$state', 'AuthenticationService'];
+    function LoginFormController($http, $state, AuthenticationService) {
         var vm = this;
 
         activate();
@@ -28,6 +28,8 @@
             vm.authMsg = '';
 
             if(vm.loginForm.$valid) {
+
+              AuthenticationService.getProfile();
 
               $http
                 .post('api/account/login', {email: vm.account.email, password: vm.account.password})

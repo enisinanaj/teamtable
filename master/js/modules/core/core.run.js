@@ -5,9 +5,9 @@
         .module('app.core')
         .run(appRun);
 
-    appRun.$inject = ['$rootScope', '$state', '$stateParams',  '$window', '$templateCache', 'Colors'];
+    appRun.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$window', '$templateCache', 'Colors', 'AuthenticationFactory'];
     
-    function appRun($rootScope, $state, $stateParams, $window, $templateCache, Colors) {
+    function appRun($rootScope, $state, $stateParams, $location, $window, $templateCache, Colors, AuthenticationFactory) {
       
       // Set reference to access them from any scope
       $rootScope.$state = $state;
@@ -44,6 +44,13 @@
       $rootScope.$on('$stateChangeError',
         function(event, toState, toParams, fromState, fromParams, error){
           console.log(error);
+          switch (error) {
+            case AuthenticationFactory.UNAUTHORIZED:
+            case AuthenticationFactory.FORBIDDEN:
+            default:
+              $window.location.href = $state.href('page.login');
+              break;
+          }
         });
       // Hook success
       $rootScope.$on('$stateChangeSuccess',

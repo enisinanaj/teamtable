@@ -19,11 +19,13 @@
         // provider access level
         basepath: basepath,
         resolveFor: resolveFor,
+        resolveForAuthenticated: resolveForAuthenticated,
         // controller access level
         $get: function() {
           return {
             basepath: basepath,
-            resolveFor: resolveFor
+            resolveFor: resolveFor,
+            resolveForAuthenticated: resolveForAuthenticated
           };
         }
       };
@@ -42,6 +44,11 @@
           deps: ['$ocLazyLoad','$q', function ($ocLL, $q) {
             // Creates a promise chain for each argument
             var promise = $q.when(1); // empty promise
+
+            if (_args.length == 1 && Array.isArray(_args[0])) {
+              _args = _args[0];
+            }
+
             for(var i=0, len=_args.length; i < len; i ++){
               promise = andThen(_args[i]);
             }
@@ -73,11 +80,27 @@
               return APP_REQUIRES.scripts && APP_REQUIRES.scripts[name];
             }
 
+          }],
+          access: ["AuthenticationFactory", function (AuthenticationFactory) { 
+            return AuthenticationFactory.isAnonymous(); 
           }]};
       } // resolveFor
 
+
+      function resolveForAuthenticated() {
+        var _args = arguments;
+
+        var params = [];
+        for(var i=0, len=_args.length; i < len; i ++){
+          params[i] = _args[i];
+        }
+
+        var result = resolveFor(params);
+        result.access = ["AuthenticationFactory", function (AuthenticationFactory) { return AuthenticationFactory.isAuthenticated(); }];
+
+        return result;
+      }
     }
-
-
-})();
+  }
+)();
 
