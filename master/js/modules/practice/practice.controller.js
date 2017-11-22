@@ -27,13 +27,12 @@
           vm.practice = {};
 
           //LOAD DATA
-          if (true) { //idPresent()) {
+          if (idPresent()) {
             PracticeService.loadPractice($stateParams.practiceId, onLoad);
             PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
           }
 
           function onLoad(result) {
-            console.log(JSON.stringify(result));
             vm.practice = result.data;
           };
 
@@ -55,10 +54,10 @@
           vm.savePractice = savePractice;
 
           function savePractice() {
-            PracticeService.savePractice(vm.practice);
+            PracticeService.savePractice(vm.practice, onSave);
 
-            function onSave(result) {
-              alert("Pratica salvata con successo");
+            function onSave(result, id) {
+              $state.go('app.practices_management')
             };
           }
 

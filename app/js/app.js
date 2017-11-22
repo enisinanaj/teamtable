@@ -46,16 +46,16 @@
         .module('app.activity', []);
 })();
 (function() {
-    'use strict';
-
-    angular
-        .module('app.colors', []);
-})();
-(function() {
 	'use strict';
 
     angular
         .module('app.authentication', []);
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('app.colors', []);
 })();
 (function() {
     'use strict';
@@ -166,13 +166,13 @@
     'use strict';
 
     angular
-        .module('app.translate', []);
+        .module('app.tables', []);
 })();
 (function() {
     'use strict';
 
     angular
-        .module('app.tables', []);
+        .module('app.translate', []);
 })();
 (function() {
     'use strict';
@@ -290,6 +290,188 @@
 
 })();
 (function() {
+	'user strinct';
+
+
+	angular.module("app.authentication")
+		.constant('AUTH', {
+			"secret_key": "a51a3f0a0f5b8233f0e5b71740ef57806f5567c4e565ebd2a1fccd1e52d6a809b4c5e40da1cf83d566c4df13fac55185435c11b109e1a4c58d6e50e62429943a",
+			"api_key": "395390b2a282e137a70308be80cb0c85cdccaf50a0b39956b7a0bdd22c6db9bf"
+		});
+
+})();
+(function() {
+
+	AuthenticationFactory.$inject = ["$q", "UserProfile"];
+	angular.module("app.authentication")
+		.factory('AuthenticationFactory', AuthenticationFactory);
+
+
+	AuthenticationFactory.$inect = ["$q", "UserProfile"];
+
+	function AuthenticationFactory($q, UserProfile) {
+
+		var AuthenticationFactory = {
+
+	   		OK: 200,
+
+		    // "we don't know who you are, so we can't say if you're authorized to access
+		    // this resource or not yet, please sign in first"
+		    UNAUTHORIZED: 401,
+
+		    // "we know who you are, and your profile does not allow you to access this resource"
+		    FORBIDDEN: 403,
+
+		    hasRole: function (role) {
+		      return UserProfile.fetchUserProfile().then(function (userProfile) {
+		        if (userProfile.$hasRole(role)) {
+		          return AuthenticationFactory.OK;
+		        } else if (userProfile.$isAnonymous()) {
+		          return $q.reject(AuthenticationFactory.UNAUTHORIZED);
+		        } else {
+		          return $q.reject(AuthenticationFactory.FORBIDDEN);
+		        }
+		      });
+		    },
+
+		    hasAnyRole: function (roles) {
+		      return UserProfile.fetchUserProfile().then(function (userProfile) {
+		        if (userProfile.$hasAnyRole(roles)) {
+		          return AuthenticationFactory.OK;
+		        } else if (userProfile.$isAnonymous()) {
+		          return $q.reject(AuthenticationFactory.UNAUTHORIZED);
+		        } else {
+		          return $q.reject(AuthenticationFactory.FORBIDDEN);
+		        }
+		      });
+		    },
+
+		    isAnonymous: function () {
+		      return UserProfile.fetchUserProfile().then(function (userProfile) {
+		        if (userProfile.$isAnonymous()) {
+		          return AuthenticationFactory.OK;
+		        } else {
+		          return $q.reject(AuthenticationFactory.FORBIDDEN);
+		        }
+		      });
+		    },
+
+		    isAuthenticated: function () {
+		      return UserProfile.fetchUserProfile().then(function (userProfile) {
+		        if (userProfile.$isAuthenticated()) {
+		          return AuthenticationFactory.OK;
+		        } else {
+		          return $q.reject(AuthenticationFactory.UNAUTHORIZED);
+		        }
+		      });
+		    }
+
+		  };
+
+		  return AuthenticationFactory;
+
+	}
+
+})();
+(function() {
+	'use strict';
+
+	angular.module('app.authentication')
+		.service('AuthenticationService', AuthenticationService);
+
+
+	AuthenticationService.$inject = ['$window', '$state', '$rootScope', '$stateParams', '$resource', 'AUTH', '$http', '$q'];
+
+	function AuthenticationService($window, $state, $rootScope, $stateParams, $resource, AUTH, $http, $q) {
+
+		var vm = this;
+		var ss = AUTH['secret_key'];
+		var apiKey = AUTH['api_key'];
+
+		vm.generateToken = generateToken;
+
+		function generateToken() {
+			var querytime = Math.floor(new Date().getTime() / 1000);
+			var toHash = apiKey + ss + querytime;
+			return CryptoJS.SHA256(toHash);
+		}
+
+		vm.getProfile = function () {
+
+		  if ($rootScope.user == undefined || $rootScope.app == undefined) {
+		  	return $http.get('/');
+		  }
+
+		  var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+          var userid = $rootScope.user.id != undefined ? $rootScope.user.id : 0;
+          var onError = function() { console.log('Failure retrieving user data'); };
+
+		  return $http.get($rootScope.app.apiUrl + "users/" + userid, config);
+		};
+
+	};
+
+})();
+(function() {
+
+	UserProfile.$inject = ["AuthenticationService"];
+	angular.module("app.authentication")
+		.service('UserProfile', UserProfile);
+
+	UserProfile.$ineject =  ["AuthenticationService"];
+
+	function UserProfile(AuthenticationService) {
+	  var vm = this;
+	  vm.userProfile = {};
+
+	  vm.clearUserProfile = function () {
+	    for (var prop in vm.userProfile) {
+	      if (vm.userProfile.hasOwnProperty(prop)) {
+	        delete vm.userProfile[prop];
+	      }
+	    }
+	  };
+
+	  vm.fetchUserProfile = function () {
+	    return AuthenticationService.getProfile().then(function (response) {
+	      vm.clearUserProfile();
+	      
+	      return angular.extend(vm.userProfile, response.data, {
+
+	        $refresh: vm.fetchUserProfile,
+
+	        $hasRole: function (role) {
+	          return vm.userProfile.roles.indexOf(role) >= 0;
+	        },
+
+	        $hasAnyRole: function (roles) {
+	          return !!vm.userProfile.roles.filter(function (role) {
+	            return roles.indexOf(role) >= 0;
+	          }).length;
+	        },
+
+	        $isAnonymous: function () {
+	          return vm.userProfile.anonymous == undefined ? true : vm.userProfile.anonymous;
+	        },
+
+	        $isAuthenticated: function () {
+	          return !vm.userProfile.$isAnonymous();
+	        }
+
+	      });
+	    });
+	  };
+	}
+  }	
+)();
+(function() {
     'use strict';
 
     angular
@@ -339,43 +521,6 @@
 
 })();
 
-(function() {
-	'user strinct';
-
-
-	angular.module("app.authentication")
-		.constant('AUTH', {
-			"secret_key": "secret_key",
-			"api_key": "api_key"
-		});
-
-})();
-(function() {
-	'use strict';
-
-	angular.module('app.authentication')
-		.service('AuthenticationService', AuthenticationService);
-
-
-	AuthenticationService.$inject = ['$rootScope', '$window', '$state', '$stateParams', '$resource', 'AUTH'];
-
-	function AuthenticationService($rootScope, $window, $state, $stateParams, $resource, AUTH) {
-
-		var vm = this;
-		var ss = AUTH['secret_key'];
-		var apiKey = AUTH['api_key'];
-
-		vm.generateToken = generateToken;
-
-		function generateToken() {
-			var querytime = Math.floor(new Date().getTime() / 1000);
-			var toHash = apiKey + ss + querytime;
-			return CryptoJS.SHA256(toHash);
-		}
-
-	};
-
-})();
 (function() {
     'use strict';
 
@@ -431,9 +576,9 @@
         .module('app.core')
         .run(appRun);
 
-    appRun.$inject = ['$rootScope', '$state', '$stateParams',  '$window', '$templateCache', 'Colors'];
+    appRun.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$window', '$templateCache', 'Colors', 'AuthenticationFactory'];
     
-    function appRun($rootScope, $state, $stateParams, $window, $templateCache, Colors) {
+    function appRun($rootScope, $state, $stateParams, $location, $window, $templateCache, Colors, AuthenticationFactory) {
       
       // Set reference to access them from any scope
       $rootScope.$state = $state;
@@ -441,11 +586,11 @@
       $rootScope.$storage = $window.localStorage;
 
       // Uncomment this to disable template cache
-      /*$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+      $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
           if (typeof(toState) !== 'undefined'){
             $templateCache.remove(toState.templateUrl);
           }
-      });*/
+      });
 
       // Allows to use branding color with interpolation
       // {{ colorByName('primary') }}
@@ -470,6 +615,14 @@
       $rootScope.$on('$stateChangeError',
         function(event, toState, toParams, fromState, fromParams, error){
           console.log(error);
+          switch (error) {
+            case AuthenticationFactory.UNAUTHORIZED:
+            case AuthenticationFactory.FORBIDDEN:
+            default:
+              $window.location.href = $state.href("page.login");
+              //$state.go('page.login');
+              break;
+          }
         });
       // Hook success
       $rootScope.$on('$stateChangeSuccess',
@@ -1747,8 +1900,8 @@
         .module('app.pages')
         .controller('LoginFormController', LoginFormController);
 
-    LoginFormController.$inject = ['$http', '$state'];
-    function LoginFormController($http, $state) {
+    LoginFormController.$inject = ['$http', '$state', '$window', 'AuthenticationService', '$rootScope', 'AUTH'];
+    function LoginFormController($http, $state, $window, AuthenticationService, $rootScope, AUTH) {
         var vm = this;
 
         activate();
@@ -1761,24 +1914,45 @@
           // place the message if something goes wrong
           vm.authMsg = '';
 
+          vm.extractId = extractId;
+
+          function extractId(hRef) {
+            return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
+          }
+
           vm.login = function() {
             vm.authMsg = '';
 
             if(vm.loginForm.$valid) {
+              var userPassword = CryptoJS.SHA256(vm.account.password).toString();
+              $rootScope.user.password = userPassword;
 
-              $http
-                .post('api/account/login', {email: vm.account.email, password: vm.account.password})
-                .then(function(response) {
-                  // assumes if ok, response is an object with some data, if not, a string with error
-                  // customize according to your api
-                  if ( !response.account ) {
-                    vm.authMsg = 'Incorrect credentials.';
-                  }else{
-                    $state.go('app.dashboard');
-                  }
-                }, function() {
-                  vm.authMsg = 'Server Request Error';
-                });
+              var config = {
+                  headers: {
+                      'Content-Type': 'application/json;',
+                      'token': AuthenticationService.generateToken(),
+                      'apiKey': AUTH['api_key'],
+                      'principal': vm.account.user,
+                      'principal-token': userPassword
+                  },
+                  cache: false
+              };
+
+              $http.post($rootScope.app.apiUrl + "sessions", {}, config)
+              .then(function(response) {
+                $rootScope.user.authenticated = true;
+                $rootScope.user.anonymous = false;
+                $rootScope.user.id = vm.extractId(response.data.hRef);
+
+                if ( !response.data.hRef ) {
+                  vm.authMsg = 'Incorrect credentials.';
+                }else{
+                  $window.location.href = $state.href('app.welcome');
+                }
+              }, function() {
+                vm.authMsg = 'Credenziali non corrette!';
+              });
+
             }
             else {
               // set as dirty if the user click directly to login so we show the validation messages
@@ -1878,13 +2052,12 @@
           vm.practice = {};
 
           //LOAD DATA
-          if (true) { //idPresent()) {
+          if (idPresent()) {
             PracticeService.loadPractice($stateParams.practiceId, onLoad);
             PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
           }
 
           function onLoad(result) {
-            console.log(JSON.stringify(result));
             vm.practice = result.data;
           };
 
@@ -1906,10 +2079,10 @@
           vm.savePractice = savePractice;
 
           function savePractice() {
-            PracticeService.savePractice(vm.practice);
+            PracticeService.savePractice(vm.practice, onSave);
 
-            function onSave(result) {
-              alert("Pratica salvata con successo");
+            function onSave(result, id) {
+              $state.go('app.practices_management')
             };
           }
 
@@ -2016,9 +2189,7 @@
           var onError = function() { console.log('Failure sending practice data'); };
           addCreatorIdToModel(practice);
 
-          practice.creatorId = "OQ";
-
-          //var data = $.param(practice);
+          practice.creatorId = $rootScope.user.id;
 
           function getId(practice) {
             if (practice.id == undefined || practice.id == null) {
@@ -2251,11 +2422,13 @@
         // provider access level
         basepath: basepath,
         resolveFor: resolveFor,
+        resolveForAuthenticated: resolveForAuthenticated,
         // controller access level
         $get: function() {
           return {
             basepath: basepath,
-            resolveFor: resolveFor
+            resolveFor: resolveFor,
+            resolveForAuthenticated: resolveForAuthenticated
           };
         }
       };
@@ -2274,6 +2447,11 @@
           deps: ['$ocLazyLoad','$q', function ($ocLL, $q) {
             // Creates a promise chain for each argument
             var promise = $q.when(1); // empty promise
+
+            if (_args.length == 1 && Array.isArray(_args[0])) {
+              _args = _args[0];
+            }
+
             for(var i=0, len=_args.length; i < len; i ++){
               promise = andThen(_args[i]);
             }
@@ -2305,13 +2483,29 @@
               return APP_REQUIRES.scripts && APP_REQUIRES.scripts[name];
             }
 
+          }],
+          access: ["AuthenticationFactory", function (AuthenticationFactory) { 
+            return AuthenticationFactory.isAnonymous(); 
           }]};
       } // resolveFor
 
+
+      function resolveForAuthenticated() {
+        var _args = arguments;
+
+        var params = [];
+        for(var i=0, len=_args.length; i < len; i ++){
+          params[i] = _args[i];
+        }
+
+        var result = resolveFor(params);
+        result.access = ["AuthenticationFactory", function (AuthenticationFactory) { return AuthenticationFactory.isAuthenticated(); }];
+
+        return result;
+      }
     }
-
-
-})();
+  }
+)();
 
 
 /**=========================================================
@@ -2335,7 +2529,7 @@
         $locationProvider.html5Mode(false);
 
         //defaults to
-        $urlRouterProvider.otherwise('/page/login');
+        $urlRouterProvider.otherwise('/app/welcome');
 
         $stateProvider
           //
@@ -2349,82 +2543,86 @@
                   $rootScope.app.layout.isBoxed = false;
               }]
           })
-          .state('page.login', {
-              url: '/login',
-              title: 'Login',
-              templateUrl: 'app/pages/login.html'
-          })
-          .state('page.register', {
-              url: '/register',
-              title: 'Register',
-              templateUrl: 'app/pages/register.html'
-          })
-          .state('page.recover', {
-              url: '/recover',
-              title: 'Recover',
-              templateUrl: 'app/pages/recover.html'
-          })
+            .state('page.login', {
+                url: '/login',
+                title: 'Login',
+                templateUrl: 'app/pages/login.html',
+                resolve: helper.resolveFor('modernizr', 'icons')
+            })
+            .state('page.register', {
+                url: '/register',
+                title: 'Register',
+                templateUrl: 'app/pages/register.html',
+                resolve: helper.resolveFor('modernizr', 'icons')
+            })
+            .state('page.recover', {
+                url: '/recover',
+                title: 'Recover',
+                templateUrl: 'app/pages/recover.html',
+                resolve: helper.resolveFor('modernizr', 'icons')
+            })
           // 
           // Application Routes
           // -----------------------------------   
           .state('app', {
               url: '/app',
               abstract: true,
-              templateUrl: helper.basepath('app.html'),
-              resolve: helper.resolveFor('modernizr', 'icons')
+              templateUrl: helper.basepath('app.html')
           })
-          .state('app.welcome', {
-              url: '/welcome',
-              title: 'Welcome',
-              templateUrl: helper.basepath('welcome.html')
-          })
-          .state('app.add_practice', {
-              url: '/addPractice',
-              title: 'Add practice',
-              templateUrl: helper.basepath('add_practice.html'),
-              resolve: helper.resolveFor('practices', 'moment')
-          })
-          .state('app.add_event', {
-              url: '/addEvent',
-              title: 'Add event',
-              templateUrl: helper.basepath('add_event.html')
-          })
-          .state('app.single_practice', {
-              url: '/practice/:practiceId',
-              title: 'Single practice',
-              templateUrl: helper.basepath('practice.html'),
-              resolve: helper.resolveFor('practices', 'moment')
-          })
-          .state('app.practices_management', {
-              url: '/practices',
-              title: 'Practices',
-              templateUrl: helper.basepath('practices.html'),
-              resolve: helper.resolveFor('practices')
-          })
-          .state('app.single_event', {
-              url: '/event/:eventId',
-              title: 'Single event',
-              templateUrl: helper.basepath('event.html'),
-              resolve: helper.resolveFor('practices', 'moment')
-          })
-          .state('app.events', {
-              url: '/events',
-              title: 'Events',
-              templateUrl: helper.basepath('events.html'),
-              resolve: helper.resolveFor('practices')
-          })
-          .state('app.single_activity', {
-              url: '/activity/:activityId',
-              title: 'Single activity',
-              templateUrl: helper.basepath('activity.html'),
-              resolve: helper.resolveFor('practices', 'moment')
-          })
-          .state('app.activities', {
-              url: '/activities',
-              title: 'Activities',
-              templateUrl: helper.basepath('activities.html'),
-              resolve: helper.resolveFor('practices')
-          });
+            .state('app.welcome', {
+                url: '/welcome',
+                title: 'Welcome',
+                templateUrl: helper.basepath('welcome.html'),
+                resolve: helper.resolveForAuthenticated('practices', 'moment')
+            })
+            .state('app.add_practice', {
+                url: '/addPractice',
+                title: 'Add practice',
+                templateUrl: helper.basepath('add_practice.html'),
+                resolve: helper.resolveForAuthenticated('practices', 'moment')
+            })
+            .state('app.add_event', {
+                url: '/addEvent',
+                title: 'Add event',
+                templateUrl: helper.basepath('add_event.html'),
+                resolve: helper.resolveForAuthenticated('practices', 'moment')
+            })
+            .state('app.single_practice', {
+                url: '/practice/:practiceId',
+                title: 'Single practice',
+                templateUrl: helper.basepath('practice.html'),
+                resolve: helper.resolveForAuthenticated('practices', 'moment')
+            })
+            .state('app.practices_management', {
+                url: '/practices',
+                title: 'Practices',
+                templateUrl: helper.basepath('practices.html'),
+                resolve: helper.resolveForAuthenticated('practices', 'moment')
+            })
+            .state('app.single_event', {
+                url: '/event/:eventId',
+                title: 'Single event',
+                templateUrl: helper.basepath('event.html'),
+                resolve: helper.resolveForAuthenticated('practices', 'moment')
+            })
+            .state('app.events', {
+                url: '/events',
+                title: 'Events',
+                templateUrl: helper.basepath('events.html'),
+                resolve: helper.resolveForAuthenticated('practices')
+            })
+            .state('app.single_activity', {
+                url: '/activity/:activityId',
+                title: 'Single activity',
+                templateUrl: helper.basepath('activity.html'),
+                resolve: helper.resolveForAuthenticated('practices', 'moment')
+            })
+            .state('app.activities', {
+                url: '/activities',
+                title: 'Activities',
+                templateUrl: helper.basepath('activities.html'),
+                resolve: helper.resolveForAuthenticated('practices')
+            });
 
     } // routesConfig
 
@@ -2438,14 +2636,15 @@
         .module('app.settings')
         .run(settingsRun);
 
-    settingsRun.$inject = ['$rootScope', '$localStorage'];
+    settingsRun.$inject = ['$rootScope', '$state', '$localStorage', 'AuthenticationFactory'];
 
-    function settingsRun($rootScope, $localStorage){
+    function settingsRun($rootScope, $state, $localStorage, AuthenticationFactory) {
       // User Settings
       // -----------------------------------
       $rootScope.user = {
         name:     'John',
-        picture:  'app/img/user/02.jpg'
+        picture:  'app/img/user/02.jpg',
+        password: ''
       };
 
       // Hides/show user avatar on sidebar from any element
@@ -2852,71 +3051,6 @@
     }
 })();
 
-(function() {
-    'use strict';
-
-    angular
-        .module('app.translate')
-        .config(translateConfig)
-        ;
-    translateConfig.$inject = ['$translateProvider'];
-    function translateConfig($translateProvider){
-
-      $translateProvider.useStaticFilesLoader({
-          prefix : 'app/i18n/',
-          suffix : '.json'
-      });
-
-      $translateProvider.preferredLanguage('it');
-      $translateProvider.useLocalStorage();
-      $translateProvider.usePostCompiling(true);
-      $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
-
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('app.translate')
-        .run(translateRun)
-        ;
-    translateRun.$inject = ['$rootScope', '$translate'];
-    
-    function translateRun($rootScope, $translate){
-
-      // Internationalization
-      // ----------------------
-
-      $rootScope.language = {
-        // Handles language dropdown
-        listIsOpen: false,
-        // list of available languages
-        available: {
-          'it':       'Italiano',
-          'en':       'English',
-          'es_AR':    'Español'
-        },
-        // display always the current ui language
-        init: function () {
-          var proposedLanguage = $translate.proposedLanguage() || $translate.use();
-          var preferredLanguage = $translate.preferredLanguage(); // we know we have set a preferred one in app.config
-          $rootScope.language.selected = $rootScope.language.available[ (proposedLanguage || preferredLanguage) ];
-        },
-        set: function (localeId) {
-          // Set the new idiom
-          $translate.use(localeId);
-          // save a reference for the current language
-          $rootScope.language.selected = $rootScope.language.available[localeId];
-          // finally toggle dropdown
-          $rootScope.language.listIsOpen = ! $rootScope.language.listIsOpen;
-        }
-      };
-
-      $rootScope.language.init();
-
-    }
-})();
 /**=========================================================
  * Module: angular-grid.js
  * Example for Angular Grid
@@ -3757,6 +3891,71 @@
             });
 
         }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('app.translate')
+        .config(translateConfig)
+        ;
+    translateConfig.$inject = ['$translateProvider'];
+    function translateConfig($translateProvider){
+
+      $translateProvider.useStaticFilesLoader({
+          prefix : 'app/i18n/',
+          suffix : '.json'
+      });
+
+      $translateProvider.preferredLanguage('it');
+      $translateProvider.useLocalStorage();
+      $translateProvider.usePostCompiling(true);
+      $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
+
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('app.translate')
+        .run(translateRun)
+        ;
+    translateRun.$inject = ['$rootScope', '$translate'];
+    
+    function translateRun($rootScope, $translate){
+
+      // Internationalization
+      // ----------------------
+
+      $rootScope.language = {
+        // Handles language dropdown
+        listIsOpen: false,
+        // list of available languages
+        available: {
+          'it':       'Italiano',
+          'en':       'English',
+          'es_AR':    'Español'
+        },
+        // display always the current ui language
+        init: function () {
+          var proposedLanguage = $translate.proposedLanguage() || $translate.use();
+          var preferredLanguage = $translate.preferredLanguage(); // we know we have set a preferred one in app.config
+          $rootScope.language.selected = $rootScope.language.available[ (proposedLanguage || preferredLanguage) ];
+        },
+        set: function (localeId) {
+          // Set the new idiom
+          $translate.use(localeId);
+          // save a reference for the current language
+          $rootScope.language.selected = $rootScope.language.available[localeId];
+          // finally toggle dropdown
+          $rootScope.language.listIsOpen = ! $rootScope.language.listIsOpen;
+        }
+      };
+
+      $rootScope.language.init();
+
     }
 })();
 /**=========================================================

@@ -10,8 +10,8 @@
         .module('app.pages')
         .controller('LoginFormController', LoginFormController);
 
-    LoginFormController.$inject = ['$http', '$state'];
-    function LoginFormController($http, $state) {
+    LoginFormController.$inject = ['$http', '$state', '$window', 'AuthenticationService', '$rootScope', 'AUTH'];
+    function LoginFormController($http, $state, $window, AuthenticationService, $rootScope, AUTH) {
         var vm = this;
 
         activate();
@@ -24,24 +24,45 @@
           // place the message if something goes wrong
           vm.authMsg = '';
 
+          vm.extractId = extractId;
+
+          function extractId(hRef) {
+            return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
+          }
+
           vm.login = function() {
             vm.authMsg = '';
 
             if(vm.loginForm.$valid) {
+              var userPassword = CryptoJS.SHA256(vm.account.password).toString();
+              $rootScope.user.password = userPassword;
 
-              $http
-                .post('api/account/login', {email: vm.account.email, password: vm.account.password})
-                .then(function(response) {
-                  // assumes if ok, response is an object with some data, if not, a string with error
-                  // customize according to your api
-                  if ( !response.account ) {
-                    vm.authMsg = 'Incorrect credentials.';
-                  }else{
-                    $state.go('app.dashboard');
-                  }
-                }, function() {
-                  vm.authMsg = 'Server Request Error';
-                });
+              var config = {
+                  headers: {
+                      'Content-Type': 'application/json;',
+                      'token': AuthenticationService.generateToken(),
+                      'apiKey': AUTH['api_key'],
+                      'principal': vm.account.user,
+                      'principal-token': userPassword
+                  },
+                  cache: false
+              };
+
+              $http.post($rootScope.app.apiUrl + "sessions", {}, config)
+              .then(function(response) {
+                $rootScope.user.authenticated = true;
+                $rootScope.user.anonymous = false;
+                $rootScope.user.id = vm.extractId(response.data.hRef);
+
+                if ( !response.data.hRef ) {
+                  vm.authMsg = 'Incorrect credentials.';
+                }else{
+                  $window.location.href = $state.href('app.welcome');
+                }
+              }, function() {
+                vm.authMsg = 'Credenziali non corrette!';
+              });
+
             }
             else {
               // set as dirty if the user click directly to login so we show the validation messages
