@@ -57,7 +57,7 @@
             PracticeService.savePractice(vm.practice, onSave);
 
             function onSave(result, id) {
-              $state.go('app.practices')
+              $state.go('app.practices_management')
             };
           }
 
