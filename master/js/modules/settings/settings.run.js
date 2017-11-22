@@ -5,14 +5,15 @@
         .module('app.settings')
         .run(settingsRun);
 
-    settingsRun.$inject = ['$rootScope', '$localStorage'];
+    settingsRun.$inject = ['$rootScope', '$state', '$localStorage', 'AuthenticationFactory'];
 
-    function settingsRun($rootScope, $localStorage){
+    function settingsRun($rootScope, $state, $localStorage, AuthenticationFactory) {
       // User Settings
       // -----------------------------------
       $rootScope.user = {
         name:     'John',
-        picture:  'app/img/user/02.jpg'
+        picture:  'app/img/user/02.jpg',
+        password: ''
       };
 
       // Hides/show user avatar on sidebar from any element
