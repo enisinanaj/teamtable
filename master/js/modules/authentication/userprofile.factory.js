@@ -1,52 +1,51 @@
 (function() {
 
 	angular.module("app.authentication")
-		.factory('UserProfile', UserProfile);
+		.service('UserProfile', UserProfile);
 
 	UserProfile.$ineject =  ["AuthenticationService"];
 
 	function UserProfile(AuthenticationService) {
-	  var userProfile = {};
+	  var vm = this;
+	  vm.userProfile = {};
 
-	  var clearUserProfile = function () {
-	    for (var prop in userProfile) {
-	      if (userProfile.hasOwnProperty(prop)) {
-	        delete userProfile[prop];
+	  vm.clearUserProfile = function () {
+	    for (var prop in vm.userProfile) {
+	      if (vm.userProfile.hasOwnProperty(prop)) {
+	        delete vm.userProfile[prop];
 	      }
 	    }
 	  };
 
-	  var fetchUserProfile = function () {
+	  vm.fetchUserProfile = function () {
 	    return AuthenticationService.getProfile().then(function (response) {
-	      clearUserProfile();
+	      vm.clearUserProfile();
 	      
-	      return angular.extend(userProfile, response.data, {
+	      return angular.extend(vm.userProfile, response.data, {
 
-	        $refresh: fetchUserProfile,
+	        $refresh: vm.fetchUserProfile,
 
 	        $hasRole: function (role) {
-	          return userProfile.roles.indexOf(role) >= 0;
+	          return vm.userProfile.roles.indexOf(role) >= 0;
 	        },
 
 	        $hasAnyRole: function (roles) {
-	          return !!userProfile.roles.filter(function (role) {
+	          return !!vm.userProfile.roles.filter(function (role) {
 	            return roles.indexOf(role) >= 0;
 	          }).length;
 	        },
 
 	        $isAnonymous: function () {
-	          return userProfile.anonymous == undefined ? true : userProfile.anonymous;
+	          return vm.userProfile.anonymous == undefined ? true : vm.userProfile.anonymous;
 	        },
 
 	        $isAuthenticated: function () {
-	          return !userProfile.$isAnonymous();
+	          return !vm.userProfile.$isAnonymous();
 	        }
 
 	      });
 	    });
 	  };
-
-	  return fetchUserProfile();
 	}
   }	
 )();

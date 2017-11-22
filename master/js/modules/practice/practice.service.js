@@ -67,9 +67,7 @@
           var onError = function() { console.log('Failure sending practice data'); };
           addCreatorIdToModel(practice);
 
-          practice.creatorId = "OQ";
-
-          //var data = $.param(practice);
+          practice.creatorId = $rootScope.user.id;
 
           function getId(practice) {
             if (practice.id == undefined || practice.id == null) {

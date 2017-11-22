@@ -15,11 +15,11 @@
       $rootScope.$storage = $window.localStorage;
 
       // Uncomment this to disable template cache
-      /*$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+      $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
           if (typeof(toState) !== 'undefined'){
             $templateCache.remove(toState.templateUrl);
           }
-      });*/
+      });
 
       // Allows to use branding color with interpolation
       // {{ colorByName('primary') }}
@@ -48,7 +48,8 @@
             case AuthenticationFactory.UNAUTHORIZED:
             case AuthenticationFactory.FORBIDDEN:
             default:
-              $window.location.href = $state.href('page.login');
+              $window.location.href = $state.href("page.login");
+              //$state.go('page.login');
               break;
           }
         });

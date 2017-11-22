@@ -27,23 +27,18 @@
 		  	return $http.get('/');
 		  }
 
-		  var userPassword = CryptoJS.SHA256($rootScope.user.password).toString();
-		  $rootScope.user.password = userPassword;
-
 		  var config = {
               headers: {
                   'Content-Type': 'application/json;',
-                  'token': vm.generateToken(),
-                  'apiKey': AUTH['api_key'],
-                  'principal': $rootScope.user.name,
-                  'principal-token': userPassword
+                  'token': generateToken(),
+                  'apiKey': AUTH['api_key']
               },
               cache: false
           };
+          var userid = $rootScope.user.id != undefined ? $rootScope.user.id : 0;
+          var onError = function() { console.log('Failure retrieving user data'); };
 
-          var onError = function() { console.log('Failure sending practice data'); };
-
-		  return $http.post($rootScope.app.apiUrl + "/sessions", {}, config);
+		  return $http.get($rootScope.app.apiUrl + "users/" + userid, config);
 		};
 
 	};

@@ -20,7 +20,7 @@
 		    FORBIDDEN: 403,
 
 		    hasRole: function (role) {
-		      return UserProfile.then(function (userProfile) {
+		      return UserProfile.fetchUserProfile().then(function (userProfile) {
 		        if (userProfile.$hasRole(role)) {
 		          return AuthenticationFactory.OK;
 		        } else if (userProfile.$isAnonymous()) {
@@ -32,7 +32,7 @@
 		    },
 
 		    hasAnyRole: function (roles) {
-		      return UserProfile.then(function (userProfile) {
+		      return UserProfile.fetchUserProfile().then(function (userProfile) {
 		        if (userProfile.$hasAnyRole(roles)) {
 		          return AuthenticationFactory.OK;
 		        } else if (userProfile.$isAnonymous()) {
@@ -44,7 +44,7 @@
 		    },
 
 		    isAnonymous: function () {
-		      return UserProfile.then(function (userProfile) {
+		      return UserProfile.fetchUserProfile().then(function (userProfile) {
 		        if (userProfile.$isAnonymous()) {
 		          return AuthenticationFactory.OK;
 		        } else {
@@ -54,7 +54,7 @@
 		    },
 
 		    isAuthenticated: function () {
-		      return UserProfile.then(function (userProfile) {
+		      return UserProfile.fetchUserProfile().then(function (userProfile) {
 		        if (userProfile.$isAuthenticated()) {
 		          return AuthenticationFactory.OK;
 		        } else {
