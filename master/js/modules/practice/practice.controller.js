@@ -46,7 +46,7 @@
           };
 
           function idPresent() {
-            return $stateParams.id != null;
+            return $stateParams.practiceId != null;
           }
 
           //INSERTION
