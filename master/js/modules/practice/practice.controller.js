@@ -56,8 +56,9 @@
           function savePractice() {
             PracticeService.savePractice(vm.practice, onSave);
 
-            function onSave(result, id) {
-              $state.go('app.practices_management')
+            function onSave(data) {
+              console.log(data.headers()["Location"]);
+              //$state.go('app.practices_management')
             };
           }
 
