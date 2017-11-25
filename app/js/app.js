@@ -43,7 +43,7 @@
     'use strict';
 
     angular
-        .module('app.activity', []);
+        .module('app.colors', []);
 })();
 (function() {
 	'use strict';
@@ -55,7 +55,7 @@
     'use strict';
 
     angular
-        .module('app.colors', []);
+        .module('app.activity', []);
 })();
 (function() {
     'use strict';
@@ -106,6 +106,12 @@
     'use strict';
 
     angular
+        .module('app.pages', []);
+})();
+(function() {
+    'use strict';
+
+    angular
         .module('app.material', [
             'ngMaterial'
           ]);
@@ -115,24 +121,6 @@
 
     angular
         .module('app.navsearch', []);
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('app.pages', []);
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('app.practice', []);
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('app.practices', []);
 })();
 (function() {
     'use strict';
@@ -166,13 +154,25 @@
     'use strict';
 
     angular
+        .module('app.translate', []);
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('app.practices', []);
+})();
+(function() {
+    'use strict';
+
+    angular
         .module('app.tables', []);
 })();
 (function() {
     'use strict';
 
     angular
-        .module('app.translate', []);
+        .module('app.practice', []);
 })();
 (function() {
     'use strict';
@@ -183,112 +183,56 @@
           ]);
 })();
 
+(function() {
+    'use strict';
+
+    angular
+        .module('app.colors')
+        .constant('APP_COLORS', {
+          'primary':                '#3F51B5',
+          'success':                '#4CAF50',
+          'info':                   '#2196F3',
+          'warning':                '#FF9800',
+          'danger':                 '#F44336',
+          'inverse':                '#607D8B',
+          'green':                  '#009688',
+          'pink':                   '#E91E63',
+          'purple':                 '#673AB7',
+          'dark':                   '#263238',
+          'yellow':                 '#FFEB3B',
+          'gray-darker':            '#232735',
+          'gray-dark':              '#3a3f51',
+          'gray':                   '#dde6e9',
+          'gray-light':             '#e4eaec',
+          'gray-lighter':           '#edf1f2'
+        })
+        ;
+})();
 /**=========================================================
- * Module: datatable,js
- * Angular Datatable controller
+ * Module: colors.js
+ * Services to retrieve global colors
  =========================================================*/
 
 (function() {
     'use strict';
 
     angular
-        .module('app.activity')
-        .controller('ActivityController', ActivityController);
+        .module('app.colors')
+        .service('Colors', Colors);
 
-    ActivityController.$inject = ['$scope', '$window', '$state', '$stateParams', 
-      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'ActivityService'];
-    
-    function ActivityController($scope, $window, $state, $stateParams, 
-      $resource, DTOptionsBuilder, DTColumnDefBuilder, ActivityService) {
-        
-        var vm = this;
-
-        activate();
+    Colors.$inject = ['APP_COLORS'];
+    function Colors(APP_COLORS) {
+        this.byName = byName;
 
         ////////////////
 
-        function activate() {
-
-          vm.activity = {};
-
-          function onLoad(result) {
-            console.log(JSON.stringify(result));
-            vm.activity = result.data;
-            vm.activity.event.id = extractId(vm.activity.event.hRef);
-            vm.activity.event.practice.id = extractId(vm.activity.event.practice.hRef);
-            vm.activity.creationDate = parseEventDate(vm.activity.creationDate);
-            vm.activity.completionDate = parseEventDate(vm.activity.complationDate);
-            vm.activity.expirationDate = parseEventDate(vm.activity.expirationDate);
-          };
-
-          ActivityService.loadActivity($stateParams.activityId, onLoad);
-
-          function extractId(hRef) {
-            return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
-          }
-
-          function parseEventDate(date) {
-            return moment(date).format('DD/MM/YYYY');
-          }
-
-          vm.dtOptions = DTOptionsBuilder.newOptions()
-            .withPaginationType('full_numbers')
-            .withLanguageSource("//cdn.datatables.net/plug-ins/1.10.16/i18n/Italian.json")
-            /*.withDOM('<"html5buttons"B>lTfgitp')
-            .withButtons([
-                {extend: 'copy',  className: 'btn-sm', text: 'Copia'},
-                {extend: 'csv',   className: 'btn-sm'},
-                {extend: 'print', className: 'btn-sm'}
-            ])*/
-            .withOption("info", false);
-
-          vm.dtColumnDefs = [
-              DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
-              DTColumnDefBuilder.newColumnDef(1),
-              DTColumnDefBuilder.newColumnDef(2).withOption('width', '80px'),
-              DTColumnDefBuilder.newColumnDef(3).withOption('width', '50px')
-          ];
-          
-        }
-    }
-})();
-
-// Practices service
-// angular.module("app").factory;
-
-
-(function() {
-    'use strict';
-
-    angular
-        .module('app.activity')
-        .service('ActivityService', ActivityService);
-
-    ActivityService.$inject = ['$resource', '$http', '$rootScope', 'AuthenticationService', 'AUTH'];
-    function ActivityService($resource, $http, $rootScope, AuthenticationService, AUTH) {
-        this.loadActivity = loadActivity;
-        var vm = this;
-
-        function loadActivity(id, onReady) {
-          var activitiesApi = $rootScope.app.apiUrl + 'activities/' + id;
-          var config = {
-              headers: {
-                  'Content-Type': 'application/json;',
-                  'token': AuthenticationService.generateToken(),
-                  'apiKey': AUTH['api_key']
-              },
-              cache: false
-          };
-
-          var onError = function() { console.log('Failure loading activity'); };
-
-          $http
-            .get(activitiesApi, config)
-            .then(onReady, onError);
+        function byName(name) {
+          return (APP_COLORS[name] || '#fff');
         }
     }
 
 })();
+
 (function() {
 	'user strinct';
 
@@ -471,56 +415,112 @@
 	}
   }	
 )();
-(function() {
-    'use strict';
-
-    angular
-        .module('app.colors')
-        .constant('APP_COLORS', {
-          'primary':                '#3F51B5',
-          'success':                '#4CAF50',
-          'info':                   '#2196F3',
-          'warning':                '#FF9800',
-          'danger':                 '#F44336',
-          'inverse':                '#607D8B',
-          'green':                  '#009688',
-          'pink':                   '#E91E63',
-          'purple':                 '#673AB7',
-          'dark':                   '#263238',
-          'yellow':                 '#FFEB3B',
-          'gray-darker':            '#232735',
-          'gray-dark':              '#3a3f51',
-          'gray':                   '#dde6e9',
-          'gray-light':             '#e4eaec',
-          'gray-lighter':           '#edf1f2'
-        })
-        ;
-})();
 /**=========================================================
- * Module: colors.js
- * Services to retrieve global colors
+ * Module: datatable,js
+ * Angular Datatable controller
  =========================================================*/
 
 (function() {
     'use strict';
 
     angular
-        .module('app.colors')
-        .service('Colors', Colors);
+        .module('app.activity')
+        .controller('ActivityController', ActivityController);
 
-    Colors.$inject = ['APP_COLORS'];
-    function Colors(APP_COLORS) {
-        this.byName = byName;
+    ActivityController.$inject = ['$scope', '$window', '$state', '$stateParams', 
+      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'ActivityService'];
+    
+    function ActivityController($scope, $window, $state, $stateParams, 
+      $resource, DTOptionsBuilder, DTColumnDefBuilder, ActivityService) {
+        
+        var vm = this;
+
+        activate();
 
         ////////////////
 
-        function byName(name) {
-          return (APP_COLORS[name] || '#fff');
+        function activate() {
+
+          vm.activity = {};
+
+          function onLoad(result) {
+            console.log(JSON.stringify(result));
+            vm.activity = result.data;
+            vm.activity.event.id = extractId(vm.activity.event.hRef);
+            vm.activity.event.practice.id = extractId(vm.activity.event.practice.hRef);
+            vm.activity.creationDate = parseEventDate(vm.activity.creationDate);
+            vm.activity.completionDate = parseEventDate(vm.activity.complationDate);
+            vm.activity.expirationDate = parseEventDate(vm.activity.expirationDate);
+          };
+
+          ActivityService.loadActivity($stateParams.activityId, onLoad);
+
+          function extractId(hRef) {
+            return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
+          }
+
+          function parseEventDate(date) {
+            return moment(date).format('DD/MM/YYYY');
+          }
+
+          vm.dtOptions = DTOptionsBuilder.newOptions()
+            .withPaginationType('full_numbers')
+            .withLanguageSource("//cdn.datatables.net/plug-ins/1.10.16/i18n/Italian.json")
+            /*.withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                {extend: 'copy',  className: 'btn-sm', text: 'Copia'},
+                {extend: 'csv',   className: 'btn-sm'},
+                {extend: 'print', className: 'btn-sm'}
+            ])*/
+            .withOption("info", false);
+
+          vm.dtColumnDefs = [
+              DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
+              DTColumnDefBuilder.newColumnDef(1),
+              DTColumnDefBuilder.newColumnDef(2).withOption('width', '80px'),
+              DTColumnDefBuilder.newColumnDef(3).withOption('width', '50px')
+          ];
+          
+        }
+    }
+})();
+
+// Practices service
+// angular.module("app").factory;
+
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.activity')
+        .service('ActivityService', ActivityService);
+
+    ActivityService.$inject = ['$resource', '$http', '$rootScope', 'AuthenticationService', 'AUTH'];
+    function ActivityService($resource, $http, $rootScope, AuthenticationService, AUTH) {
+        this.loadActivity = loadActivity;
+        var vm = this;
+
+        function loadActivity(id, onReady) {
+          var activitiesApi = $rootScope.app.apiUrl + 'activities/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure loading activity'); };
+
+          $http
+            .get(activitiesApi, config)
+            .then(onReady, onError);
         }
     }
 
 })();
-
 (function() {
     'use strict';
 
@@ -679,6 +679,7 @@
             vm.event = result.data;
 
             vm.event.practice.id = extractId(vm.event.practice.hRef);
+            vm.event.eventDate = parseEventDate(vm.event.eventDate);
           };
 
           EventService.loadEvent($stateParams.eventId, onLoad);
@@ -690,7 +691,6 @@
 
             for (var i = vm.activities.length - 1; i >= 0; i--) {
               vm.activities[i].id = extractId(vm.activities[i].hRef);
-              //vm.events[i].eventDate = parseEventDate(vm.events[i].eventDate);
             }
           }
 
@@ -712,6 +712,7 @@
                 {extend: 'print', className: 'btn-sm'}
             ])*/
             .withOption("lengthChange", false)
+            .withOption("paging", false)
             .withOption("info", false);
 
           vm.dtColumnDefs = [
@@ -1041,6 +1042,141 @@
             });
           }
 
+        }
+    }
+})();
+
+/**=========================================================
+ * Module: access-login.js
+ * Demo for login api
+ =========================================================*/
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.pages')
+        .controller('LoginFormController', LoginFormController);
+
+    LoginFormController.$inject = ['$http', '$state', '$window', 'AuthenticationService', '$rootScope', 'AUTH'];
+    function LoginFormController($http, $state, $window, AuthenticationService, $rootScope, AUTH) {
+        var vm = this;
+
+        activate();
+
+        ////////////////
+
+        function activate() {
+          // bind here all data from the form
+          vm.account = {};
+          // place the message if something goes wrong
+          vm.authMsg = '';
+
+          vm.extractId = extractId;
+
+          function extractId(hRef) {
+            return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
+          }
+
+          vm.login = function() {
+            vm.authMsg = '';
+
+            if(vm.loginForm.$valid) {
+              var userPassword = CryptoJS.SHA256(vm.account.password).toString();
+              $rootScope.user.password = userPassword;
+
+              var config = {
+                  headers: {
+                      'Content-Type': 'application/json;',
+                      'token': AuthenticationService.generateToken(),
+                      'apiKey': AUTH['api_key'],
+                      'principal': vm.account.user,
+                      'principal-token': userPassword
+                  },
+                  cache: false
+              };
+
+              $http.post($rootScope.app.apiUrl + "sessions", {}, config)
+              .then(function(response) {
+                $rootScope.user.authenticated = true;
+                $rootScope.user.anonymous = false;
+                $rootScope.user.id = vm.extractId(response.data.hRef);
+
+                if ( !response.data.hRef ) {
+                  vm.authMsg = 'Incorrect credentials.';
+                }else{
+                  $window.location.href = $state.href('app.welcome');
+                }
+              }, function() {
+                vm.authMsg = 'Credenziali non corrette!';
+              });
+
+            }
+            else {
+              // set as dirty if the user click directly to login so we show the validation messages
+              /*jshint -W106*/
+              vm.loginForm.account_email.$dirty = true;
+              vm.loginForm.account_password.$dirty = true;
+            }
+          };
+        }
+    }
+})();
+
+/**=========================================================
+ * Module: access-register.js
+ * Demo for register account api
+ =========================================================*/
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.pages')
+        .controller('RegisterFormController', RegisterFormController);
+
+    RegisterFormController.$inject = ['$http', '$state'];
+    function RegisterFormController($http, $state) {
+        var vm = this;
+
+        activate();
+
+        ////////////////
+
+        function activate() {
+          // bind here all data from the form
+          vm.account = {};
+          // place the message if something goes wrong
+          vm.authMsg = '';
+            
+          vm.register = function() {
+            vm.authMsg = '';
+
+            if(vm.registerForm.$valid) {
+
+              $http
+                .post('api/account/register', {email: vm.account.email, password: vm.account.password})
+                .then(function(response) {
+                  // assumes if ok, response is an object with some data, if not, a string with error
+                  // customize according to your api
+                  if ( !response.account ) {
+                    vm.authMsg = response;
+                  }else{
+                    $state.go('app.dashboard');
+                  }
+                }, function() {
+                  vm.authMsg = 'Server Request Error';
+                });
+            }
+            else {
+              // set as dirty if the user click directly to login so we show the validation messages
+              /*jshint -W106*/
+              vm.registerForm.account_email.$dirty = true;
+              vm.registerForm.account_password.$dirty = true;
+              vm.registerForm.account_agreed.$dirty = true;
+              
+            }
+          };
         }
     }
 })();
@@ -1888,426 +2024,6 @@
     }
 })();
 
-/**=========================================================
- * Module: access-login.js
- * Demo for login api
- =========================================================*/
-
-(function() {
-    'use strict';
-
-    angular
-        .module('app.pages')
-        .controller('LoginFormController', LoginFormController);
-
-    LoginFormController.$inject = ['$http', '$state', '$window', 'AuthenticationService', '$rootScope', 'AUTH'];
-    function LoginFormController($http, $state, $window, AuthenticationService, $rootScope, AUTH) {
-        var vm = this;
-
-        activate();
-
-        ////////////////
-
-        function activate() {
-          // bind here all data from the form
-          vm.account = {};
-          // place the message if something goes wrong
-          vm.authMsg = '';
-
-          vm.extractId = extractId;
-
-          function extractId(hRef) {
-            return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
-          }
-
-          vm.login = function() {
-            vm.authMsg = '';
-
-            if(vm.loginForm.$valid) {
-              var userPassword = CryptoJS.SHA256(vm.account.password).toString();
-              $rootScope.user.password = userPassword;
-
-              var config = {
-                  headers: {
-                      'Content-Type': 'application/json;',
-                      'token': AuthenticationService.generateToken(),
-                      'apiKey': AUTH['api_key'],
-                      'principal': vm.account.user,
-                      'principal-token': userPassword
-                  },
-                  cache: false
-              };
-
-              $http.post($rootScope.app.apiUrl + "sessions", {}, config)
-              .then(function(response) {
-                $rootScope.user.authenticated = true;
-                $rootScope.user.anonymous = false;
-                $rootScope.user.id = vm.extractId(response.data.hRef);
-
-                if ( !response.data.hRef ) {
-                  vm.authMsg = 'Incorrect credentials.';
-                }else{
-                  $window.location.href = $state.href('app.welcome');
-                }
-              }, function() {
-                vm.authMsg = 'Credenziali non corrette!';
-              });
-
-            }
-            else {
-              // set as dirty if the user click directly to login so we show the validation messages
-              /*jshint -W106*/
-              vm.loginForm.account_email.$dirty = true;
-              vm.loginForm.account_password.$dirty = true;
-            }
-          };
-        }
-    }
-})();
-
-/**=========================================================
- * Module: access-register.js
- * Demo for register account api
- =========================================================*/
-
-(function() {
-    'use strict';
-
-    angular
-        .module('app.pages')
-        .controller('RegisterFormController', RegisterFormController);
-
-    RegisterFormController.$inject = ['$http', '$state'];
-    function RegisterFormController($http, $state) {
-        var vm = this;
-
-        activate();
-
-        ////////////////
-
-        function activate() {
-          // bind here all data from the form
-          vm.account = {};
-          // place the message if something goes wrong
-          vm.authMsg = '';
-            
-          vm.register = function() {
-            vm.authMsg = '';
-
-            if(vm.registerForm.$valid) {
-
-              $http
-                .post('api/account/register', {email: vm.account.email, password: vm.account.password})
-                .then(function(response) {
-                  // assumes if ok, response is an object with some data, if not, a string with error
-                  // customize according to your api
-                  if ( !response.account ) {
-                    vm.authMsg = response;
-                  }else{
-                    $state.go('app.dashboard');
-                  }
-                }, function() {
-                  vm.authMsg = 'Server Request Error';
-                });
-            }
-            else {
-              // set as dirty if the user click directly to login so we show the validation messages
-              /*jshint -W106*/
-              vm.registerForm.account_email.$dirty = true;
-              vm.registerForm.account_password.$dirty = true;
-              vm.registerForm.account_agreed.$dirty = true;
-              
-            }
-          };
-        }
-    }
-})();
-
-/**=========================================================
- * Module: datatable,js
- * Angular Datatable controller
- =========================================================*/
-
-(function() {
-    'use strict';
-
-    angular
-        .module('app.practice')
-        .controller('PracticeController', PracticeController);
-
-    PracticeController.$inject = ['$scope', '$window', '$state', '$stateParams', 
-      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'PracticeService'];
-    
-    function PracticeController($scope, $window, $state, $stateParams, 
-      $resource, DTOptionsBuilder, DTColumnDefBuilder, PracticeService) {
-        
-        var vm = this;
-
-        activate();
-
-        ////////////////
-
-        function activate() {
-
-          vm.practice = {};
-
-          //LOAD DATA
-          if (idPresent()) {
-            PracticeService.loadPractice($stateParams.practiceId, onLoad);
-            PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
-          }
-
-          function onLoad(result) {
-            vm.practice = result.data;
-          };
-
-          function onLoadEvents (events) {
-            vm.events = events.data;
-
-            for (var i = vm.events.length - 1; i >= 0; i--) {
-              vm.events[i].id = extractId(vm.events[i].hRef);
-              vm.events[i].eventDate = parseEventDate(vm.events[i].eventDate);
-            }
-          };
-
-          function idPresent() {
-            return $stateParams.id != null;
-          }
-
-          //INSERTION
-
-          vm.savePractice = savePractice;
-
-          function savePractice() {
-            PracticeService.savePractice(vm.practice, onSave);
-
-            function onSave(result, id) {
-              $state.go('app.practices_management')
-            };
-          }
-
-          //UTILITIES
-
-          function extractId(hRef) {
-            return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
-          }
-
-          function parseEventDate(date) {
-            return moment(date).format('DD/MM/YYYY');
-          }
-
-          //DATATABLE
-
-          vm.dtOptions = DTOptionsBuilder.newOptions()
-            .withPaginationType('full_numbers')
-            .withLanguageSource("//cdn.datatables.net/plug-ins/1.10.16/i18n/Italian.json")
-            .withDOM('<"html5buttons"B>lTfgitp')
-            .withButtons([
-                {extend: 'copy',  className: 'btn-sm', text: 'Copia'},
-                {extend: 'csv',   className: 'btn-sm'},
-                {extend: 'print', className: 'btn-sm'}
-            ])
-            .withOption("info", false);
-
-          vm.dtColumnDefs = [
-              DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
-              DTColumnDefBuilder.newColumnDef(1),
-              DTColumnDefBuilder.newColumnDef(2).withOption('width', '80px'),
-              DTColumnDefBuilder.newColumnDef(3).withOption('width', '50px')
-          ];
-          
-        }
-    }
-})();
-
-// Practices service
-// angular.module("app").factory;
-
-
-(function() {
-    'use strict';
-
-    angular
-        .module('app.practice')
-        .service('PracticeService', PracticeService);
-
-    PracticeService.$inject = ['$resource', '$http', '$rootScope', 'AuthenticationService', 'AUTH'];
-    function PracticeService($resource, $http, $rootScope, AuthenticationService, AUTH) {
-        this.loadPractice = loadPractice;
-        this.loadEvents = loadEvents;
-        this.savePractice = savePractice;
-
-        var vm = this;
-
-        function loadPractice(id, onReady) {
-          var practicesApi = $rootScope.app.apiUrl + 'legalPractices/' + id;
-          var config = {
-              headers: {
-                  'Content-Type': 'application/json;',
-                  'token': AuthenticationService.generateToken(),
-                  'apiKey': AUTH['api_key']
-              },
-              cache: false
-          };
-
-          var onError = function() { console.log('Failure loading practice'); };
-
-          $http
-            .get(practicesApi, config)
-            .then(onReady, onError);
-        }
-
-        function loadEvents(filter, onReady) {
-          var eventsApi = $rootScope.app.apiUrl + 'events/' + filter;
-          var config = {
-              headers: {
-                  'Content-Type': 'application/json;',
-                  'token': AuthenticationService.generateToken(),
-                  'apiKey': AUTH['api_key']
-              },
-              cache: false
-          };
-
-          var onError = function() { console.log('Failure loading practice\'s events'); };
-
-          $http
-            .get(eventsApi, config)
-            .then(onReady, onError);
-        }
-
-        function savePractice(practice, onReady) {
-          var practiceEndpoint = $rootScope.app.apiUrl + 'legalPractices/' + getId(practice);
-          var config = {
-              headers: {
-                  'Content-Type': 'application/json;',
-                  'token': AuthenticationService.generateToken(),
-                  'apiKey': AUTH['api_key']
-              },
-              cache: false
-          };
-
-          var onError = function() { console.log('Failure sending practice data'); };
-          addCreatorIdToModel(practice);
-
-          practice.creatorId = $rootScope.user.id;
-
-          function getId(practice) {
-            if (practice.id == undefined || practice.id == null) {
-              return "";
-            }
-
-            return practice.id;
-          };
-
-          $http
-            .post(practiceEndpoint, practice, config)
-            .then(onReady, onError);
-        }
-
-        function addCreatorIdToModel(model) {
-          model.id = $rootScope.user.id;
-        }
-    }
-
-})();
-/**=========================================================
- * Module: datatable,js
- * Angular Datatable controller
- =========================================================*/
-
-(function() {
-    'use strict';
-
-    angular
-        .module('app.practices')
-        .controller('PracticesController', PracticesController);
-
-    PracticesController.$inject = ['$scope', '$window', '$state', 
-      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'PracticesService'];
-    
-    function PracticesController($scope, $window, $state,
-      $resource, DTOptionsBuilder, DTColumnDefBuilder, PracticesService) {
-        
-        var vm = this;
-
-        activate();
-
-        ////////////////
-
-        function activate() {
-
-          // Ajax
-
-          PracticesService.getPractices("", onDone);
-
-          function onDone (practices) {
-            vm.elements = practices.data;
-
-            for (var i = vm.elements.length - 1; i >= 0; i--) {
-              vm.elements[i].id = extractId(vm.elements[i].hRef);
-            }
-          };
-
-          function extractId(hRef) {
-            return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
-          }
-
-          vm.dtOptions = DTOptionsBuilder.newOptions()
-            .withPaginationType('full_numbers')
-            .withLanguageSource("//cdn.datatables.net/plug-ins/1.10.16/i18n/Italian.json")
-            .withDOM('<"html5buttons"B>lTfgitp')
-            .withButtons([
-                {extend: 'copy',  className: 'btn-sm', text: 'Copia'},
-                {extend: 'csv',   className: 'btn-sm'},
-                {extend: 'print', className: 'btn-sm'}
-            ])
-            .withOption("info", false);
-
-          vm.dtColumnDefs = [
-              DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
-              DTColumnDefBuilder.newColumnDef(1).withOption('width', '200px'),
-              DTColumnDefBuilder.newColumnDef(2)
-          ];
-        }
-    }
-})();
-
-// Practices service
-// angular.module("app").factory;
-
-
-(function() {
-    'use strict';
-
-    angular
-        .module('app.practices')
-        .service('PracticesService', PracticesService);
-
-    PracticesService.$inject = ['$resource', '$rootScope', '$http', 'AuthenticationService', 'AUTH'];
-    function PracticesService($resource, $rootScope, $http, AuthenticationService, AUTH) {
-        this.getPractices = getPractices;
-        var vm = this;
-
-        function getPractices(params, onReady) {
-          var practicesApi = $rootScope.app.apiUrl + 'legalPractices' + params;
-          var config = {
-              headers: {
-                  'Content-Type': 'application/json;',
-                  'token': AuthenticationService.generateToken(),
-                  'apiKey': AUTH['api_key']
-              },
-              cache: false
-          };
-
-          var onError = function() { console.log('Failure loading practice'); };
-
-          $http
-            .get(practicesApi, config)
-            .then(onReady, onError);
-        }
-    }
-
-})();
 (function() {
     'use strict';
 
@@ -3051,6 +2767,169 @@
     }
 })();
 
+(function() {
+    'use strict';
+
+    angular
+        .module('app.translate')
+        .config(translateConfig)
+        ;
+    translateConfig.$inject = ['$translateProvider'];
+    function translateConfig($translateProvider){
+
+      $translateProvider.useStaticFilesLoader({
+          prefix : 'app/i18n/',
+          suffix : '.json'
+      });
+
+      $translateProvider.preferredLanguage('it');
+      $translateProvider.useLocalStorage();
+      $translateProvider.usePostCompiling(true);
+      $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
+
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('app.translate')
+        .run(translateRun)
+        ;
+    translateRun.$inject = ['$rootScope', '$translate'];
+    
+    function translateRun($rootScope, $translate){
+
+      // Internationalization
+      // ----------------------
+
+      $rootScope.language = {
+        // Handles language dropdown
+        listIsOpen: false,
+        // list of available languages
+        available: {
+          'it':       'Italiano',
+          'en':       'English',
+          'es_AR':    'Español'
+        },
+        // display always the current ui language
+        init: function () {
+          var proposedLanguage = $translate.proposedLanguage() || $translate.use();
+          var preferredLanguage = $translate.preferredLanguage(); // we know we have set a preferred one in app.config
+          $rootScope.language.selected = $rootScope.language.available[ (proposedLanguage || preferredLanguage) ];
+        },
+        set: function (localeId) {
+          // Set the new idiom
+          $translate.use(localeId);
+          // save a reference for the current language
+          $rootScope.language.selected = $rootScope.language.available[localeId];
+          // finally toggle dropdown
+          $rootScope.language.listIsOpen = ! $rootScope.language.listIsOpen;
+        }
+      };
+
+      $rootScope.language.init();
+
+    }
+})();
+/**=========================================================
+ * Module: datatable,js
+ * Angular Datatable controller
+ =========================================================*/
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.practices')
+        .controller('PracticesController', PracticesController);
+
+    PracticesController.$inject = ['$scope', '$window', '$state', 
+      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'PracticesService'];
+    
+    function PracticesController($scope, $window, $state,
+      $resource, DTOptionsBuilder, DTColumnDefBuilder, PracticesService) {
+        
+        var vm = this;
+
+        activate();
+
+        ////////////////
+
+        function activate() {
+
+          // Ajax
+
+          PracticesService.getPractices("", onDone);
+
+          function onDone (practices) {
+            vm.elements = practices.data;
+
+            for (var i = vm.elements.length - 1; i >= 0; i--) {
+              vm.elements[i].id = extractId(vm.elements[i].hRef);
+            }
+          };
+
+          function extractId(hRef) {
+            return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
+          }
+
+          vm.dtOptions = DTOptionsBuilder.newOptions()
+            .withPaginationType('full_numbers')
+            .withLanguageSource("//cdn.datatables.net/plug-ins/1.10.16/i18n/Italian.json")
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                {extend: 'copy',  className: 'btn-sm', text: 'Copia'},
+                {extend: 'csv',   className: 'btn-sm'},
+                {extend: 'print', className: 'btn-sm'}
+            ])
+            .withOption("info", false);
+
+          vm.dtColumnDefs = [
+              DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
+              DTColumnDefBuilder.newColumnDef(1).withOption('width', '200px'),
+              DTColumnDefBuilder.newColumnDef(2)
+          ];
+        }
+    }
+})();
+
+// Practices service
+// angular.module("app").factory;
+
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.practices')
+        .service('PracticesService', PracticesService);
+
+    PracticesService.$inject = ['$resource', '$rootScope', '$http', 'AuthenticationService', 'AUTH'];
+    function PracticesService($resource, $rootScope, $http, AuthenticationService, AUTH) {
+        this.getPractices = getPractices;
+        var vm = this;
+
+        function getPractices(params, onReady) {
+          var practicesApi = $rootScope.app.apiUrl + 'legalPractices' + params;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure loading practice'); };
+
+          $http
+            .get(practicesApi, config)
+            .then(onReady, onError);
+        }
+    }
+
+})();
 /**=========================================================
  * Module: angular-grid.js
  * Example for Angular Grid
@@ -3893,70 +3772,193 @@
         }
     }
 })();
+/**=========================================================
+ * Module: datatable,js
+ * Angular Datatable controller
+ =========================================================*/
+
 (function() {
     'use strict';
 
     angular
-        .module('app.translate')
-        .config(translateConfig)
-        ;
-    translateConfig.$inject = ['$translateProvider'];
-    function translateConfig($translateProvider){
+        .module('app.practice')
+        .controller('PracticeController', PracticeController);
 
-      $translateProvider.useStaticFilesLoader({
-          prefix : 'app/i18n/',
-          suffix : '.json'
-      });
+    PracticeController.$inject = ['$scope', '$window', '$state', '$stateParams', 
+      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'PracticeService'];
+    
+    function PracticeController($scope, $window, $state, $stateParams, 
+      $resource, DTOptionsBuilder, DTColumnDefBuilder, PracticeService) {
+        
+        var vm = this;
 
-      $translateProvider.preferredLanguage('it');
-      $translateProvider.useLocalStorage();
-      $translateProvider.usePostCompiling(true);
-      $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
+        activate();
 
+        ////////////////
+
+        function activate() {
+
+          vm.practice = {};
+
+          //LOAD DATA
+          if (idPresent()) {
+            PracticeService.loadPractice($stateParams.practiceId, onLoad);
+            PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
+          }
+
+          function onLoad(result) {
+            vm.practice = result.data;
+          };
+
+          function onLoadEvents (events) {
+            vm.events = events.data;
+
+            for (var i = vm.events.length - 1; i >= 0; i--) {
+              vm.events[i].id = extractId(vm.events[i].hRef);
+              vm.events[i].eventDate = parseEventDate(vm.events[i].eventDate);
+            }
+          };
+
+          function idPresent() {
+            return $stateParams.practiceId != null;
+          }
+
+          //INSERTION
+
+          vm.savePractice = savePractice;
+
+          function savePractice() {
+            PracticeService.savePractice(vm.practice, onSave);
+
+            function onSave(data) {
+              var hRef = data.headers()["location"];
+              $state.go('app.single_practice', {practiceId: extractId(hRef)})
+            };
+          }
+
+          //UTILITIES
+
+          function extractId(hRef) {
+            return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
+          }
+
+          function parseEventDate(date) {
+            return moment(date).format('DD/MM/YYYY');
+          }
+
+          //DATATABLE
+
+          vm.dtOptions = DTOptionsBuilder.newOptions()
+            .withPaginationType('full_numbers')
+            .withLanguageSource("//cdn.datatables.net/plug-ins/1.10.16/i18n/Italian.json")
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                {extend: 'copy',  className: 'btn-sm', text: 'Copia'},
+                {extend: 'csv',   className: 'btn-sm'},
+                {extend: 'print', className: 'btn-sm'}
+            ])
+            .withOption("info", false);
+
+          vm.dtColumnDefs = [
+              DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
+              DTColumnDefBuilder.newColumnDef(1),
+              DTColumnDefBuilder.newColumnDef(2).withOption('width', '80px'),
+              DTColumnDefBuilder.newColumnDef(3).withOption('width', '50px')
+          ];
+          
+        }
     }
 })();
+
+// Practices service
+// angular.module("app").factory;
+
+
 (function() {
     'use strict';
 
     angular
-        .module('app.translate')
-        .run(translateRun)
-        ;
-    translateRun.$inject = ['$rootScope', '$translate'];
-    
-    function translateRun($rootScope, $translate){
+        .module('app.practice')
+        .service('PracticeService', PracticeService);
 
-      // Internationalization
-      // ----------------------
+    PracticeService.$inject = ['$resource', '$http', '$rootScope', 'AuthenticationService', 'AUTH'];
+    function PracticeService($resource, $http, $rootScope, AuthenticationService, AUTH) {
+        this.loadPractice = loadPractice;
+        this.loadEvents = loadEvents;
+        this.savePractice = savePractice;
 
-      $rootScope.language = {
-        // Handles language dropdown
-        listIsOpen: false,
-        // list of available languages
-        available: {
-          'it':       'Italiano',
-          'en':       'English',
-          'es_AR':    'Español'
-        },
-        // display always the current ui language
-        init: function () {
-          var proposedLanguage = $translate.proposedLanguage() || $translate.use();
-          var preferredLanguage = $translate.preferredLanguage(); // we know we have set a preferred one in app.config
-          $rootScope.language.selected = $rootScope.language.available[ (proposedLanguage || preferredLanguage) ];
-        },
-        set: function (localeId) {
-          // Set the new idiom
-          $translate.use(localeId);
-          // save a reference for the current language
-          $rootScope.language.selected = $rootScope.language.available[localeId];
-          // finally toggle dropdown
-          $rootScope.language.listIsOpen = ! $rootScope.language.listIsOpen;
+        var vm = this;
+
+        function loadPractice(id, onReady) {
+          var practicesApi = $rootScope.app.apiUrl + 'legalPractices/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure loading practice'); };
+
+          $http
+            .get(practicesApi, config)
+            .then(onReady, onError);
         }
-      };
 
-      $rootScope.language.init();
+        function loadEvents(filter, onReady) {
+          var eventsApi = $rootScope.app.apiUrl + 'events/' + filter;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
 
+          var onError = function() { console.log('Failure loading practice\'s events'); };
+
+          $http
+            .get(eventsApi, config)
+            .then(onReady, onError);
+        }
+
+        function savePractice(practice, onReady) {
+          var practiceEndpoint = $rootScope.app.apiUrl + 'legalPractices/' + getId(practice);
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure sending practice data'); };
+          addCreatorIdToModel(practice);
+
+          practice.creatorId = $rootScope.user.id;
+
+          function getId(practice) {
+            if (practice.id == undefined || practice.id == null) {
+              return "";
+            }
+
+            return practice.id;
+          };
+
+          $http
+            .post(practiceEndpoint, practice, config)
+            .then(onReady, onError);
+        }
+
+        function addCreatorIdToModel(model) {
+          model.id = $rootScope.user.id;
+        }
     }
+
 })();
 /**=========================================================
  * Module: animate-enabled.js
