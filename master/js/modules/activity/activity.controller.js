@@ -31,6 +31,7 @@
           function onLoad(result) {
             console.log(JSON.stringify(result));
             vm.activity = result.data;
+            vm.activity.id = extractId(vm.activity.hRef);
             vm.activity.event.id = extractId(vm.activity.event.hRef);
             vm.activity.event.practice.id = extractId(vm.activity.event.practice.hRef);
             vm.activity.creationDate = parseEventDate(vm.activity.creationDate);
@@ -60,6 +61,12 @@
           vm.saveActivity = saveActivity;
 
           function saveActivity() {
+            if (vm.activity.event != undefined && vm.activity.event.id != undefined) {
+              vm.activity.eventId = vm.activity.event.id;
+            } else {
+              vm.activity.eventId = $stateParams.eventId;
+            }
+
             ActivityService.saveActivity(vm.activity, onSave);
 
             function onSave(data) {

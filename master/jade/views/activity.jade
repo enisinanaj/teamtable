@@ -26,7 +26,7 @@
           span Data chiusura
           strong {{controller.activity.completionDate}}
     .card-offset.pull-right
-      button.btn.btn-purple.btn-circle.btn-lg(ng-href="{{$state.href('app.add_activity', {activityId: controller.activity.id})}}")
+      a.btn.btn-purple.btn-circle.btn-lg(ng-href="{{$state.href('app.add_activity', {activityId: controller.activity.id, eventId: controller.activity.event.id})}}")
         em.icon-pencil
     .card-body
       div

@@ -44,17 +44,17 @@
               cache: false
           };
 
-          var onError = function() { console.log('Failure sending practice data'); };
+          var onError = function() { console.log('Failure sending activity data'); };
           addCreatorIdToModel(activity);
 
-          practice.creatorId = $rootScope.user.id;
+          activity.creatorId = $rootScope.user.id;
 
           function getId(activity) {
             if (activity.id == undefined || activity.id == null) {
               return "";
             }
 
-            return practice.id;
+            return activity.id;
           };
 
           $http

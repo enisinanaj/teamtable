@@ -1,21 +1,29 @@
 .container-md
   .card(ng-controller='ActivityController as controller')
     .card-heading.bg-primary
-      .card-title(ng-if="controller.activity.id == ''") Nuova attività
-      .card-title(ng-if="controller.activity.id != ''") Modifica attività {{controller.activity.name}}
+      .card-title(ng-if="controller.activity.id == undefined") Nuova attività
+      .card-title(ng-if="controller.activity.id != undefined") Modifica attività {{controller.activity.name}}
     .card-body
       .row
         .col-sm-12
           .mda-form-group
-            input.mda-form-control(ng-model='practiceController.practice.name', tabindex='0', aria-invalid='false')
+            input.mda-form-control(ng-model='controller.activity.name', tabindex='0', aria-invalid='false')
             label Nome
-            span.mda-form-msg.right Es. Nome cliente/Controparte
+      .row
+        .col-sm-6
+          .mda-form-group
+            input.mda-form-control(ng-model='controller.activity.assignee.username', tabindex='1')
+            label Operatore incaricato
+        .col-sm-6
+          .mda-form-group
+            md-datepicker.mda-form-control(ng-model="controller.activity.expirationDate" style="border: none !important;")
+            label Data scadenza
       .row
         .col-sm-12
           .mda-form-group
-            textarea.mda-form-control(ng-model='practiceController.practice.description', rows='4', aria-multiline='true', tabindex='0', aria-invalid='false')
+            textarea.mda-form-control(ng-model='controller.activity.description', rows='4', aria-multiline='true', tabindex='0', aria-invalid='false')
             label Note
-            span.mda-form-msg.right La descrizione della pratica
+            span.mda-form-msg.right La descrizione dell'attività
       .row
         .col-sm-12
-          md-button.pull-right.md-raised.md-primary(md-no-ink='', ng-click="practiceController.savePractice()") Salva
+          md-button.pull-right.md-raised.md-primary(md-no-ink='', ng-click="controller.saveActivity()") Salva
