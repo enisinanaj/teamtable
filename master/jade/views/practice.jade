@@ -1,25 +1,31 @@
 .container-md(ng-controller='PracticeController as controller')
   .card
     .card-heading.bg-primary
-      .card-title Dettaglio pratica 
-        strong {{controller.practice.name}}
-        span.pull-right
-          em Operatore di inserimento
-            strong {{controller.practice.creator.username}}
-    .card-body
-      div
-        table.row-border.hover(datatable='ng', dt-options='controller.dtOptions' dt-column-defs='controller.dtColumnDefs')
-          thead
-            tr
-              th Operatore inserimento
-              th Evento
-              th Data
-              th Dettaglio
-          tbody
-            tr(ng-repeat='event in controller.events')
-              td {{event.creator.username}}
-              td {{event.description}}
-              td {{event.eventDate}}
-              td 
-                a.btn.btn-primary(ng-href="{{$state.href('app.single_event', {eventId: event.id})}}")
-                  i.icon-magnifier
+      .card-title 
+        div Dettaglio pratica 
+          strong {{controller.practice.name}} 
+        span Operatore di inserimento
+          strong {{controller.practice.creator.username}}
+    .card-offset.pull-right
+      a.btn.btn-purple.btn-circle.btn-lg(ng-href="{{$state.href('app.add_practice', {practiceId: controller.practice.id})}}")
+        em.icon-pencil
+    .card-body(style="padding-top: 25px")
+      div.card-title.strong(style="font-size:18px!important; color: #424242 !important;font-weight: bold")
+        | Elenco Eventi
+        a(ng-href="{{$state.href('app.add_event', {eventId: 0, practiceId: controller.practice.id})}}", style="font-weight: 100; font-size: 14px; line-height: 20px")
+          em aggiungi evento
+      table.row-border.hover(datatable='ng', dt-options='controller.dtOptions' dt-column-defs='controller.dtColumnDefs')
+        thead
+          tr
+            th Operatore inserimento
+            th Evento
+            th Data
+            th Dettaglio
+        tbody
+          tr(ng-repeat='event in controller.events')
+            td {{event.creator.username}}
+            td {{event.description}}
+            td {{event.eventDate}}
+            td 
+              a.btn.btn-primary(ng-href="{{$state.href('app.single_event', {eventId: event.id})}}")
+                i.icon-magnifier

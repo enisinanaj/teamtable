@@ -1,54 +1,35 @@
 .container-md(ng-controller='ActivityController as controller')
   .card
-    .card-heading.bg-primary
-      .row.list-icon
-        .col-md-1.col-sm-4
-          a(ng-href="{{$state.href('app.single_practice', {practiceId: controller.activity.event.practice.id})}}" style="color:#FFF!important;")
-            em.icon-arrow-left-circle(style="font-size:24px!important;")
-        .card-title(style="font-size:20px!important;") Pratica
-          strong {{controller.activity.event.practice.name}}
-    .card-heading.bg-info
-      .row.list-icon
-        .col-md-1.col-sm-4
-          a(ng-href="{{$state.href('app.single_event', {eventId: controller.activity.event.id})}}" style="color:#E8EAF6!important")
-            em.icon-arrow-left-circle(style="font-size:24px!important;")
-        .card-title(style="font-size:20px!important; color:#E8EAF6!important") Evento
-          strong {{controller.activity.event.description}}
-    .card(ng-controller='MDInputCtrl', style="margin-bottom:0px;")
-    .card-heading(style="border-bottom-color: #2196F3!important; border-bottom-style:solid!important; border-bottom-width:thin!important;")
-      .row.list-icon
-        .col-md-1.col-sm-4
-          em.icon-check(style="font-size:24px!important; color:#3F51B5!important;")
-        .card-title(style="font-size:20px!important; color:#3F51B5!important") Dettaglio Attività
+    .card-heading.bg-primary(style="padding-bottom: 15px")
+      div.card-title
+        strong Attività
+      .row
+        .col-lg-12
+          span Nome attività
+          strong {{controller.activity.name}}
+        .col-lg-6
+          span Pratica
+          strong(ng-click="controller.goToPractice()", style="text-decoration: underline") {{controller.activity.event.practice.name}}
+        .col-lg-6
+          span Nome evento
+          strong(ng-click="controller.goToEvent()", style="text-decoration: underline") {{controller.activity.event.description}}
+        .col-lg-6
+          span Tipo attività
+          strong {{controller.activity.activityType}}
+        .col-lg-6
+          span Operatore incaricato
+          strong {{controller.activity.assignee.username}}
+        .col-lg-6
+          span Data scadenza
+          strong {{controller.activity.expirationDate}}
+        .col-lg-6(ng-if="controller.activity.completionDate != undefined")
+          span Data chiusura
+          strong {{controller.activity.completionDate}}
+    .card-offset.pull-right
+      button.btn.btn-purple.btn-circle.btn-lg(ng-href="{{$state.href('app.add_activity', {activityId: controller.activity.id})}}")
+        em.icon-pencil
     .card-body
-      .row  
-      form(name='userForm')
-        div(layout='', layout-sm='column')
-          md-input-container(flex='')
-            label Nome Attività
-            input(ng-model='controller.activity.name', disabled='')
-        div(layout='', layout-sm='column')
-          md-input-container(flex='')
-            label Tipo Attività
-            input(ng-model='controller.activity.activityType', disabled='')
-          md-input-container(flex='')
-            label Operatore incaricato
-            input(ng-model='controller.activity.assignee.username', disabled='')
-        div(layout='', layout-sm='column')
-          md-input-container(flex='')
-            label Stato Attività
-            input(ng-model='controller.activity.status', disabled='')
-          md-input-container(flex='')
-            label Data chiusura
-            input(ng-model='controller.activity.completionDate', disabled='')
-          md-input-container(flex='')
-            label Data scadenza
-            input(ng-model='controller.activity.expirationDate', disabled='')
-    fieldset
-      .form-group
-        .col-sm-12
-          label.col-sm-4.control-label(style="color:rgba(0,0,0,0.38)") Descrizione attività
-          .panel
-            .panel-body
-              textarea.form-control.note-editor(rows="10", disabled='', style="cursor:text!important; background-color:#FFF!important; color:rgba(0,0,0,0.38); resize:none")
-                |{{controller.activity.description}}
+      div
+        strong Descrizione attività
+        .clearfix
+        p(style="font-size: 16px") {{controller.activity.description}}

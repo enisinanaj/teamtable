@@ -1,18 +1,20 @@
 .container-md
-  .card
+  .card(ng-controller="EventController as controller")
     .card-heading.bg-primary
-      .card-title Nuovo evento
+      .card-title(ng-if="controller.event.id == undefined") Nuovo evento
+      .card-title(ng-if="controller.event.id != undefined") Modifica evento 
+        strong {{controller.event.description}}
     .card-body
       .row
         .col-sm-12
           .mda-form-group
-            input.mda-form-control(ng-model='event.description', tabindex='0', aria-invalid='false')
+            input.mda-form-control(ng-model='controller.event.description', tabindex='0', aria-invalid='false')
             label Nome
       .row
         .col-sm-12
           .mda-form-group
-            md-datepicker.mda-form-control(ng-model="birthday" style="border: none !important;")
+            md-datepicker.mda-form-control(ng-model="controller.event.eventDate" style="border: none !important;")
             label Data evento
       .row
         .col-sm-12
-          md-button.pull-right.md-raised.md-primary(md-no-ink='') Salva
+          md-button.pull-right.md-raised.md-primary(md-no-ink='', ng-click="controller.saveEvent()") Salva

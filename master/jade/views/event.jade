@@ -1,31 +1,27 @@
 .container-md(ng-controller='EventController as controller')
   .card
-    .card-heading.bg-primary
-      .row.list-icon
-        .col-md-1.col-sm-4
-          a(ng-href="{{$state.href('app.single_practice', {practiceId: controller.event.practice.id})}}" style="color:#FFF!important;")
-            em.icon-arrow-left-circle(style="font-size:24px!important;")
-        .card-title(style="font-size:20px!important;") Pratica
-          strong {{controller.event.practice.name}}
-    .card-heading.bg-info
-      .row.list-icon
-        .col-md-1.col-sm-4
-          em.icon-check(style="font-size:24px!important; color:#E8EAF6!important;")
-        .card-title(style="font-size:20px!important; color:#E8EAF6!important;") Dettaglio Evento
-    .card-body(style="padding-bottom:0px;")
-      .row  
-      form(name='userForm')
-        div(layout='', layout-sm='column')
-          md-input-container(flex='')
-            label Nome Evento
-            input(ng-model='controller.event.description', disabled='')
-          md-input-container
-            label Data Evento
-            input(ng-model='controller.event.eventDate', disabled='')
-    .card-body(style="padding-top:0px!important; text-align:center!important;")
+    .card-heading.bg-primary(style="padding-bottom: 15px")
+      div.card-title
+        strong Evento 
+      .row
+        .col-lg-12
+          span Pratica
+          strong(ng-click="controller.goToPractice()", style="text-decoration: underline") {{controller.event.practice.name}}
+        .col-lg-7.col-md-6.col-sm-12
+          span Nome Evento
+          strong {{controller.event.description}}
+        .col-lg-5.col-md-6.col-sm-12
+          span Data Evento
+          strong {{controller.event.eventDate}}
+    .card-offset.pull-right
+      a.btn.btn-purple.btn-circle.btn-lg(ng-href="{{$state.href('app.add_event', {eventId: controller.event.id, practiceId: controller.event.practice.id})}}")
+        em.icon-pencil
+    .card-body(style="padding-top: 25px!important;")
+      div.card-title.strong(style="font-size:18px!important; color: #424242 !important;font-weight: bold") Elenco Attività
+        a(ng-href="{{$state.href('app.add_activity', {activityId: 0, eventId: controller.event.id})}}", style="font-weight: 100; font-size: 14px; line-height: 20px")
+          em aggiungi attività
       table.row-border.hover(datatable='ng', dt-options='controller.dtOptions' dt-column-defs='controller.dtColumnDefs')
         thead 
-          strong(style="font-size:20px!important;") Elenco Attività
           tr  
             th Attività
             th Tipo attività

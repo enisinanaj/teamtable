@@ -1,7 +1,9 @@
 .container-md
   .card(ng-controller='PracticeController as practiceController')
     .card-heading.bg-primary
-      .card-title Nuova pratica
+      .card-title(ng-if="practiceController.practice.id == ''") Nuova pratica
+      .card-title(ng-if="practiceController.practice.id != ''") Modifica pratica 
+        strong {{practiceController.practice.name}}
     .card-body
       .row
         .col-sm-12

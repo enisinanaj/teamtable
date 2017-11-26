@@ -66,15 +66,21 @@
                 resolve: helper.resolveForAuthenticated('practices', 'moment')
             })
             .state('app.add_practice', {
-                url: '/addPractice',
+                url: '/addPractice/:practiceId',
                 title: 'Add practice',
                 templateUrl: helper.basepath('add_practice.html'),
                 resolve: helper.resolveForAuthenticated('practices', 'moment')
             })
             .state('app.add_event', {
-                url: '/addEvent',
+                url: '/addEvent/:eventId/:practiceId',
                 title: 'Add event',
                 templateUrl: helper.basepath('add_event.html'),
+                resolve: helper.resolveForAuthenticated('practices', 'moment')
+            })
+            .state('app.add_activity', {
+                url: '/addActivity/:activityId/:eventId',
+                title: 'Add activity',
+                templateUrl: helper.basepath('add_activity.html'),
                 resolve: helper.resolveForAuthenticated('practices', 'moment')
             })
             .state('app.single_practice', {
