@@ -5,16 +5,21 @@
       .card-title(ng-if="controller.activity.id != undefined") Modifica attività {{controller.activity.name}}
     .card-body
       .row
-        .col-sm-12
+        .col-sm-9
           .mda-form-group
             input.mda-form-control(ng-model='controller.activity.name', tabindex='0', aria-invalid='false')
             label Nome
-      .row
-        .col-sm-6
+        .col-sm-3
           .mda-form-group
-            input.mda-form-control(ng-model='controller.activity.assignee.username', tabindex='1')
-            label Operatore incaricato
-        .col-sm-6
+            input.mda-form-control(ng-model='controller.activity.activityType', tabindex='0', aria-invalid='false')
+            label Tipo attività
+      .row
+        .col-sm-9
+          .mda-form-group
+            md-input-container(style="width: 100%;margin: 0")
+              md-select(placeholder='Operatore incaricato', ng-model='controller.activity.assigneeId')
+                md-option(ng-repeat='user in controller.users', value='{{user.id}}') {{user.username}}
+        .col-sm-3
           .mda-form-group
             md-datepicker.mda-form-control(ng-model="controller.activity.expirationDate" style="border: none !important;")
             label Data scadenza

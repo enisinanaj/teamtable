@@ -30,7 +30,10 @@
             th Dettaglio
         tbody
           tr(ng-repeat='activity in controller.activities')
-            td {{activity.description}}
+            td 
+              strong {{activity.name}}
+              .clearfix
+              span.text-muted {{activity.description}}
             td {{activity.activityType}}
             td {{activity.assignee.username}}
             td {{activity.status}}

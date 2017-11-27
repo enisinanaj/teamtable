@@ -34,7 +34,8 @@
             'app.practices',
             'app.practice',
             'app.event',
-            'app.activity'
+            'app.activity',
+            'app.user'
         ]);
 })();
 

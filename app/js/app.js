@@ -34,7 +34,8 @@
             'app.practices',
             'app.practice',
             'app.event',
-            'app.activity'
+            'app.activity',
+            'app.user'
         ]);
 })();
 
@@ -178,6 +179,12 @@
     'use strict';
 
     angular
+        .module('app.user', []);
+})();
+(function() {
+    'use strict';
+
+    angular
         .module('app.utils', [
           'app.colors'
           ]);
@@ -196,10 +203,10 @@
         .controller('ActivityController', ActivityController);
 
     ActivityController.$inject = ['$scope', '$window', '$state', '$stateParams', 
-      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'ActivityService'];
+      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'ActivityService', 'UserService'];
     
     function ActivityController($scope, $window, $state, $stateParams, 
-      $resource, DTOptionsBuilder, DTColumnDefBuilder, ActivityService) {
+      $resource, DTOptionsBuilder, DTColumnDefBuilder, ActivityService, UserService) {
         
         var vm = this;
 
@@ -214,7 +221,6 @@
           // LOAD DATA
 
           function onLoad(result) {
-            console.log(JSON.stringify(result));
             vm.activity = result.data;
             vm.activity.id = extractId(vm.activity.hRef);
             vm.activity.event.id = extractId(vm.activity.event.hRef);
@@ -224,9 +230,18 @@
             vm.activity.expirationDate = parseEventDate(vm.activity.expirationDate);
           };
 
+          function onLoadUsers(result) {
+            vm.users = result.data;
+            for (var i = vm.users.length - 1; i >= 0; i--) {
+              vm.users[i].id = extractId(vm.users[i].hRef);
+            }
+          };
+
           if (idPresent()) {
             ActivityService.loadActivity($stateParams.activityId, onLoad);
           }
+
+          UserService.loadAllUsers(onLoadUsers);
 
           function extractId(hRef) {
             return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
@@ -251,6 +266,8 @@
             } else {
               vm.activity.eventId = $stateParams.eventId;
             }
+
+            vm.activity.status = 'OPEN';
 
             ActivityService.saveActivity(vm.activity, onSave);
 
@@ -4133,6 +4150,43 @@
       $rootScope.language.init();
 
     }
+})();
+// Practices service
+// angular.module("app").factory;
+
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.user')
+        .service('UserService', UserService);
+
+    UserService.$inject = ['$resource', '$http', '$rootScope', 'AuthenticationService', 'AUTH'];
+    function UserService($resource, $http, $rootScope, AuthenticationService, AUTH) {
+        this.loadAllUsers = loadAllUsers;
+
+        var vm = this;
+
+        function loadAllUsers(onReady) {
+          var practicesApi = $rootScope.app.apiUrl + 'users/';
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure loading users'); };
+
+          $http
+            .get(practicesApi, config)
+            .then(onReady, onError);
+        }
+    }
+
 })();
 /**=========================================================
  * Module: animate-enabled.js
