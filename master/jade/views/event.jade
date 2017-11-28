@@ -6,22 +6,28 @@
     .card-heading.bg-info(style="box-shadow: 0px -5px 5px -1px rgba(0,0,0,0.15);")
       .card-title(style="font-size:20px!important; color:#E8EAF6!important; padding-left: 20px;") Dettaglio Evento
     .card-body(style="border: 1px solid #f5f5f5")
-      .col-lg-2
-        label.text-muted(style="font-weight: normal;") Dati evento
+      .col-lg-4
+        label.text-muted(style="font-weight: normal;") Dati evento 
+        span [
+          a(ng-href="{{$state.href('app.add_event', {eventId: controller.event.id, practiceId: controller.event.practice.id})}}") modifica evento
+          |]
       .col-lg-2(style="text-align: right;")
         .row.mr-sm
           label(style="font-weight: normal;") Nome evento
         .row.mr-sm
           label(style="font-weight: normal;") Data evento
-      .col-lg-8
+      .col-lg-6
         .row
           label {{controller.event.description}}
         .row
           label {{controller.event.eventDate}}
       .clearfix
     .card-body
-      .col-lg-2
+      .col-lg-4
         label.text-muted(style="font-weight: normal;") Elenco attività
+        span [
+          a(ng-href="{{$state.href('app.add_activity', {activityId: 0, eventId: controller.event.id})}}") aggiungi attività
+          |]
       .clearfix
       table.row-border.hover(datatable='ng', dt-options='controller.dtOptions' dt-column-defs='controller.dtColumnDefs')
         thead 
