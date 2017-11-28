@@ -65,7 +65,7 @@
           }
 
           function idPresent() {
-            return $stateParams.activityId != undefined && $stateParams.activityId != 0;
+            return $stateParams.activityId != undefined && $stateParams.activityId != 0 && $stateParams.activityId != "";
           }
 
           //INSERTION

@@ -47,7 +47,7 @@
           };
 
           function idPresent() {
-            return $stateParams.practiceId != null;
+            return $stateParams.practiceId != null && $stateParams.practiceId != "";
           }
 
           //INSERTION

@@ -1,4 +1,4 @@
-.container-md(ng-controller='PracticeController as controller')
+.container-md(ng-controller='PracticeController as practiceDetail')
   .card
     .card-heading.bg-primary
       .card-title(style="font-size:20px!important; padding-left: 20px;") Dettaglio pratica
@@ -6,7 +6,7 @@
       .col-lg-4
         label.text-muted(style="font-weight: normal") Dati pratica
         span [
-          a(ng-href="{{$state.href('app.add_practice', {practiceId: controller.practice.id})}}") modifica pratica
+          a(ng-href="{{$state.href('app.add_practice', {practiceId: practiceDetail.practice.id})}}") modifica pratica
           |]
       .col-lg-2(style="text-align: right;")
         .row.mr-sm
@@ -15,18 +15,18 @@
           label(style="font-weight: normal;") Note
       .col-lg-6
         .row
-          label {{controller.practice.name}}
+          label {{practiceDetail.practice.name}}
         .row
-          label {{controller.practice.description}}
+          label {{practiceDetail.practice.description}}
       .clearfix
     .card-body
       .col-lg-4
         label.text-muted(style="font-weight: normal;") Elenco eventi
         span [
-          a(ng-href="{{$state.href('app.add_event', {eventId: 0, practiceId: controller.practice.id})}}") aggiungi evento
+          a(ng-href="{{$state.href('app.add_event', {eventId: 0, practiceId: practiceDetail.practice.id})}}") aggiungi evento
           |]
       .clearfix
-      table.row-border.hover(datatable='ng', dt-options='controller.dtOptions' dt-column-defs='controller.dtColumnDefs')
+      table.row-border.hover(datatable='ng', dt-options='practiceDetail.dtOptions' dt-column-defs='practiceDetail.dtColumnDefs')
         thead
           tr
             th Operatore inserimento
@@ -34,7 +34,7 @@
             th Data
             th Dettaglio
         tbody
-          tr(ng-repeat='event in controller.events')
+          tr(ng-repeat='event in practiceDetail.events')
             td {{event.creator.username}}
             td {{event.description}}
             td {{event.eventDate}}

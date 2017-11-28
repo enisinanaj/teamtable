@@ -1,15 +1,15 @@
-.container-md(ng-controller='EventController as controller')
+.container-md(ng-controller='EventController as eventDetailController')
   .card
-    .card-heading.bg-primary(ng-click="controller.goToPractice()")
+    .card-heading.bg-primary(ng-click="eventDetailController.goToPractice()")
       .card-title(style="font-size:20px!important; padding-left: 20px;") Pratica
-        strong {{controller.event.practice.name}}
+        strong {{eventDetailController.event.practice.name}}
     .card-heading.bg-info(style="box-shadow: 0px -5px 5px -1px rgba(0,0,0,0.15);")
       .card-title(style="font-size:20px!important; color:#E8EAF6!important; padding-left: 20px;") Dettaglio Evento
     .card-body(style="border: 1px solid #f5f5f5")
       .col-lg-4
         label.text-muted(style="font-weight: normal;") Dati evento 
         span [
-          a(ng-href="{{$state.href('app.add_event', {eventId: controller.event.id, practiceId: controller.event.practice.id})}}") modifica evento
+          a(ng-href="{{$state.href('app.add_event', {eventId: eventDetailController.event.id, practiceId: eventDetailController.event.practice.id})}}") modifica evento
           |]
       .col-lg-2(style="text-align: right;")
         .row.mr-sm
@@ -18,18 +18,18 @@
           label(style="font-weight: normal;") Data evento
       .col-lg-6
         .row
-          label {{controller.event.description}}
+          label {{eventDetailController.event.description}}
         .row
-          label {{controller.event.eventDate}}
+          label {{eventDetailController.event.eventDate}}
       .clearfix
     .card-body
       .col-lg-4
         label.text-muted(style="font-weight: normal;") Elenco attività
         span [
-          a(ng-href="{{$state.href('app.add_activity', {activityId: 0, eventId: controller.event.id})}}") aggiungi attività
+          a(ng-href="{{$state.href('app.add_activity', {activityId: 0, eventId: eventDetailController.event.id})}}") aggiungi attività
           |]
       .clearfix
-      table.row-border.hover(datatable='ng', dt-options='controller.dtOptions' dt-column-defs='controller.dtColumnDefs')
+      table.row-border.hover(datatable='ng', dt-options='eventDetailController.dtOptions' dt-column-defs='eventDetailController.dtColumnDefs')
         thead 
           tr  
             th Attività
@@ -38,7 +38,7 @@
             th Stato attività
             th Dettaglio
         tbody
-          tr(ng-repeat='activity in controller.activities')
+          tr(ng-repeat='activity in eventDetailController.activities')
             td
               strong {{activity.name}}
               .clearfix

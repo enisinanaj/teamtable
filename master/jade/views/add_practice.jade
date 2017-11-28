@@ -1,22 +1,22 @@
 .container-md
-  .card(ng-controller='PracticeController as practiceController')
+  .card(ng-controller='PracticeController as addPracticeController')
     .card-heading.bg-primary
-      .card-title(ng-if="practiceController.practice.id == ''") Nuova pratica
-      .card-title(ng-if="practiceController.practice.id != ''") Modifica pratica 
-        strong {{practiceController.practice.name}}
+      .card-title(ng-if="addPracticeController.practice.id == '' || addPracticeController.practice.id == undefined") Nuova pratica
+      .card-title(ng-if="addPracticeController.practice.id != '' && addPracticeController.practice.id != undefined") Modifica pratica 
+        strong {{addPracticeController.practice.name}}
     .card-body
       .row
         .col-sm-12
           .mda-form-group
-            input.mda-form-control(ng-model='practiceController.practice.name', tabindex='0', aria-invalid='false')
+            input.mda-form-control(ng-model='addPracticeController.practice.name', tabindex='0', aria-invalid='false')
             label Nome
             span.mda-form-msg.right Es. Nome cliente/Controparte
       .row
         .col-sm-12
           .mda-form-group
-            textarea.mda-form-control(ng-model='practiceController.practice.description', rows='4', aria-multiline='true', tabindex='0', aria-invalid='false')
+            textarea.mda-form-control(ng-model='addPracticeController.practice.description', rows='4', aria-multiline='true', tabindex='0', aria-invalid='false')
             label Note
             span.mda-form-msg.right La descrizione della pratica
       .row
         .col-sm-12
-          md-button.pull-right.md-raised.md-primary(md-no-ink='', ng-click="practiceController.savePractice()") Salva
+          md-button.pull-right.md-raised.md-primary(md-no-ink='', ng-click="addPracticeController.savePractice()") Salva

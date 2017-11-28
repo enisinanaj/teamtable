@@ -1,11 +1,11 @@
-.container-md(ng-controller='ActivityController as controller')
+.container-md(ng-controller='ActivityController as activityDetailController')
   .card
-    .card-heading.bg-primary(ng-click="controller.goToPractice()")
+    .card-heading.bg-primary(ng-click="activityDetailController.goToPractice()")
       .card-title(style="font-size:20px!important; padding-left: 20px;") Pratica
-        strong {{controller.activity.event.practice.name}}
-    .card-heading.bg-info(style="box-shadow: 0px -5px 5px -1px rgba(0,0,0,0.15);", ng-click="controller.goToEvent()")
+        strong {{activityDetailController.activity.event.practice.name}}
+    .card-heading.bg-info(style="box-shadow: 0px -5px 5px -1px rgba(0,0,0,0.15);", ng-click="activityDetailController.goToEvent()")
       .card-title(style="font-size:20px!important; color:#E8EAF6!important; padding-left: 20px;") Evento
-        strong {{controller.activity.event.description}}
+        strong {{activityDetailController.activity.event.description}}
     .card(ng-controller='MDInputCtrl', style="margin-bottom:0px;")
       .card-heading(style="border-bottom-color: #2196F3!important; border-bottom-style:solid!important; border-bottom-width:thin!important; box-shadow: 0px -5px 5px -1px rgba(0,0,0,0.15);")
         .card-title(style="font-size:20px!important; color:#3F51B5!important; padding-left: 20px;") Dettaglio Attività
@@ -13,7 +13,7 @@
         .col-lg-4
           label.text-muted(style="font-weight: normal;") Dati principali
           span [
-            a(ng-href="{{$state.href('app.add_activity', {activityId: controller.activity.id, eventId: controller.activity.event.id})}}") modifica attività
+            a(ng-href="{{$state.href('app.add_activity', {activityId: activityDetailController.activity.id, eventId: activityDetailController.activity.event.id})}}") modifica attività
             |]
         .col-lg-2(style="text-align: right;")
           .row.mr-sm
@@ -22,9 +22,9 @@
             label(style="font-weight: normal;") Descrizione attività
         .col-lg-6
           .row
-            label {{controller.activity.name}}
+            label {{activityDetailController.activity.name}}
           .row
-            label {{controller.activity.description}}
+            label {{activityDetailController.activity.description}}
         .clearfix
       .card-body
         .col-lg-4 
@@ -42,13 +42,13 @@
             label(style="font-weight: normal;") Data scadenza
         .col-lg-6
           .row
-            label {{controller.activity.activityType}}
+            label {{activityDetailController.activity.activityType}}
           .row
-            label {{controller.activity.assignee.username}}
+            label {{activityDetailController.activity.assignee.username}}
           .row
-            label {{controller.activity.status}}
+            label {{activityDetailController.activity.status}}
           .row
-            label {{controller.activity.completionDate}}
+            label {{activityDetailController.activity.completionDate}}
           .row
-            label {{controller.activity.expirationDate}}
+            label {{activityDetailController.activity.expirationDate}}
         .clearfix
