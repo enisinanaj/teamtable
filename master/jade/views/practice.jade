@@ -1,19 +1,25 @@
 .container-md(ng-controller='PracticeController as controller')
   .card
     .card-heading.bg-primary
-      .card-title 
-        div Dettaglio pratica 
-          strong {{controller.practice.name}} 
-        span Operatore di inserimento
-          strong {{controller.practice.creator.username}}
-    .card-offset.pull-right
-      a.btn.btn-purple.btn-circle.btn-lg(ng-href="{{$state.href('app.add_practice', {practiceId: controller.practice.id})}}")
-        em.icon-pencil
-    .card-body(style="padding-top: 25px")
-      div.card-title.strong(style="font-size:18px!important; color: #424242 !important;font-weight: bold")
-        | Elenco Eventi
-        a(ng-href="{{$state.href('app.add_event', {eventId: 0, practiceId: controller.practice.id})}}", style="font-weight: 100; font-size: 14px; line-height: 20px")
-          em aggiungi evento
+      .card-title(style="font-size:20px!important; padding-left: 20px;") Dettaglio pratica
+    .card-body(style="border: 1px solid #f5f5f5")
+      .col-lg-2
+        label.text-muted(style="font-weight: normal") Dati pratica
+      .col-lg-2(style="text-align: right;")
+        .row.mr-sm
+          label(style="font-weight: normal;") Nome pratica
+        .row.mr-sm
+          label(style="font-weight: normal;") Note
+      .col-lg-8
+        .row
+          label {{controller.practice.name}}
+        .row
+          label {{controller.practice.description}}
+      .clearfix
+    .card-body
+      .col-lg-2
+        label.text-muted(style="font-weight: normal;") Elenco eventi
+      .clearfix
       table.row-border.hover(datatable='ng', dt-options='controller.dtOptions' dt-column-defs='controller.dtColumnDefs')
         thead
           tr

@@ -80,8 +80,12 @@
           }
 
           function parseEventDate(date) {
-            date.replace(/\[.*\]/, '');
-            return moment(date).format('DD/MM/YYYY');
+            if (date != null) {
+              date.replace(/\[.*\]/, '');
+              return moment(date).format('DD/MM/YYYY');
+            } else {
+              return null;
+            }
           }
 
           //DATATABLE

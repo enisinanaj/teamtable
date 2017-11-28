@@ -1,35 +1,51 @@
 .container-md(ng-controller='ActivityController as controller')
   .card
-    .card-heading.bg-primary(style="padding-bottom: 15px")
-      div.card-title
-        strong Attività
-      .row
-        .col-lg-12
-          span Nome attività
-          strong {{controller.activity.name}}
-        .col-lg-6
-          span Pratica
-          strong(ng-click="controller.goToPractice()", style="text-decoration: underline") {{controller.activity.event.practice.name}}
-        .col-lg-6
-          span Nome evento
-          strong(ng-click="controller.goToEvent()", style="text-decoration: underline") {{controller.activity.event.description}}
-        .col-lg-6
-          span Tipo attività
-          strong {{controller.activity.activityType}}
-        .col-lg-6
-          span Operatore incaricato
-          strong {{controller.activity.assignee.username}}
-        .col-lg-6
-          span Data scadenza
-          strong {{controller.activity.expirationDate}}
-        .col-lg-6(ng-if="controller.activity.completionDate != undefined")
-          span Data chiusura
-          strong {{controller.activity.completionDate}}
-    .card-offset.pull-right
-      a.btn.btn-purple.btn-circle.btn-lg(ng-href="{{$state.href('app.add_activity', {activityId: controller.activity.id, eventId: controller.activity.event.id})}}")
-        em.icon-pencil
-    .card-body
-      div
-        strong Descrizione attività
+    .card-heading.bg-primary(ng-click="controller.goToPractice()")
+      .card-title(style="font-size:20px!important; padding-left: 20px;") Pratica
+        strong {{controller.activity.event.practice.name}}
+    .card-heading.bg-info(style="box-shadow: 0px -5px 5px -1px rgba(0,0,0,0.15);", ng-click="controller.goToEvent()")
+      .card-title(style="font-size:20px!important; color:#E8EAF6!important; padding-left: 20px;") Evento
+        strong {{controller.activity.event.description}}
+    .card(ng-controller='MDInputCtrl', style="margin-bottom:0px;")
+      .card-heading(style="border-bottom-color: #2196F3!important; border-bottom-style:solid!important; border-bottom-width:thin!important; box-shadow: 0px -5px 5px -1px rgba(0,0,0,0.15);")
+        .card-title(style="font-size:20px!important; color:#3F51B5!important; padding-left: 20px;") Dettaglio Attività
+      .card-body(style="border: 1px solid #f5f5f5")
+        .col-lg-2
+          label.text-muted(style="font-weight: normal;") Dati principali
+        .col-lg-2(style="text-align: right;")
+          .row.mr-sm
+            label(style="font-weight: normal;") Nome attività
+          .row.mr-sm
+            label(style="font-weight: normal;") Descrizione attività
+        .col-lg-8
+          .row
+            label {{controller.activity.name}}
+          .row
+            label {{controller.activity.description}}
         .clearfix
-        p(style="font-size: 16px") {{controller.activity.description}}
+      .card-body
+        .col-lg-2 
+          label.text-muted(style="font-weight: normal;") Altri dati
+        .col-lg-2(style="text-align: right;")
+          .row.mr-sm
+            label(style="font-weight: normal;") Tipo attività
+          .row.mr-sm
+            label(style="font-weight: normal;") Operatore Incaricato
+          .row.mr-sm
+            label(style="font-weight: normal;") Stato attività
+          .row.mr-sm
+            label(style="font-weight: normal;") Data chiusura
+          .row.mr-sm
+            label(style="font-weight: normal;") Data scadenza
+        .col-lg-8
+          .row
+            label {{controller.activity.activityType}}
+          .row
+            label {{controller.activity.assignee.username}}
+          .row
+            label {{controller.activity.status}}
+          .row
+            label {{controller.activity.completionDate}}
+          .row
+            label {{controller.activity.expirationDate}}
+        .clearfix
