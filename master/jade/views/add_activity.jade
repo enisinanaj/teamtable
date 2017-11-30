@@ -2,7 +2,7 @@
   .card(ng-controller='ActivityController as addActivityController')
     .card-heading.bg-primary
       .card-title(ng-if="addActivityController.activity.id == undefined") Nuova attività
-      .card-title(ng-if="addActivityController.activity.id != undefined") Modifica attività {{addActivityController.activity.name}}
+      .card-title(ng-if="addActivityController.activity.id != undefined") Modifica attività
     .card-body
       .row
         .col-sm-9
@@ -21,7 +21,7 @@
                 md-option(ng-repeat='user in addActivityController.users', value='{{user.id}}') {{user.username}}
         .col-sm-3
           .mda-form-group
-            md-datepicker.mda-form-control(ng-model="addActivityController.activity.expirationDate" style="border: none !important;")
+            md-datepicker.mda-form-control(ng-model="addActivityController.activity.expirationDate_dateFormat" style="border: none !important;")
             label Data scadenza
       .row
         .col-sm-12

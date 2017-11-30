@@ -14,7 +14,8 @@
       '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'ActivityService', 'UserService'];
     
     function ActivityController($scope, $window, $state, $stateParams, 
-      $resource, DTOptionsBuilder, DTColumnDefBuilder, ActivityService, UserService) {
+                                $resource, DTOptionsBuilder, DTColumnDefBuilder, 
+                                ActivityService, UserService) {
         
         var vm = this;
 
@@ -35,7 +36,9 @@
             vm.activity.event.practice.id = extractId(vm.activity.event.practice.hRef);
             vm.activity.creationDate = parseEventDate(vm.activity.creationDate);
             vm.activity.completionDate = parseEventDate(vm.activity.completionDate);
+            vm.activity.expirationDate_dateFormat = new Date(vm.activity.expirationDate);
             vm.activity.expirationDate = parseEventDate(vm.activity.expirationDate);
+            vm.activity.assigneeId = extractId(vm.activity.assignee.hRef);
           };
 
           function onLoadUsers(result) {
@@ -73,6 +76,8 @@
           vm.saveActivity = saveActivity;
 
           function saveActivity() {
+            vm.activity.expirationDate = vm.activity.expirationDate_dateFormat;
+
             if (vm.activity.event != undefined && vm.activity.event.id != undefined) {
               vm.activity.eventId = vm.activity.event.id;
             } else {
