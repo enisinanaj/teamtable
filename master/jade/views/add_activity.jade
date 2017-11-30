@@ -1,0 +1,34 @@
+.container-md
+  .card(ng-controller='ActivityController as addActivityController')
+    .card-heading.bg-primary
+      .card-title(ng-if="addActivityController.activity.id == undefined") Nuova attività
+      .card-title(ng-if="addActivityController.activity.id != undefined") Modifica attività {{addActivityController.activity.name}}
+    .card-body
+      .row
+        .col-sm-9
+          .mda-form-group
+            input.mda-form-control(ng-model='addActivityController.activity.name', tabindex='0', aria-invalid='false')
+            label Nome
+        .col-sm-3
+          .mda-form-group
+            input.mda-form-control(ng-model='addActivityController.activity.activityType', tabindex='0', aria-invalid='false')
+            label Tipo attività
+      .row
+        .col-sm-9
+          .mda-form-group
+            md-input-container(style="width: 100%;margin: 0")
+              md-select(placeholder='Operatore incaricato', ng-model='addActivityController.activity.assigneeId')
+                md-option(ng-repeat='user in addActivityController.users', value='{{user.id}}') {{user.username}}
+        .col-sm-3
+          .mda-form-group
+            md-datepicker.mda-form-control(ng-model="addActivityController.activity.expirationDate" style="border: none !important;")
+            label Data scadenza
+      .row
+        .col-sm-12
+          .mda-form-group
+            textarea.mda-form-control(ng-model='addActivityController.activity.description', rows='4', aria-multiline='true', tabindex='0', aria-invalid='false')
+            label Note
+            span.mda-form-msg.right La descrizione dell'attività
+      .row
+        .col-sm-12
+          md-button.pull-right.md-raised.md-primary(md-no-ink='', ng-click="addActivityController.saveActivity()") Salva

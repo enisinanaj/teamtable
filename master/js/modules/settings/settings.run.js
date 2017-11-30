@@ -39,7 +39,7 @@
           asideScrollbar: false,
           isCollapsedText: false
         },
-        apiUrl: 'http://localhost:8000/teamtable/api/',
+        apiUrl: 'http://192.168.1.156:8000/teamtable/api/',
         useFullLayout: false,
         hiddenFooter: false,
         offsidebarOpen: false,

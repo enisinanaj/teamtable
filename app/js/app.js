@@ -34,7 +34,8 @@
             'app.practices',
             'app.practice',
             'app.event',
-            'app.activity'
+            'app.activity',
+            'app.user'
         ]);
 })();
 
@@ -178,6 +179,12 @@
     'use strict';
 
     angular
+        .module('app.user', []);
+})();
+(function() {
+    'use strict';
+
+    angular
         .module('app.utils', [
           'app.colors'
           ]);
@@ -196,10 +203,10 @@
         .controller('ActivityController', ActivityController);
 
     ActivityController.$inject = ['$scope', '$window', '$state', '$stateParams', 
-      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'ActivityService'];
+      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'ActivityService', 'UserService'];
     
     function ActivityController($scope, $window, $state, $stateParams, 
-      $resource, DTOptionsBuilder, DTColumnDefBuilder, ActivityService) {
+      $resource, DTOptionsBuilder, DTColumnDefBuilder, ActivityService, UserService) {
         
         var vm = this;
 
@@ -211,25 +218,72 @@
 
           vm.activity = {};
 
+          // LOAD DATA
+
           function onLoad(result) {
-            console.log(JSON.stringify(result));
             vm.activity = result.data;
+            vm.activity.id = extractId(vm.activity.hRef);
             vm.activity.event.id = extractId(vm.activity.event.hRef);
             vm.activity.event.practice.id = extractId(vm.activity.event.practice.hRef);
             vm.activity.creationDate = parseEventDate(vm.activity.creationDate);
-            vm.activity.completionDate = parseEventDate(vm.activity.complationDate);
+            vm.activity.completionDate = parseEventDate(vm.activity.completionDate);
             vm.activity.expirationDate = parseEventDate(vm.activity.expirationDate);
           };
 
-          ActivityService.loadActivity($stateParams.activityId, onLoad);
+          function onLoadUsers(result) {
+            vm.users = result.data;
+            for (var i = vm.users.length - 1; i >= 0; i--) {
+              vm.users[i].id = extractId(vm.users[i].hRef);
+            }
+          };
+
+          if (idPresent()) {
+            ActivityService.loadActivity($stateParams.activityId, onLoad);
+          }
+
+          UserService.loadAllUsers(onLoadUsers);
 
           function extractId(hRef) {
             return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
           }
 
           function parseEventDate(date) {
+            date.replace(/\[.*\]/, '');
             return moment(date).format('DD/MM/YYYY');
           }
+
+          function idPresent() {
+            return $stateParams.activityId != undefined && $stateParams.activityId != 0;
+          }
+
+          //INSERTION
+
+          vm.saveActivity = saveActivity;
+
+          function saveActivity() {
+            if (vm.activity.event != undefined && vm.activity.event.id != undefined) {
+              vm.activity.eventId = vm.activity.event.id;
+            } else {
+              vm.activity.eventId = $stateParams.eventId;
+            }
+
+            vm.activity.status = 'OPEN';
+
+            ActivityService.saveActivity(vm.activity, onSave);
+
+            function onSave(data) {
+              var id = vm.activity.id;
+              
+              if (vm.activity.id == undefined) {
+                var hRef = data.headers()["location"];
+                id = extractId(hRef);
+              }
+              
+              $state.go('app.single_activity', {activityId: id})
+            };
+          }
+
+          // CONFIGURATION
 
           vm.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType('full_numbers')
@@ -248,6 +302,14 @@
               DTColumnDefBuilder.newColumnDef(2).withOption('width', '80px'),
               DTColumnDefBuilder.newColumnDef(3).withOption('width', '50px')
           ];
+
+          vm.goToEvent = function() {
+            $state.go('app.single_event', {eventId: vm.activity.event.id});
+          }
+
+          vm.goToPractice = function() {
+            $state.go('app.single_practice', {practiceId: vm.activity.event.practice.id});
+          }
           
         }
     }
@@ -267,6 +329,7 @@
     ActivityService.$inject = ['$resource', '$http', '$rootScope', 'AuthenticationService', 'AUTH'];
     function ActivityService($resource, $http, $rootScope, AuthenticationService, AUTH) {
         this.loadActivity = loadActivity;
+        this.saveActivity = saveActivity;
         var vm = this;
 
         function loadActivity(id, onReady) {
@@ -285,6 +348,39 @@
           $http
             .get(activitiesApi, config)
             .then(onReady, onError);
+        }
+
+        function saveActivity(activity, onReady) {
+          var activityEndpoint = $rootScope.app.apiUrl + 'activities/' + getId(activity);
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure sending activity data'); };
+          addCreatorIdToModel(activity);
+
+          activity.creatorId = $rootScope.user.id;
+
+          function getId(activity) {
+            if (activity.id == undefined || activity.id == null) {
+              return "";
+            }
+
+            return activity.id;
+          };
+
+          $http
+            .post(activityEndpoint, activity, config)
+            .then(onReady, onError);
+        }
+
+        function addCreatorIdToModel(activity) {
+          activity.creatorId = $rootScope.user.id;
         }
     }
 
@@ -674,23 +770,32 @@
 
           vm.event = {};
 
+          vm.goToPractice = function() {
+            $state.go('app.single_practice', {practiceId: vm.event.practice.id});
+            return;
+          }
+
+          // LOAD DATA
+
+          if (idPresent()) {
+            EventService.loadEvent($stateParams.eventId, onLoad);
+            EventService.loadActivities("?event=" + $stateParams.eventId, onLoadActivities);
+          }
+
           function onLoad(result) {
             console.log(JSON.stringify(result));
             vm.event = result.data;
 
+            vm.event.id = extractId(vm.event.hRef);
             vm.event.practice.id = extractId(vm.event.practice.hRef);
+            vm.event.eventDate = parseEventDate(vm.event.eventDate);
           };
-
-          EventService.loadEvent($stateParams.eventId, onLoad);
-
-          EventService.loadActivities("?event=" + $stateParams.eventId, onLoadActivities);
 
           function onLoadActivities (activities) {
             vm.activities = activities.data;
 
             for (var i = vm.activities.length - 1; i >= 0; i--) {
               vm.activities[i].id = extractId(vm.activities[i].hRef);
-              //vm.events[i].eventDate = parseEventDate(vm.events[i].eventDate);
             }
           }
 
@@ -699,8 +804,40 @@
           }
 
           function parseEventDate(date) {
+            date.replace(/\[.*\]/, '');
             return moment(date).format('DD/MM/YYYY');
           }
+
+          function idPresent() {
+            return $stateParams.eventId != undefined && $stateParams.eventId != 0;
+          }
+
+          // INSERTION
+
+          vm.saveEvent = saveEvent;
+
+          function saveEvent() {
+            if (vm.event.practice != undefined && vm.event.practice.id != undefined) {
+              vm.event.practiceId = vm.event.practice.id;
+            } else {
+              vm.event.practiceId = $stateParams.practiceId;
+            }
+
+            EventService.saveEvent(vm.event, onSave);
+
+            function onSave(data) {
+              var id = vm.event.id;
+              
+              if (vm.event.id == undefined) {
+                var hRef = data.headers()["location"];
+                id = extractId(hRef);
+              }
+              
+              $state.go('app.single_event', {eventId: id})
+            };
+          }
+
+          // VIEW CONFIGURATION
 
           vm.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType('full_numbers')
@@ -712,11 +849,12 @@
                 {extend: 'print', className: 'btn-sm'}
             ])*/
             .withOption("lengthChange", false)
+            .withOption("paging", false)
             .withOption("info", false);
 
           vm.dtColumnDefs = [
-              DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
-              DTColumnDefBuilder.newColumnDef(1),
+              DTColumnDefBuilder.newColumnDef(0),
+              DTColumnDefBuilder.newColumnDef(1).withOption('width', '160px'),
               DTColumnDefBuilder.newColumnDef(2).withOption('width', '80px'),
               DTColumnDefBuilder.newColumnDef(3).withOption('width', '50px'),
               DTColumnDefBuilder.newColumnDef(4).withOption('width', '50px')
@@ -741,6 +879,7 @@
     function EventService($resource, $http, $rootScope, AuthenticationService, AUTH) {
         this.loadEvent = loadEvent;
         this.loadActivities = loadActivities;
+        this.saveEvent = saveEvent;
         var vm = this;
 
         function loadEvent(id, onReady) {
@@ -777,6 +916,39 @@
           $http
             .get(activitiesApi, config)
             .then(onReady, onError);
+        }
+
+        function saveEvent(event, onSave) {
+          var eventEndpoint = $rootScope.app.apiUrl + 'events/' + getId(event);
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure sending event data'); };
+          addCreatorIdToModel(event);
+
+          event.creatorId = $rootScope.user.id;
+
+          function getId(event) {
+            if (event.id == undefined || event.id == null) {
+              return "";
+            }
+
+            return event.id;
+          };
+
+          $http
+            .post(eventEndpoint, event, config)
+            .then(onSave, onError);
+        }
+
+        function addCreatorIdToModel(model) {
+          model.creatorId = $rootScope.user.id;
         }
     }
 
@@ -2059,6 +2231,7 @@
 
           function onLoad(result) {
             vm.practice = result.data;
+            vm.practice.id = $stateParams.practiceId;
           };
 
           function onLoadEvents (events) {
@@ -2071,7 +2244,7 @@
           };
 
           function idPresent() {
-            return $stateParams.id != null;
+            return $stateParams.practiceId != null;
           }
 
           //INSERTION
@@ -2081,18 +2254,30 @@
           function savePractice() {
             PracticeService.savePractice(vm.practice, onSave);
 
-            function onSave(result, id) {
-              $state.go('app.practices_management')
+            function onSave(data) {
+              var id = vm.practice.id;
+              
+              if (vm.practice.id == undefined) {
+                var hRef = data.headers()["location"];
+                id = extractId(hRef);
+              }
+              
+              $state.go('app.single_practice', {practiceId: id})
             };
           }
 
           //UTILITIES
 
           function extractId(hRef) {
+            if (hRef == undefined) {
+              return "";
+            }
+
             return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
           }
 
           function parseEventDate(date) {
+            date.replace(/\[.*\]/, '');
             return moment(date).format('DD/MM/YYYY');
           }
 
@@ -2101,12 +2286,14 @@
           vm.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType('full_numbers')
             .withLanguageSource("//cdn.datatables.net/plug-ins/1.10.16/i18n/Italian.json")
-            .withDOM('<"html5buttons"B>lTfgitp')
+            /*.withDOM('<"html5buttons"B>lTfgitp')
             .withButtons([
                 {extend: 'copy',  className: 'btn-sm', text: 'Copia'},
                 {extend: 'csv',   className: 'btn-sm'},
                 {extend: 'print', className: 'btn-sm'}
-            ])
+            ])*/
+            .withOption("lengthChange", false)
+            .withOption("paging", false)
             .withOption("info", false);
 
           vm.dtColumnDefs = [
@@ -2189,8 +2376,6 @@
           var onError = function() { console.log('Failure sending practice data'); };
           addCreatorIdToModel(practice);
 
-          practice.creatorId = $rootScope.user.id;
-
           function getId(practice) {
             if (practice.id == undefined || practice.id == null) {
               return "";
@@ -2205,7 +2390,7 @@
         }
 
         function addCreatorIdToModel(model) {
-          model.id = $rootScope.user.id;
+          model.creatorId = $rootScope.user.id;
         }
     }
 
@@ -2255,13 +2440,15 @@
           vm.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType('full_numbers')
             .withLanguageSource("//cdn.datatables.net/plug-ins/1.10.16/i18n/Italian.json")
-            .withDOM('<"html5buttons"B>lTfgitp')
+            /*.withDOM('<"html5buttons"B>lTfgitp')
             .withButtons([
                 {extend: 'copy',  className: 'btn-sm', text: 'Copia'},
                 {extend: 'csv',   className: 'btn-sm'},
                 {extend: 'print', className: 'btn-sm'}
-            ])
-            .withOption("info", false);
+            ])*/
+            .withOption("info", false)
+            .withOption("lengthChange", false)
+            .withOption("paging", false);
 
           vm.dtColumnDefs = [
               DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
@@ -2576,15 +2763,21 @@
                 resolve: helper.resolveForAuthenticated('practices', 'moment')
             })
             .state('app.add_practice', {
-                url: '/addPractice',
+                url: '/addPractice/:practiceId',
                 title: 'Add practice',
                 templateUrl: helper.basepath('add_practice.html'),
                 resolve: helper.resolveForAuthenticated('practices', 'moment')
             })
             .state('app.add_event', {
-                url: '/addEvent',
+                url: '/addEvent/:eventId/:practiceId',
                 title: 'Add event',
                 templateUrl: helper.basepath('add_event.html'),
+                resolve: helper.resolveForAuthenticated('practices', 'moment')
+            })
+            .state('app.add_activity', {
+                url: '/addActivity/:activityId/:eventId',
+                title: 'Add activity',
+                templateUrl: helper.basepath('add_activity.html'),
                 resolve: helper.resolveForAuthenticated('practices', 'moment')
             })
             .state('app.single_practice', {
@@ -3957,6 +4150,43 @@
       $rootScope.language.init();
 
     }
+})();
+// Practices service
+// angular.module("app").factory;
+
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.user')
+        .service('UserService', UserService);
+
+    UserService.$inject = ['$resource', '$http', '$rootScope', 'AuthenticationService', 'AUTH'];
+    function UserService($resource, $http, $rootScope, AuthenticationService, AUTH) {
+        this.loadAllUsers = loadAllUsers;
+
+        var vm = this;
+
+        function loadAllUsers(onReady) {
+          var practicesApi = $rootScope.app.apiUrl + 'users/';
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure loading users'); };
+
+          $http
+            .get(practicesApi, config)
+            .then(onReady, onError);
+        }
+    }
+
 })();
 /**=========================================================
  * Module: animate-enabled.js

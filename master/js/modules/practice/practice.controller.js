@@ -34,6 +34,7 @@
 
           function onLoad(result) {
             vm.practice = result.data;
+            vm.practice.id = $stateParams.practiceId;
           };
 
           function onLoadEvents (events) {
@@ -46,7 +47,7 @@
           };
 
           function idPresent() {
-            return $stateParams.id != null;
+            return $stateParams.practiceId != null && $stateParams.practiceId != "";
           }
 
           //INSERTION
@@ -56,19 +57,35 @@
           function savePractice() {
             PracticeService.savePractice(vm.practice, onSave);
 
-            function onSave(result, id) {
-              $state.go('app.practices_management')
+            function onSave(data) {
+              var id = vm.practice.id;
+              
+              if (vm.practice.id == undefined) {
+                var hRef = data.headers()["location"];
+                id = extractId(hRef);
+              }
+              
+              $state.go('app.single_practice', {practiceId: id})
             };
           }
 
           //UTILITIES
 
           function extractId(hRef) {
+            if (hRef == undefined) {
+              return "";
+            }
+
             return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
           }
 
           function parseEventDate(date) {
-            return moment(date).format('DD/MM/YYYY');
+            if (date != null) {
+              date.replace(/\[.*\]/, '');
+              return moment(date).format('DD/MM/YYYY');
+            } else {
+              return null;
+            }
           }
 
           //DATATABLE
@@ -76,12 +93,14 @@
           vm.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType('full_numbers')
             .withLanguageSource("//cdn.datatables.net/plug-ins/1.10.16/i18n/Italian.json")
-            .withDOM('<"html5buttons"B>lTfgitp')
+            /*.withDOM('<"html5buttons"B>lTfgitp')
             .withButtons([
                 {extend: 'copy',  className: 'btn-sm', text: 'Copia'},
                 {extend: 'csv',   className: 'btn-sm'},
                 {extend: 'print', className: 'btn-sm'}
-            ])
+            ])*/
+            .withOption("lengthChange", false)
+            .withOption("paging", false)
             .withOption("info", false);
 
           vm.dtColumnDefs = [

@@ -1,21 +1,17 @@
-h3 Elenco pratiche
 .container-md
   .card
+    .card-heading.bg-primary
+      .card-title Elenco pratiche
     .card-body
-        .row
-            .col-sm-6.col-xm-12(style="margin-top: 15px")
-                span Filtra per codice urgenza
-                ul.filter-status(style="list-style: none; display:inline-block; padding: 5px")
-                    li#red(style="display:inline-block")
-                        a.label.label-danger(href="#") Rosso
-                    li#orange(style="display:inline-block")
-                        a.label.label-warning(href="#") Arancione
-                    li#green(style="display:inline-block")
-                        a.label.label-success(href="#") Verde
-
-
-  .card
-    .card-body
+      .col-sm-6.col-xm-12(style="margin-top: -5px !important; position: absolute;")
+        span Filtra per codice urgenza
+        ul.filter-status(style="list-style: none; display:inline-block; padding: 5px")
+          li#red(style="display:inline-block")
+              a.label.label-danger(href="#") Rosso
+          li#orange(style="display:inline-block")
+              a.label.label-warning(href="#") Arancione
+          li#green(style="display:inline-block")
+              a.label.label-success(href="#") Verde
       div(ng-controller='PracticesController as practices')
         table.row-border.hover(datatable='ng', dt-options='practices.dtOptions' dt-column-defs='practices.dtColumnDefs')
           thead

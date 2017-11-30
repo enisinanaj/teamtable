@@ -43,13 +43,15 @@
           vm.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType('full_numbers')
             .withLanguageSource("//cdn.datatables.net/plug-ins/1.10.16/i18n/Italian.json")
-            .withDOM('<"html5buttons"B>lTfgitp')
+            /*.withDOM('<"html5buttons"B>lTfgitp')
             .withButtons([
                 {extend: 'copy',  className: 'btn-sm', text: 'Copia'},
                 {extend: 'csv',   className: 'btn-sm'},
                 {extend: 'print', className: 'btn-sm'}
-            ])
-            .withOption("info", false);
+            ])*/
+            .withOption("info", false)
+            .withOption("lengthChange", false)
+            .withOption("paging", false);
 
           vm.dtColumnDefs = [
               DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
