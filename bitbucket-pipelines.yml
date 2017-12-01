@@ -11,6 +11,6 @@ pipelines:
         caches:
           - node
         script: # Modify the commands below to build your repository.
-          - npm install gulp
-          - npm install bower
+          - npm install -g gulp
+          - npm install -g bower
           - gulp build
