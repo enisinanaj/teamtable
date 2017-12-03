@@ -28,4 +28,13 @@ nav.navbar.topnavbar(role='navigation')
         // END User avatar toggle
       // END Left navbar
 
+      // START Right Navbar
+      ul.nav.navbar-nav.navbar-right
+        // Logout button
+        li
+          a(ng-click='logout()')
+            em.icon-logout
+      // END Right Navbar
+    // END Nav wrapper
+
 // END Top Navbar

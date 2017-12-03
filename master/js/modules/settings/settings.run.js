@@ -5,9 +5,9 @@
         .module('app.settings')
         .run(settingsRun);
 
-    settingsRun.$inject = ['$rootScope', '$state', '$localStorage', 'AuthenticationFactory'];
+    settingsRun.$inject = ['$rootScope', '$state', '$localStorage', 'AuthenticationFactory', '$cookies', '$window'];
 
-    function settingsRun($rootScope, $state, $localStorage, AuthenticationFactory) {
+    function settingsRun($rootScope, $state, $localStorage, AuthenticationFactory, $cookies, $window) {
       // User Settings
       // -----------------------------------
       $rootScope.user = {
@@ -17,6 +17,14 @@
       // Hides/show user avatar on sidebar from any element
       $rootScope.toggleUserBlock = function(){
         $rootScope.$broadcast('toggleUserBlock');
+      };
+
+      // Hides/show user avatar on sidebar from any element
+      $rootScope.logout = function(){
+        $cookies.remove('principal');
+        //$state.go('page.login', null, {reload: true});
+        $state.go('page.login');
+        window.location.reload();
       };
 
       // Global Settings

@@ -100,6 +100,36 @@
             };
           }
 
+          vm.completeActivity = completeActivity;
+
+          function completeActivity() {
+            ActivityService.completeActivity(vm.activity.id, onComplete);
+
+            function onComplete() {
+              ActivityService.loadActivity($stateParams.activityId, onLoad);
+            }
+          }
+
+          vm.archiveActivity = archiveActivity;
+
+          function archiveActivity() {
+            ActivityService.archiveActivity(vm.activity.id, onArchive);
+
+            function onArchive(data) {              
+              ActivityService.loadActivity($stateParams.activityId, onLoad);
+            };
+          }
+
+          vm.unarchiveActivity = unarchiveActivity;
+
+          function unarchiveActivity() {
+            ActivityService.unarchiveActivity(vm.activity.id, onUnarchive);
+
+            function onUnarchive(data) {              
+              ActivityService.loadActivity($stateParams.activityId, onLoad);
+            };
+          }
+
           // CONFIGURATION
 
           vm.dtOptions = DTOptionsBuilder.newOptions()

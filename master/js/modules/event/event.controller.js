@@ -11,10 +11,10 @@
         .controller('EventController', EventController);
 
     EventController.$inject = ['$scope', '$window', '$state', '$stateParams', 
-      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'EventService'];
+      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'EventService', 'ActivityService'];
     
     function EventController($scope, $window, $state, $stateParams, 
-      $resource, DTOptionsBuilder, DTColumnDefBuilder, EventService) {
+      $resource, DTOptionsBuilder, DTColumnDefBuilder, EventService, ActivityService) {
         
         var vm = this;
 
@@ -100,6 +100,48 @@
             };
           }
 
+          vm.archiveEvent = archiveEvent;
+
+          function archiveEvent() {
+            EventService.archiveEvent(vm.event.id, onArchive);
+
+            function onArchive(data) {
+              EventService.loadEvent($stateParams.eventId, onLoad);
+              EventService.loadActivities("?event=" + $stateParams.eventId, onLoadActivities);
+            };
+          }
+
+          vm.unarchiveEvent = unarchiveEvent;
+
+          function unarchiveEvent() {
+            EventService.unarchiveEvent(vm.event.id, onUnarchive);
+
+            function onUnarchive(data) {
+              EventService.loadEvent($stateParams.eventId, onLoad);
+              EventService.loadActivities("?event=" + $stateParams.eventId, onLoadActivities);
+            };
+          }
+
+          vm.archiveActivity = archiveActivity;
+
+          function archiveActivity(activityId) {
+            ActivityService.archiveActivity(activityId, onArchiveActivity);
+
+            function onArchiveActivity(data) {
+              EventService.loadActivities("?event=" + $stateParams.eventId, onLoadActivities);
+            };
+          }
+
+          vm.unarchiveActivity = unarchiveActivity;
+
+          function unarchiveActivity(activityId) {
+            ActivityService.unarchiveActivity(activityId, onUnarchiveActivity);
+
+            function onUnarchiveActivity(data) {
+              EventService.loadActivities("?event=" + $stateParams.eventId, onLoadActivities);
+            };
+          }
+
           // VIEW CONFIGURATION
 
           vm.dtOptions = DTOptionsBuilder.newOptions()
@@ -120,7 +162,7 @@
               DTColumnDefBuilder.newColumnDef(1).withOption('width', '160px'),
               DTColumnDefBuilder.newColumnDef(2).withOption('width', '80px'),
               DTColumnDefBuilder.newColumnDef(3).withOption('width', '50px'),
-              DTColumnDefBuilder.newColumnDef(4).withOption('width', '50px')
+              DTColumnDefBuilder.newColumnDef(4).withOption('width', '150px')
           ];
           
         }

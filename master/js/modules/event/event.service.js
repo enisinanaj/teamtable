@@ -14,6 +14,8 @@
         this.loadEvent = loadEvent;
         this.loadActivities = loadActivities;
         this.saveEvent = saveEvent;
+        this.archiveEvent = archiveEvent;
+        this.unarchiveEvent = unarchiveEvent;
         var vm = this;
 
         function loadEvent(id, onReady) {
@@ -79,6 +81,42 @@
           $http
             .post(eventEndpoint, event, config)
             .then(onSave, onError);
+        }
+
+        function archiveEvent(id, onReady) {
+          var eventEndpoint = $rootScope.app.apiUrl + 'events/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure sending practice data'); };
+
+          $http
+            .post(eventEndpoint, {archived: true}, config)
+            .then(onReady, onError);
+        }
+
+        function unarchiveEvent(id, onReady) {
+          var eventEndpoint = $rootScope.app.apiUrl + 'events/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure sending practice data'); };
+
+          $http
+            .post(eventEndpoint, {archived: false}, config)
+            .then(onReady, onError);
         }
 
         function addCreatorIdToModel(model) {

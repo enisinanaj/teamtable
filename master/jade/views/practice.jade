@@ -20,11 +20,13 @@
           label(style="font-weight: normal;") Nome pratica
         .row.mr-sm
           label(style="font-weight: normal;") Note
+        .clearfix
       .col-lg-6
         .row
           label {{practiceDetail.practice.name}}
         .row
           label {{practiceDetail.practice.description}}
+        .clearfix
       .clearfix
     .card-body
       .col-lg-4
@@ -41,11 +43,13 @@
             th Data
             th Azioni
         tbody
-          tr(ng-repeat='event in practiceDetail.events')
+          tr(ng-repeat='event in practiceDetail.events', ng-class="{'text-muted': event.archived}")
             td {{event.creator.username}}
             td {{event.description}}
             td {{event.eventDate}}
             td(style="text-align:center")
               a(ng-href="{{$state.href('app.single_event', {eventId: event.id})}}") visualizza
-              span(ng-if="!practiceDetail.practice.archived") | 
-                a archivia
+              span(ng-if="!practiceDetail.practice.archived && !event.archived") | 
+                a(ng-click="practiceDetail.archiveEvent(event.id)") archivia
+              span(ng-if="!practiceDetail.practice.archived && event.archived") | 
+                a(ng-click="practiceDetail.unarchiveEvent(event.id)") ripristina

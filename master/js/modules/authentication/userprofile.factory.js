@@ -45,9 +45,18 @@
 
 	      });
 
+	      function extractId(hRef) {
+            if (hRef == undefined) {
+              return "";
+            }
+
+            return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
+          }
+
 	      vm.userProfile.picture = 'app/img/149071.png';
 
 	      $rootScope.user = vm.userProfile;
+	      $rootScope.user.id = extractId(vm.userProfile.hRef);
 	      return $rootScope.user;
 	    });
 	  };

@@ -1,30 +1,54 @@
+
+style
+  | .custom-btn:hover{color: #0a4681 !important; border: 1px solid #0a4681 !important; box-shadow: none !important; text-decoration: none;}
+
 .container-md(ng-controller='ActivityController as activityDetailController')
   .card
-    .card-heading.bg-primary(ng-click="activityDetailController.goToPractice()")
-      .card-title(style="font-size:20px!important; padding-left: 20px;") Pratica
+    
+    .card-heading(ng-click="activityDetailController.goToPractice()", data-ng-class="{ 'bg-primary' : !activityDetailController.activity.event.practice.archived, 'bg-success-dark' : activityDetailController.activity.event.practice.archived}")
+      .card-title(style="font-size:20px!important; padding-left: 20px;") 
+        em.icon-check(ng-if="activityDetailController.activity.event.practice.archived", style="margin-right: 10px")
+        | Pratica
         strong {{activityDetailController.activity.event.practice.name}}
-    .card-heading.bg-info(style="box-shadow: 0px -5px 5px -1px rgba(0,0,0,0.15);", ng-click="activityDetailController.goToEvent()")
-      .card-title(style="font-size:20px!important; color:#E8EAF6!important; padding-left: 20px;") Evento
+    
+    .card-heading(style="box-shadow: 0px -5px 5px -1px rgba(0,0,0,0.15);", ng-click="activityDetailController.goToEvent()", , data-ng-class="{ 'bg-info' : !activityDetailController.activity.event.archived, 'bg-success' : activityDetailController.activity.event.archived}")
+      .card-title(style="font-size:20px!important; color:#E8EAF6!important; padding-left: 20px;") 
+        em.icon-check(ng-if="activityDetailController.activity.event.archived", style="margin-right: 10px")
+        | Evento
         strong {{activityDetailController.activity.event.description}}
+    
     .card(ng-controller='MDInputCtrl', style="margin-bottom:0px;")
-      .card-heading(style="border-bottom-color: #2196F3!important; border-bottom-style:solid!important; border-bottom-width:thin!important; box-shadow: 0px -5px 5px -1px rgba(0,0,0,0.15);")
-        .card-title(style="font-size:20px!important; color:#3F51B5!important; padding-left: 20px;") Dettaglio Attività
+      .card-heading(style="border-bottom: 1px solid #888 !important; box-shadow: 0px -5px 5px -1px rgba(0,0,0,0.15);", data-ng-class="{'text-muted' : activityDetailController.activity.archived, 'bg-success-light' : activityDetailController.activity.status == 'COMPLETED'}", ng-click="activityDetailController.completeActivity()")
+        .card-title(style="font-size:20px!important; padding-left: 20px;", ng-style="!activityDetailController.activity.archived ? {'color': '#3F51B5!important'} : ''")
+          em.icon-check(ng-if="activityDetailController.activity.status == 'COMPLETED'", style="margin-right: 10px")
+          | Dettaglio Attività
+          a.pull-right.custom-btn(style="border: 1px dashed;border-radius: 40px;padding: 5px 10px 10px 10px;position: relative;top: -6px;line-height: 20px;", ng-if="activityDetailController.activity.status != 'COMPLETED' && activityDetailController.activity.assignee != null")
+            em.icon-check(style="font-size: 25px;position: relative;top: 3px !important")
+            | &nbsp;Completa attività
+    
       .card-body(style="border: 1px solid #f5f5f5")
         .col-lg-4
           label.text-muted(style="font-weight: normal;") Dati principali
-          span [
-            a(ng-href="{{$state.href('app.add_activity', {activityId: activityDetailController.activity.id, eventId: activityDetailController.activity.event.id})}}") modifica attività
+          span(ng-if="!activityDetailController.activity.archived && activityDetailController.activity.status != 'COMPLETED'") [
+            a(ng-href="{{$state.href('app.add_activity', {activityId: activityDetailController.activity.id, eventId: activityDetailController.activity.event.id})}}") modifica
+            |  | 
+            a(ng-click="activityDetailController.archiveActivity()") archivia
+            |]
+          span(ng-if="activityDetailController.activity.archived && activityDetailController.activity.status != 'COMPLETED'") [
+            a(ng-click="activityDetailController.unarchiveActivity()") ripristina
             |]
         .col-lg-2(style="text-align: right;")
           .row.mr-sm
             label(style="font-weight: normal;") Nome attività
           .row.mr-sm
             label(style="font-weight: normal;") Descrizione attività
+          .clearfix
         .col-lg-6
           .row
             label {{activityDetailController.activity.name}}
           .row
             label {{activityDetailController.activity.description}}
+          .clearfix
         .clearfix
       .card-body
         .col-lg-4 

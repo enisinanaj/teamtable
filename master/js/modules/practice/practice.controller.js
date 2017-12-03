@@ -11,10 +11,10 @@
         .controller('PracticeController', PracticeController);
 
     PracticeController.$inject = ['$scope', '$window', '$state', '$stateParams', 
-      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'PracticeService'];
+      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'PracticeService', 'EventService'];
     
     function PracticeController($scope, $window, $state, $stateParams, 
-      $resource, DTOptionsBuilder, DTColumnDefBuilder, PracticeService) {
+      $resource, DTOptionsBuilder, DTColumnDefBuilder, PracticeService, EventService) {
         
         var vm = this;
 
@@ -87,6 +87,26 @@
 
             function onUnarchive(data) {              
               PracticeService.loadPractice($stateParams.practiceId, onLoad);
+              PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
+            };
+          }
+
+          vm.archiveEvent = archiveEvent;
+
+          function archiveEvent(eventId) {
+            EventService.archiveEvent(eventId, onArchive);
+
+            function onArchive(data) {              
+              PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
+            };
+          }
+
+          vm.unarchiveEvent = unarchiveEvent;
+
+          function unarchiveEvent(eventId) {
+            EventService.unarchiveEvent(eventId, onArchive);
+
+            function onArchive(data) {              
               PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
             };
           }

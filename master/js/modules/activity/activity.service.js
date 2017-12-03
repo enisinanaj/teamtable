@@ -13,6 +13,9 @@
     function ActivityService($resource, $http, $rootScope, AuthenticationService, AUTH) {
         this.loadActivity = loadActivity;
         this.saveActivity = saveActivity;
+        this.archiveActivity = archiveActivity;
+        this.unarchiveActivity = unarchiveActivity;
+        this.completeActivity = completeActivity;
         var vm = this;
 
         function loadActivity(id, onReady) {
@@ -59,6 +62,60 @@
 
           $http
             .post(activityEndpoint, activity, config)
+            .then(onReady, onError);
+        }
+
+        function completeActivity(id, onReady) {
+          var activitiesEndpoint = $rootScope.app.apiUrl + 'activities/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure completing activity'); };
+
+          $http
+            .post(activitiesEndpoint, {completionDate: moment(new Date()).format()}, config)
+            .then(onReady, onError);
+        }
+
+        function archiveActivity(id, onReady) {
+          var activitiesEndpoint = $rootScope.app.apiUrl + 'activities/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure sending practice data'); };
+
+          $http
+            .post(activitiesEndpoint, {archived: true}, config)
+            .then(onReady, onError);
+        }
+
+        function unarchiveActivity(id, onReady) {
+          var activitiesEndpoint = $rootScope.app.apiUrl + 'activities/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure sending practice data'); };
+
+          $http
+            .post(activitiesEndpoint, {archived: false}, config)
             .then(onReady, onError);
         }
 
