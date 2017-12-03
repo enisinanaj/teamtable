@@ -11,9 +11,7 @@
       // User Settings
       // -----------------------------------
       $rootScope.user = {
-        name:     'John',
-        picture:  'app/img/user/02.jpg',
-        password: ''
+        picture:  'app/img/149071.png'
       };
 
       // Hides/show user avatar on sidebar from any element
@@ -39,7 +37,7 @@
           asideScrollbar: false,
           isCollapsedText: false
         },
-        apiUrl: 'http://192.168.1.156:8000/teamtable/api/',
+        apiUrl: 'http://localhost:8080/teamtable/api/',
         useFullLayout: false,
         hiddenFooter: false,
         offsidebarOpen: false,

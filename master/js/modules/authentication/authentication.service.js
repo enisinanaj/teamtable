@@ -5,9 +5,9 @@
 		.service('AuthenticationService', AuthenticationService);
 
 
-	AuthenticationService.$inject = ['$window', '$state', '$rootScope', '$stateParams', '$resource', 'AUTH', '$http', '$q'];
+	AuthenticationService.$inject = ['$window', '$state', '$rootScope', '$stateParams', '$resource', 'AUTH', '$http', '$q', '$cookies'];
 
-	function AuthenticationService($window, $state, $rootScope, $stateParams, $resource, AUTH, $http, $q) {
+	function AuthenticationService($window, $state, $rootScope, $stateParams, $resource, AUTH, $http, $q, $cookies) {
 
 		var vm = this;
 		var ss = AUTH['secret_key'];
@@ -22,6 +22,15 @@
 		}
 
 		vm.getProfile = function () {
+
+		  var cookieUserId = $cookies.get('principal');
+		  console.log("cookie user id: " + cookieUserId);
+
+		  if (cookieUserId != undefined && $rootScope.user.id == undefined) {
+		  	$rootScope.user.id = cookieUserId;
+		  } else if (cookieUserId != undefined && $rootScope.user.id != cookieUserId) {
+		  	return $http.get('/');
+		  }
 
 		  if ($rootScope.user == undefined || $rootScope.app == undefined) {
 		  	return $http.get('/');

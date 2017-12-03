@@ -10,8 +10,8 @@
         .module('app.pages')
         .controller('LoginFormController', LoginFormController);
 
-    LoginFormController.$inject = ['$http', '$state', '$window', 'AuthenticationService', '$rootScope', 'AUTH'];
-    function LoginFormController($http, $state, $window, AuthenticationService, $rootScope, AUTH) {
+    LoginFormController.$inject = ['$http', '$state', '$window', 'AuthenticationService', '$rootScope', 'AUTH', '$cookies'];
+    function LoginFormController($http, $state, $window, AuthenticationService, $rootScope, AUTH, $cookies) {
         var vm = this;
 
         activate();
@@ -57,6 +57,7 @@
                 if ( !response.data.hRef ) {
                   vm.authMsg = 'Incorrect credentials.';
                 }else{
+                  $cookies.put('principal', $rootScope.user.id);
                   $window.location.href = $state.href('app.welcome');
                 }
               }, function() {

@@ -3,9 +3,9 @@
 	angular.module("app.authentication")
 		.service('UserProfile', UserProfile);
 
-	UserProfile.$ineject =  ["AuthenticationService"];
+	UserProfile.$ineject =  ["AuthenticationService", '$rootScope'];
 
-	function UserProfile(AuthenticationService) {
+	function UserProfile(AuthenticationService, $rootScope) {
 	  var vm = this;
 	  vm.userProfile = {};
 
@@ -21,7 +21,7 @@
 	    return AuthenticationService.getProfile().then(function (response) {
 	      vm.clearUserProfile();
 	      
-	      return angular.extend(vm.userProfile, response.data, {
+	      angular.extend(vm.userProfile, response.data, {
 
 	        $refresh: vm.fetchUserProfile,
 
@@ -44,6 +44,11 @@
 	        }
 
 	      });
+
+	      vm.userProfile.picture = 'app/img/149071.png';
+
+	      $rootScope.user = vm.userProfile;
+	      return $rootScope.user;
 	    });
 	  };
 	}

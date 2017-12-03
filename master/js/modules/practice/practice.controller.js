@@ -69,6 +69,28 @@
             };
           }
 
+          vm.archivePractice = archivePractice;
+
+          function archivePractice() {
+            PracticeService.archivePractice(vm.practice.id, onArchive);
+
+            function onArchive(data) {              
+              PracticeService.loadPractice($stateParams.practiceId, onLoad);
+              PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
+            };
+          }
+
+          vm.unarchivePractice = unarchivePractice;
+
+          function unarchivePractice() {
+            PracticeService.unarchivePractice(vm.practice.id, onUnarchive);
+
+            function onUnarchive(data) {              
+              PracticeService.loadPractice($stateParams.practiceId, onLoad);
+              PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
+            };
+          }
+
           //UTILITIES
 
           function extractId(hRef) {
@@ -107,7 +129,7 @@
               DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
               DTColumnDefBuilder.newColumnDef(1),
               DTColumnDefBuilder.newColumnDef(2).withOption('width', '80px'),
-              DTColumnDefBuilder.newColumnDef(3).withOption('width', '50px')
+              DTColumnDefBuilder.newColumnDef(3).withOption('width', '140px')
           ];
           
         }

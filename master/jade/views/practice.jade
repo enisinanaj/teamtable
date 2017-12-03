@@ -1,12 +1,19 @@
 .container-md(ng-controller='PracticeController as practiceDetail')
   .card
-    .card-heading.bg-primary
-      .card-title(style="font-size:20px!important; padding-left: 20px;") Dettaglio pratica
+    .card-heading(data-ng-class="{ 'bg-primary' : !practiceDetail.practice.archived, 'bg-success-light' : practiceDetail.practice.archived}")
+      .card-title(style="font-size:20px!important; padding-left: 20px;")
+        em.icon-check(ng-if="practiceDetail.practice.archived", style="margin-right: 10px")
+        | Dettaglio pratica
     .card-body(style="border: 1px solid #f5f5f5")
       .col-lg-4
         label.text-muted(style="font-weight: normal") Dati pratica
-        span [
-          a(ng-href="{{$state.href('app.add_practice', {practiceId: practiceDetail.practice.id})}}") modifica pratica
+        span(ng-if="!practiceDetail.practice.archived") [
+          a(ng-href="{{$state.href('app.add_practice', {practiceId: practiceDetail.practice.id})}}") modifica
+          |&nbsp;|&nbsp;
+          a(ng-click="practiceDetail.archivePractice()") archivia
+          |]
+        span(ng-if="practiceDetail.practice.archived") [
+          a(ng-click="practiceDetail.unarchivePractice()") ripristina
           |]
       .col-lg-2(style="text-align: right;")
         .row.mr-sm
@@ -22,7 +29,7 @@
     .card-body
       .col-lg-4
         label.text-muted(style="font-weight: normal;") Elenco eventi
-        span [
+        span(ng-if="!practiceDetail.practice.archived") [
           a(ng-href="{{$state.href('app.add_event', {eventId: 0, practiceId: practiceDetail.practice.id})}}") aggiungi evento
           |]
       .clearfix
@@ -32,12 +39,13 @@
             th Operatore inserimento
             th Evento
             th Data
-            th Dettaglio
+            th Azioni
         tbody
           tr(ng-repeat='event in practiceDetail.events')
             td {{event.creator.username}}
             td {{event.description}}
             td {{event.eventDate}}
-            td 
-              a.btn.btn-primary(ng-href="{{$state.href('app.single_event', {eventId: event.id})}}")
-                i.icon-magnifier
+            td(style="text-align:center")
+              a(ng-href="{{$state.href('app.single_event', {eventId: event.id})}}") visualizza
+              span(ng-if="!practiceDetail.practice.archived") | 
+                a archivia

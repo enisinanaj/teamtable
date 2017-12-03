@@ -21,6 +21,7 @@
         //defaults to
         $urlRouterProvider.otherwise('/app/welcome');
 
+
         $stateProvider
           //
           // Single Page Routes
@@ -63,61 +64,61 @@
                 url: '/welcome',
                 title: 'Welcome',
                 templateUrl: helper.basepath('welcome.html'),
-                resolve: helper.resolveForAuthenticated('practices', 'moment')
+                resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
             })
             .state('app.add_practice', {
                 url: '/addPractice/:practiceId',
                 title: 'Add practice',
                 templateUrl: helper.basepath('add_practice.html'),
-                resolve: helper.resolveForAuthenticated('practices', 'moment')
+                resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
             })
             .state('app.add_event', {
                 url: '/addEvent/:eventId/:practiceId',
                 title: 'Add event',
                 templateUrl: helper.basepath('add_event.html'),
-                resolve: helper.resolveForAuthenticated('practices', 'moment')
+                resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
             })
             .state('app.add_activity', {
                 url: '/addActivity/:activityId/:eventId',
                 title: 'Add activity',
                 templateUrl: helper.basepath('add_activity.html'),
-                resolve: helper.resolveForAuthenticated('practices', 'moment')
+                resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
             })
             .state('app.single_practice', {
                 url: '/practice/:practiceId',
                 title: 'Single practice',
                 templateUrl: helper.basepath('practice.html'),
-                resolve: helper.resolveForAuthenticated('practices', 'moment')
+                resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
             })
             .state('app.practices_management', {
                 url: '/practices',
                 title: 'Practices',
                 templateUrl: helper.basepath('practices.html'),
-                resolve: helper.resolveForAuthenticated('practices', 'moment')
+                resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
             })
             .state('app.single_event', {
                 url: '/event/:eventId',
                 title: 'Single event',
                 templateUrl: helper.basepath('event.html'),
-                resolve: helper.resolveForAuthenticated('practices', 'moment')
+                resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
             })
             .state('app.events', {
                 url: '/events',
                 title: 'Events',
                 templateUrl: helper.basepath('events.html'),
-                resolve: helper.resolveForAuthenticated('practices')
+                resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
             })
             .state('app.single_activity', {
                 url: '/activity/:activityId',
                 title: 'Single activity',
                 templateUrl: helper.basepath('activity.html'),
-                resolve: helper.resolveForAuthenticated('practices', 'moment')
+                resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
             })
             .state('app.activities', {
                 url: '/activities',
                 title: 'Activities',
                 templateUrl: helper.basepath('activities.html'),
-                resolve: helper.resolveForAuthenticated('practices')
+                resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
             });
 
     } // routesConfig

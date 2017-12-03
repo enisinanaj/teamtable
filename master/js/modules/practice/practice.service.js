@@ -14,6 +14,8 @@
         this.loadPractice = loadPractice;
         this.loadEvents = loadEvents;
         this.savePractice = savePractice;
+        this.archivePractice = archivePractice;
+        this.unarchivePractice = unarchivePractice;
 
         var vm = this;
 
@@ -77,6 +79,42 @@
 
           $http
             .post(practiceEndpoint, practice, config)
+            .then(onReady, onError);
+        }
+
+        function archivePractice(id, onReady) {
+          var practiceEndpoint = $rootScope.app.apiUrl + 'legalPractices/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure sending practice data'); };
+
+          $http
+            .post(practiceEndpoint, {archived: true}, config)
+            .then(onReady, onError);
+        }
+
+        function unarchivePractice(id, onReady) {
+          var practiceEndpoint = $rootScope.app.apiUrl + 'legalPractices/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure sending practice data'); };
+
+          $http
+            .post(practiceEndpoint, {archived: false}, config)
             .then(onReady, onError);
         }
 
