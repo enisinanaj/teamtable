@@ -44,6 +44,7 @@
 
             vm.event.id = extractId(vm.event.hRef);
             vm.event.practice.id = extractId(vm.event.practice.hRef);
+            vm.event.eventDate_dateFormat = new Date(vm.event.eventDate);
             vm.event.eventDate = parseEventDate(vm.event.eventDate);
           };
 
@@ -77,6 +78,8 @@
           vm.saveEvent = saveEvent;
 
           function saveEvent() {
+            vm.event.eventDate = vm.event.eventDate_dateFormat;
+
             if (vm.event.practice != undefined && vm.event.practice.id != undefined) {
               vm.event.practiceId = vm.event.practice.id;
             } else {
