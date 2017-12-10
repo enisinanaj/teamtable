@@ -96,6 +96,24 @@
                 templateUrl: helper.basepath('practices.html'),
                 resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
             })
+            .state('app.practices_management_urgency', {
+                url: '/practices/urgency/:urgencyCode',
+                title: 'Practices',
+                templateUrl: helper.basepath('practices.html'),
+                resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
+            })
+            .state('app.practices_management_dates', {
+                url: '/practices/dates/:fromDate/:toDate',
+                title: 'Practices',
+                templateUrl: helper.basepath('practices.html'),
+                resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
+            })
+            .state('app.practices_management_by_name', {
+                url: '/practices/name/:name',
+                title: 'Practices',
+                templateUrl: helper.basepath('practices.html'),
+                resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
+            })
             .state('app.single_event', {
                 url: '/event/:eventId',
                 title: 'Single event',

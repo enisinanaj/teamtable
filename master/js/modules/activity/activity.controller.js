@@ -60,7 +60,7 @@
 
           function parseEventDate(date) {
             if (date != null) {
-              date.replace(/\[.*\]/, '');
+              date = date.replace(/Z.*/, '') + "+01:00"
               return moment(date).format('DD/MM/YYYY');
             } else {
               return '-';

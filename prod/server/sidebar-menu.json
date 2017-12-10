@@ -1,0 +1,24 @@
+[
+  {
+    "text": "Main Navigation",
+    "heading": "true",
+    "translate": "sidebar.heading.HEADER"
+  },
+  {
+    "text": "Welcome",
+    "sref": "app.welcome",
+    "icon": "icon-tag"
+  },
+  {
+    "text": "Aggiungi pratica",
+    "sref": "app.add_practice",
+    "translate": "sidebar.nav.menu.ADD_PRACTICE",
+    "icon": "icon-plus"
+  },
+  {
+    "text": "Gestione pratiche",
+    "sref": "app.practices_management",
+    "translate": "sidebar.nav.menu.PRACTICES_MANAGEMENT",
+    "icon": "icon-doc"
+  }
+]

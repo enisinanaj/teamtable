@@ -10,10 +10,10 @@
         .module('app.practices')
         .controller('PracticesController', PracticesController);
 
-    PracticesController.$inject = ['$scope', '$window', '$state', 
+    PracticesController.$inject = ['$scope', '$window', '$state', '$stateParams',
       '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'PracticesService'];
     
-    function PracticesController($scope, $window, $state,
+    function PracticesController($scope, $window, $state, $stateParams,
       $resource, DTOptionsBuilder, DTColumnDefBuilder, PracticesService) {
         
         var vm = this;
@@ -26,7 +26,22 @@
 
           // Ajax
 
-          PracticesService.getPractices("", onDone);
+          var params = "";
+
+          if ($stateParams.urgencyCode != undefined && $stateParams.urgencyCode != null && $stateParams.urgencyCode != "") {
+            params += "?urgencyCode=" + $stateParams.urgencyCode;
+          }
+
+          if ($stateParams.fromDate != undefined && $stateParams.fromDate != null && $stateParams.fromDate != ""
+            && $stateParams.toDate != undefined && $stateParams.toDate != null && $stateParams.toDate != "") {
+            params += "?dateFrom=" + prepareDate($stateParams.fromDate) + "&dateTo=" + prepareDate($stateParams.toDate);
+          }
+
+          if ($stateParams.name != undefined && $stateParams.name != null && $stateParams.name != "") {
+            params += "?name=" + $stateParams.name;
+          }
+
+          PracticesService.getPractices(params, onDone);
 
           function onDone (practices) {
             vm.elements = practices.data;
@@ -38,6 +53,10 @@
 
           function extractId(hRef) {
             return hRef.substring(hRef.lastIndexOf('/') + 1, hRef.length);
+          }
+
+          function prepareDate(date) {
+            return moment($stateParams.fromDate).format("ddd MMM DD YYYY HH:mm:ss") + " CEST";
           }
 
           vm.dtOptions = DTOptionsBuilder.newOptions()

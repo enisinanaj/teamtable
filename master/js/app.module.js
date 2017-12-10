@@ -31,6 +31,7 @@
             'app.tables',
             'app.material',
             'app.authentication',
+            'app.welcome',
             'app.practices',
             'app.practice',
             'app.event',

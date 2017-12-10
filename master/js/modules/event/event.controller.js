@@ -62,7 +62,7 @@
 
           function parseEventDate(date) {
             if (date != null) {
-              date.replace(/\[.*\]/, '');
+              date = date.replace(/Z.*/, '') + "+01:00"
               return moment(date).format('DD/MM/YYYY');
             } else {
               return null;
@@ -78,7 +78,7 @@
           vm.saveEvent = saveEvent;
 
           function saveEvent() {
-            vm.event.eventDate = vm.event.eventDate_dateFormat;
+            vm.event.eventDate = vm.event.eventDate_dateFormat; // WHY?
 
             if (vm.event.practice != undefined && vm.event.practice.id != undefined) {
               vm.event.practiceId = vm.event.practice.id;
