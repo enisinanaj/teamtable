@@ -22,6 +22,9 @@ style
         .card-title(style="font-size:20px!important; padding-left: 20px;", ng-style="!activityDetailController.activity.archived ? {'color': '#3F51B5!important'} : ''")
           em.icon-check(ng-if="activityDetailController.activity.status == 'COMPLETED'", style="margin-right: 10px")
           | Dettaglio Attività
+          a.pull-right.custom-btn(style="border: 1px dashed;border-radius: 40px;padding: 5px 10px 10px 10px;position: relative;top: -6px;line-height: 20px;", ng-if="activityDetailController.activity.status == 'COMPLETED' && activityDetailController.activity.assignee != null")
+            em.icon-check(style="font-size: 25px;position: relative;top: 3px !important")
+            | &nbsp;Riapri attività
           a.pull-right.custom-btn(style="border: 1px dashed;border-radius: 40px;padding: 5px 10px 10px 10px;position: relative;top: -6px;line-height: 20px;", ng-if="activityDetailController.activity.status != 'COMPLETED' && activityDetailController.activity.assignee != null")
             em.icon-check(style="font-size: 25px;position: relative;top: 3px !important")
             | &nbsp;Completa attività

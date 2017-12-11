@@ -16,6 +16,7 @@
         this.archiveActivity = archiveActivity;
         this.unarchiveActivity = unarchiveActivity;
         this.completeActivity = completeActivity;
+        this.reopenActivity = reopenActivity;
         var vm = this;
 
         function loadActivity(id, onReady) {
@@ -80,6 +81,24 @@
 
           $http
             .post(activitiesEndpoint, {completionDate: moment(new Date()).format()}, config)
+            .then(onReady, onError);
+        }
+
+        function reopenActivity(id, onReady) {
+          var activitiesEndpoint = $rootScope.app.apiUrl + 'activities/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure reopening activity'); };
+
+          $http
+            .post(activitiesEndpoint, {completionDate: null}, config)
             .then(onReady, onError);
         }
 

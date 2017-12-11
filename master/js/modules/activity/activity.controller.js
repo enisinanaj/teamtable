@@ -103,7 +103,11 @@
           vm.completeActivity = completeActivity;
 
           function completeActivity() {
-            ActivityService.completeActivity(vm.activity.id, onComplete);
+            if ((vm.activity.completionDate != null) && (vm.activity.completionDate != '-')) { //Da rivedere con glassfish vm.activity.completionDate != '-'
+              ActivityService.reopenActivity(vm.activity.id, onComplete);
+            } else {
+              ActivityService.completeActivity(vm.activity.id, onComplete);
+            }            
 
             function onComplete() {
               ActivityService.loadActivity($stateParams.activityId, onLoad);
