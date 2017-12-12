@@ -35,8 +35,10 @@
             vm.activity.event.id = extractId(vm.activity.event.hRef);
             vm.activity.event.practice.id = extractId(vm.activity.event.practice.hRef);
             vm.activity.creationDate = parseEventDate(vm.activity.creationDate);
+            vm.activity.creationDate_dateFormat = new Date(cleanDate(vm.activity.creationDate));
             vm.activity.completionDate = parseEventDate(vm.activity.completionDate);
-            vm.activity.expirationDate_dateFormat = new Date(vm.activity.expirationDate);
+            vm.activity.completionDate_dateFormat = new Date(cleanDate(vm.activity.completionDate));
+            vm.activity.expirationDate_dateFormat = new Date(cleanDate(vm.activity.expirationDate));
             vm.activity.expirationDate = parseEventDate(vm.activity.expirationDate);
             vm.activity.assigneeId = extractId(vm.activity.assignee.hRef);
           };
@@ -60,11 +62,15 @@
 
           function parseEventDate(date) {
             if (date != null) {
-              date = date.replace(/Z.*/, '') + "+01:00"
+              date = cleanDate(date);
               return moment(date).format('DD/MM/YYYY');
             } else {
               return '-';
             }
+          }
+
+          function cleanDate(date) {
+            return date.replace(/Z.*/, '') + "+01:00";
           }
 
           function idPresent() {
@@ -77,6 +83,8 @@
 
           function saveActivity() {
             vm.activity.expirationDate = vm.activity.expirationDate_dateFormat;
+            vm.activity.creationDate = vm.activity.creationDate_dateFormat;
+            vm.activity.completionDate = vm.activity.completionDate_dateFormat;
 
             if (vm.activity.event != undefined && vm.activity.event.id != undefined) {
               vm.activity.eventId = vm.activity.event.id;

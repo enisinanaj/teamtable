@@ -29,16 +29,16 @@
           var params = "";
 
           if ($stateParams.urgencyCode != undefined && $stateParams.urgencyCode != null && $stateParams.urgencyCode != "") {
-            params += "?urgencyCode=" + $stateParams.urgencyCode;
+            params = "?urgencyCode=" + $stateParams.urgencyCode;
           }
 
           if ($stateParams.fromDate != undefined && $stateParams.fromDate != null && $stateParams.fromDate != ""
             && $stateParams.toDate != undefined && $stateParams.toDate != null && $stateParams.toDate != "") {
-            params += "?dateFrom=" + prepareDate($stateParams.fromDate) + "&dateTo=" + prepareDate($stateParams.toDate);
+            params = "?dateFrom=" + prepareDate($stateParams.fromDate) + "&dateTo=" + prepareDate($stateParams.toDate);
           }
 
           if ($stateParams.name != undefined && $stateParams.name != null && $stateParams.name != "") {
-            params += "?name=" + $stateParams.name;
+            params = "?name=" + $stateParams.name;
           }
 
           PracticesService.getPractices(params, onDone);
@@ -56,7 +56,7 @@
           }
 
           function prepareDate(date) {
-            return moment($stateParams.fromDate).format("ddd MMM DD YYYY HH:mm:ss") + " CEST";
+            return moment(date).format("ddd MMM DD YYYY HH:mm:ss") + " CEST";
           }
 
           vm.dtOptions = DTOptionsBuilder.newOptions()

@@ -44,7 +44,7 @@
 
             vm.event.id = extractId(vm.event.hRef);
             vm.event.practice.id = extractId(vm.event.practice.hRef);
-            vm.event.eventDate_dateFormat = new Date(vm.event.eventDate);
+            vm.event.eventDate_dateFormat = new Date(cleanDate(vm.event.eventDate));
             vm.event.eventDate = parseEventDate(vm.event.eventDate);
           };
 
@@ -62,11 +62,15 @@
 
           function parseEventDate(date) {
             if (date != null) {
-              date = date.replace(/Z.*/, '') + "+01:00"
+              date = cleanDate(date);
               return moment(date).format('DD/MM/YYYY');
             } else {
               return null;
             }
+          }
+
+          function cleanDate(date) {
+            return date.replace(/Z.*/, '') + "+01:00";
           }
 
           function idPresent() {
@@ -78,7 +82,7 @@
           vm.saveEvent = saveEvent;
 
           function saveEvent() {
-            vm.event.eventDate = vm.event.eventDate_dateFormat; // WHY?
+            vm.event.eventDate = vm.event.eventDate_dateFormat;
 
             if (vm.event.practice != undefined && vm.event.practice.id != undefined) {
               vm.event.practiceId = vm.event.practice.id;

@@ -5,14 +5,29 @@
       h1.animated.fadeInDown.anim-delay-10 TeamTable
       h2.animated.fadeInLeft.anim-delay-15 Gestione del team in cloud
   
-.container.container-md
+.container.container-lg
   p.lead.m0 Gestisci il tuo team in cloud con uno strumento innovativo e veloce!
   .row.md-welcome-row
+    .col-md-3
+      .card.animated.fadeInDown.anim-delay-25(md-ink-ripple, style="min-height: 247px")
+        .card-body(ng-controller="WelcomeController as welcomeController") 
+          p.lead.text-bold Ricerca pratiche
+          | Esegui una ricerca per nome pratica
+          div(style="margin-top: 15px")
+            div.col-md-12
+              .mda-form-group
+                input.mda-form-control(ng-model='welcomeController.practice.search.name', tabindex='0', aria-invalid='false')
+                label Nome
+          .clearfix
+          md-button.pull-right.md-raised.md-primary(md-no-ink='' ng-click='welcomeController.doSearchPracticesByName()')
+            em.icon-magnifier(style="margin-right: 3px")
+            |  Esegui ricerca
+          div.clearfix
     .col-md-4
-      .card.animated.fadeInDown.anim-delay-20(md-ink-ripple, style="min-height: 200px !important")
+      .card.animated.fadeInDown.anim-delay-20(md-ink-ripple, style="min-height: 250px")
         .card-body 
           p.lead.text-bold Pratiche per urgenza
-          | Estrai le pratiche per codice urgenza seguendo i seguenti link.
+          | Estrai le pratiche per codice urgenza scegliendo tra i seguenti colori
           .clearfix
           div(style="margin-top: 55px; font-size: 20px")
             span
@@ -31,12 +46,12 @@
               a(ng-href="{{$state.href('app.practices_management_urgency', {urgencyCode: 'green'})}}") verde
               .clearfix
           .clearfix
-    .col-md-6
-      .card.animated.fadeInDown.anim-delay-20(md-ink-ripple)
+    .col-md-5
+      .card.animated.fadeInDown.anim-delay-20(md-ink-ripple, style="min-height: 247px")
         .card-body(ng-controller="WelcomeController as welcomeController") 
           p.lead.text-bold Pratiche nel tempo
           .clearfix
-          div(style="margin-top: 15px")
+          div(style="margin-top: 46px")
             div.col-md-6
               label Data da
               .clearfix
@@ -49,19 +64,4 @@
           md-button.pull-right.md-raised.md-primary(md-no-ink='' ng-click='welcomeController.doSearchPractices()')
             em.icon-magnifier(style="margin-right: 3px")
             |  Estrai
-          div.clearfix
-    .col-md-4
-      .card.animated.fadeInDown.anim-delay-25(md-ink-ripple)
-        .card-body(ng-controller="WelcomeController as welcomeController") 
-          p.lead.text-bold Ricerca pratiche
-          | Esegui una ricerca per nome pratica
-          div(style="margin-top: 15px")
-            div.col-md-12
-              .mda-form-group
-                input.mda-form-control(ng-model='welcomeController.practice.search.name', tabindex='0', aria-invalid='false')
-                label Nome
-          .clearfix
-          md-button.pull-right.md-raised.md-primary(md-no-ink='' ng-click='welcomeController.doSearchPracticesByName()')
-            em.icon-magnifier(style="margin-right: 3px")
-            |  Esegui ricerca
           div.clearfix
