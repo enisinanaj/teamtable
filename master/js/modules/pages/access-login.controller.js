@@ -49,19 +49,19 @@
               };
 
               $http.post($rootScope.app.apiUrl + "sessions", {}, config)
-              .then(function(response) {
-                $rootScope.user.authenticated = true;
-                $rootScope.user.anonymous = false;
-                $rootScope.user.id = vm.extractId(response.data.hRef);
+                .then(function(response) {
+                  $rootScope.user.authenticated = true;
+                  $rootScope.user.anonymous = false;
+                  $rootScope.user.id = vm.extractId(response.data.hRef);
 
-                if ( !response.data.hRef ) {
-                  vm.authMsg = 'Incorrect credentials.';
-                }else{
-                  $cookies.put('principal', $rootScope.user.id);
-                  $window.location.href = $state.href('app.welcome');
-                }
-              }, function() {
-                vm.authMsg = 'Credenziali non corrette!';
+                  if ( !response.data.hRef ) {
+                    vm.authMsg = 'Incorrect credentials.';
+                  }else{
+                    $cookies.put('principal', response.data.session.sessionKey); //$rootScope.user.session.sessionId);
+                    $window.location.href = $state.href('app.welcome');
+                  }
+                }, function() {
+                  vm.authMsg = 'Credenziali non corrette!';
               });
 
             }

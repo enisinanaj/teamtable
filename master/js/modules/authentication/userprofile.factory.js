@@ -56,7 +56,9 @@
 	      vm.userProfile.picture = 'app/img/149071.png';
 
 	      $rootScope.user = vm.userProfile;
-	      $rootScope.user.id = extractId(vm.userProfile.hRef);
+				$rootScope.user.id = extractId(vm.userProfile.hRef);
+				$rootScope.user.sessionId = vm.userProfile.session != undefined ? vm.userProfile.session.sessionKey : undefined;
+
 	      return $rootScope.user;
 	    });
 	  };

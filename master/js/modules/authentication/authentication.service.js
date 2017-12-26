@@ -24,11 +24,10 @@
 		vm.getProfile = function () {
 
 		  var cookieUserId = $cookies.get('principal');
-		  console.log("cookie user id: " + cookieUserId);
 
-		  if (cookieUserId != undefined && $rootScope.user.id == undefined) {
+		  if (cookieUserId != undefined && $rootScope.user.sessionId == undefined) {
 		  	$rootScope.user.id = cookieUserId;
-		  } else if (cookieUserId != undefined && $rootScope.user.id != cookieUserId) {
+		  } else if (cookieUserId != undefined && $rootScope.user.sessionId != cookieUserId) {
 		  	return $http.get('/');
 		  }
 
@@ -36,18 +35,20 @@
 		  	return $http.get('/');
 		  }
 
+		  var userSessionId = $rootScope.user.sessionId != undefined ? $rootScope.user.sessionId : null;
 		  var config = {
               headers: {
                   'Content-Type': 'application/json;',
                   'token': generateToken(),
-                  'apiKey': AUTH['api_key']
+				  'apiKey': AUTH['api_key'],
+				  'sessionId': userSessionId
               },
               cache: false
-          };
-          var userid = $rootScope.user.id != undefined ? $rootScope.user.id : 0;
+		  };
+		  
           var onError = function() { console.log('Failure retrieving user data'); };
 
-		  return $http.get($rootScope.app.apiUrl + "users/" + userid, config);
+		  return $http.get($rootScope.app.apiUrl + "sessions/", config);
 		};
 
 	};

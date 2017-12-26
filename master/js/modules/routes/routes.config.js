@@ -66,6 +66,12 @@
                 templateUrl: helper.basepath('welcome.html'),
                 resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
             })
+            .state('app.changepassword', {
+                url: '/changepassword',
+                title: 'Change Password',
+                templateUrl: helper.basepath('changepassword.html'),
+                resolve: helper.resolveForAuthenticated('moment', 'modernizr', 'icons')
+            })
             .state('app.add_practice', {
                 url: '/addPractice/:practiceId',
                 title: 'Add practice',
