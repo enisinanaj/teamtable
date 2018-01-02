@@ -88,6 +88,7 @@
           vm.saveActivity = saveActivity;
 
           function saveActivity() {
+            //date correction
             vm.activity.expirationDate = moment(vm.activity.expirationDate_dateFormat).format("YYYY-MM-DDTHH:mm:ss") + ".000Z";
             vm.activity.creationDate = moment(vm.activity.creationDate_dateFormat).format("YYYY-MM-DDTHH:mm:ss") + ".000Z";
 
