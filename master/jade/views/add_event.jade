@@ -11,10 +11,21 @@
             input.mda-form-control(ng-model='addEventController.event.description', tabindex='0', aria-invalid='false')
             label Nome
       .row
-        .col-sm-12
+        .col-sm-12.col-md-6.col-lg-4
           .mda-form-group
             md-datepicker.mda-form-control(ng-model="addEventController.event.eventDate_dateFormat" style="border: none !important;")
             label Data evento
+        .col-lg-8(ng-if="addEventController.createActivity && addEventController.event.id == undefined")
+          .mda-form-group
+            md-input-container(style="width: 100%;margin: 0")
+              md-select(placeholder='Operatore incaricato', ng-model='addEventController.activity.assigneeId')
+                md-option(ng-repeat='user in addEventController.users', value='{{user.id}}') {{user.username}}
       .row
         .col-sm-12
           md-button.pull-right.md-raised.md-primary(md-no-ink='', ng-click="addEventController.saveEvent()") Salva
+          .col-sm-12.col-md-6.col-lg-6.pull-right.text-right(style="line-height: 50px", ng-if="addEventController.event.id == undefined")
+            .mb
+              label.mda-checkbox
+                input(type='checkbox', ng-model="addEventController.createActivity")
+                em.bg-indigo-500
+                | Crea attività associata in automatico

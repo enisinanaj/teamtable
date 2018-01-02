@@ -10,11 +10,11 @@
         .module('app.event')
         .controller('EventController', EventController);
 
-    EventController.$inject = ['$scope', '$window', '$state', '$stateParams', 
-      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'EventService', 'ActivityService'];
+    EventController.$inject = ['$scope', '$window', '$state', '$stateParams', '$rootScope',
+      '$resource', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'EventService', 'ActivityService', 'UserService'];
     
-    function EventController($scope, $window, $state, $stateParams, 
-      $resource, DTOptionsBuilder, DTColumnDefBuilder, EventService, ActivityService) {
+    function EventController($scope, $window, $state, $stateParams, $rootScope,
+      $resource, DTOptionsBuilder, DTColumnDefBuilder, EventService, ActivityService, UserService) {
         
         var vm = this;
 
@@ -25,6 +25,8 @@
         function activate() {
 
           vm.event = {};
+          vm.createActivity = "";
+          vm.activity = {};
 
           vm.goToPractice = function() {
             $state.go('app.single_practice', {practiceId: vm.event.practice.id});
@@ -77,6 +79,15 @@
             return $stateParams.eventId != undefined && $stateParams.eventId != 0;
           }
 
+          UserService.loadAllUsers(onLoadUsers);
+
+          function onLoadUsers(result) {
+            vm.users = result.data;
+            for (var i = vm.users.length - 1; i >= 0; i--) {
+              vm.users[i].id = extractId(vm.users[i].hRef);
+            }
+          };
+
           // INSERTION
 
           vm.saveEvent = saveEvent;
@@ -100,8 +111,37 @@
                 var hRef = data.headers()["location"];
                 id = extractId(hRef);
               }
+
+              if (vm.createActivity) {
+                var newActivity = {
+                    name: vm.event.description,
+                    activityType: "EVENT",
+                    assigneeId: vm.activity.assigneeId,
+                    expirationDate_dateFormat: vm.event.eventDate,
+                    description: "Attività creata con l'evento: " + vm.event.description,
+                    expirationDate: vm.event.eventDate,
+                    creationDate: vm.event.eventDate,
+                    eventId: id,
+                    status: "OPEN"
+                };
+
+                ActivityService.saveActivity(newActivity, onSaveActivity);
+
+                function onSaveActivity(data) {
+                  var hRef = data.headers()["location"];
+                  id = extractId(hRef);
+                  
+                  $state.go('app.single_activity', {activityId: id})
+                };
+
+                return;
+              }
               
-              $state.go('app.single_event', {eventId: id})
+              if (vm.createActivity) {
+                return;
+              } else {
+                $state.go('app.single_event', {eventId: id})
+              }
             };
           }
 
