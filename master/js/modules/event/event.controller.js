@@ -82,7 +82,7 @@
           vm.saveEvent = saveEvent;
 
           function saveEvent() {
-            vm.event.eventDate = vm.event.eventDate_dateFormat;
+            vm.event.eventDate = moment(vm.event.eventDate_dateFormat).format("YYYY-MM-DDTHH:mm:ss") + ".000Z";
 
             if (vm.event.practice != undefined && vm.event.practice.id != undefined) {
               vm.event.practiceId = vm.event.practice.id;

@@ -34,10 +34,16 @@
             vm.activity.id = extractId(vm.activity.hRef);
             vm.activity.event.id = extractId(vm.activity.event.hRef);
             vm.activity.event.practice.id = extractId(vm.activity.event.practice.hRef);
-            vm.activity.creationDate = parseEventDate(vm.activity.creationDate);
+
             vm.activity.creationDate_dateFormat = new Date(cleanDate(vm.activity.creationDate));
+            vm.activity.creationDate = parseEventDate(vm.activity.creationDate);
+            
+            if (vm.activity.completionDate != undefined) {
+              vm.activity.completionDate_dateFormat = new Date(cleanDate(vm.activity.completionDate));
+            }
+
             vm.activity.completionDate = parseEventDate(vm.activity.completionDate);
-            vm.activity.completionDate_dateFormat = new Date(cleanDate(vm.activity.completionDate));
+            
             vm.activity.expirationDate_dateFormat = new Date(cleanDate(vm.activity.expirationDate));
             vm.activity.expirationDate = parseEventDate(vm.activity.expirationDate);
             vm.activity.assigneeId = extractId(vm.activity.assignee.hRef);
@@ -82,9 +88,14 @@
           vm.saveActivity = saveActivity;
 
           function saveActivity() {
-            vm.activity.expirationDate = vm.activity.expirationDate_dateFormat;
-            vm.activity.creationDate = vm.activity.creationDate_dateFormat;
-            vm.activity.completionDate = vm.activity.completionDate_dateFormat;
+            vm.activity.expirationDate = moment(vm.activity.expirationDate_dateFormat).format("YYYY-MM-DDTHH:mm:ss") + ".000Z";
+            vm.activity.creationDate = moment(vm.activity.creationDate_dateFormat).format("YYYY-MM-DDTHH:mm:ss") + ".000Z";
+
+            if (vm.activity.completionDate_dateFormat != undefined) {
+              vm.activity.completionDate = moment(vm.activity.completionDate_dateFormat).format("YYYY-MM-DDTHH:mm:ss") + ".000Z";
+            } else if (vm.activity.completionDate == '-') {
+              delete vm.activity.completionDate;
+            }
 
             if (vm.activity.event != undefined && vm.activity.event.id != undefined) {
               vm.activity.eventId = vm.activity.event.id;
