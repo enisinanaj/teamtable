@@ -26,7 +26,7 @@
 		  var cookieUserId = $cookies.get('principal');
 
 		  if (cookieUserId != undefined && $rootScope.user.sessionId == undefined) {
-		  	$rootScope.user.id = cookieUserId;
+		  	$rootScope.user.sessionId = cookieUserId;
 		  } else if (cookieUserId != undefined && $rootScope.user.sessionId != cookieUserId) {
 		  	return $http.get('/');
 		  }
