@@ -1,0 +1,18 @@
+.container-md
+  .card
+    .card-heading.bg-primary
+      .card-title Elenco attività in scadenza
+    .card-body
+      div(ng-controller='ActivitiesController as activities')
+        table.row-border.hover(datatable='ng', dt-options='activities.dtOptions' dt-column-defs='activities.dtColumnDefs')
+          thead
+            tr
+              th Operatore incaricato
+              th Attività
+              th Note
+          tbody
+            tr(ng-repeat='activity in activities.elements')
+              td {{ activity.assignee.username }}
+              td
+                a(ng-href="{{$state.href('app.single_activity', {activityId: activity.id})}}") {{ activity.name }}
+              td {{ activity.description }}

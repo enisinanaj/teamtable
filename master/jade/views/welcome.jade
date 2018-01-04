@@ -26,24 +26,24 @@
     .col-md-4
       .card.animated.fadeInDown.anim-delay-20(md-ink-ripple, style="min-height: 250px")
         .card-body 
-          p.lead.text-bold Pratiche per urgenza
-          | Estrai le pratiche per codice urgenza scegliendo tra i seguenti colori
+          p.lead.text-bold Attività in scadenza
+          | Estrai le attività in scadenza scegliendo tra i seguenti colori
           .clearfix
           div(style="margin-top: 55px; font-size: 20px")
             span
               em.fa.fa-circle.text-danger
               |  
-              a(ng-href="{{$state.href('app.practices_management_urgency', {urgencyCode: 'red'})}}") rosso
+              a(ng-href="{{$state.href('app.activities_management_urgency', {urgencyCode: 'red'})}}") rosso
             |  | 
             span
               em.fa.fa-circle.text-warning
               |  
-              a(ng-href="{{$state.href('app.practices_management_urgency', {urgencyCode: 'yellow'})}}") giallo
+              a(ng-href="{{$state.href('app.activities_management_urgency', {urgencyCode: 'yellow'})}}") giallo
             |  | 
             span
               em.fa.fa-circle.text-green
               |  
-              a(ng-href="{{$state.href('app.practices_management_urgency', {urgencyCode: 'green'})}}") verde
+              a(ng-href="{{$state.href('app.activities_management_urgency', {urgencyCode: 'green'})}}") verde
               .clearfix
           .clearfix
     .col-md-5

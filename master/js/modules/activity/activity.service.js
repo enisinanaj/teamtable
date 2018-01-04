@@ -1,4 +1,4 @@
-// Practices service
+// Activities service
 // angular.module("app").factory;
 
 
@@ -113,7 +113,7 @@
               cache: false
           };
 
-          var onError = function() { console.log('Failure sending practice data'); };
+          var onError = function() { console.log('Failure sending activity data'); };
 
           $http
             .post(activitiesEndpoint, {archived: true}, config)
@@ -131,7 +131,7 @@
               cache: false
           };
 
-          var onError = function() { console.log('Failure sending practice data'); };
+          var onError = function() { console.log('Failure sending activity data'); };
 
           $http
             .post(activitiesEndpoint, {archived: false}, config)

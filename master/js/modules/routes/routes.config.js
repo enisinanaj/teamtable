@@ -143,6 +143,18 @@
                 title: 'Activities',
                 templateUrl: helper.basepath('activities.html'),
                 resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
+            })
+            .state('app.activities_management', {
+                url: '/activities',
+                title: 'Activities',
+                templateUrl: helper.basepath('activities.html'),
+                resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
+            })
+            .state('app.activities_management_urgency', {
+                url: '/activities/urgency/:urgencyCode',
+                title: 'Activities',
+                templateUrl: helper.basepath('activities.html'),
+                resolve: helper.resolveForAuthenticated('practices', 'moment', 'modernizr', 'icons')
             });
 
     } // routesConfig
