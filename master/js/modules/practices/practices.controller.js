@@ -59,6 +59,14 @@
             return moment(date).format("ddd MMM DD YYYY HH:mm:ss") + " CEST";
           }
 
+          vm.showArchived = false;
+
+          vm.dtInstance = {};
+
+          $scope.reloadData = function() {
+             vm.dtInstance._renderer.rerender();             
+          }
+
           vm.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType('full_numbers')
             .withLanguageSource("//cdn.datatables.net/plug-ins/1.10.16/i18n/Italian.json")

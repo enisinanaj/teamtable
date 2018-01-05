@@ -111,6 +111,14 @@
             };
           }
 
+          vm.showArchived = false;
+
+          vm.dtInstance = {};
+
+          $scope.reloadData = function() {
+             vm.dtInstance._renderer.rerender();             
+          }
+
           //UTILITIES
 
           function extractId(hRef) {

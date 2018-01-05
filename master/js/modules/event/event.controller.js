@@ -187,6 +187,14 @@
             };
           }
 
+          vm.showArchived = false;
+
+          vm.dtInstance = {};
+
+          $scope.reloadData = function() {
+             vm.dtInstance._renderer.rerender();             
+          }
+
           // VIEW CONFIGURATION
 
           vm.dtOptions = DTOptionsBuilder.newOptions()

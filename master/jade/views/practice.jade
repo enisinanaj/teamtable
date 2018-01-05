@@ -35,7 +35,7 @@
           a(ng-href="{{$state.href('app.add_event', {eventId: 0, practiceId: practiceDetail.practice.id})}}") aggiungi evento
           |]
       .clearfix
-      table.row-border.hover(datatable='ng', dt-options='practiceDetail.dtOptions' dt-column-defs='practiceDetail.dtColumnDefs')
+      table.row-border.hover(datatable='ng', dt-options='practiceDetail.dtOptions', dt-column-defs='practiceDetail.dtColumnDefs', dt-instance='practiceDetail.dtInstance')
         thead
           tr
             th Operatore inserimento
@@ -43,7 +43,7 @@
             th Data
             th Azioni
         tbody
-          tr(ng-repeat='event in practiceDetail.events', ng-class="{'text-muted': event.archived}")
+          tr(ng-if="!event.archived || practiceDetail.showArchived", ng-repeat='event in practiceDetail.events', ng-class="{'text-muted': event.archived}")
             td {{event.creator.username}}
             td {{event.description}}
             td {{event.eventDate}}
@@ -53,3 +53,8 @@
                 a(ng-click="practiceDetail.archiveEvent(event.id)") archivia
               span(ng-if="!practiceDetail.practice.archived && event.archived") | 
                 a(ng-click="practiceDetail.unarchiveEvent(event.id)") ripristina
+    .card-body(style="text-align: right")
+      label.mda-checkbox
+        input(type='checkbox', ng-model="practiceDetail.showArchived", ng-click="reloadData();")
+        em.bg-indigo-500
+        | Mostra eventi archiviati

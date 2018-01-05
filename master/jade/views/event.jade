@@ -40,7 +40,7 @@
           a(ng-href="{{$state.href('app.add_activity', {activityId: 0, eventId: eventDetailController.event.id})}}") aggiungi attività
           |]
       .clearfix
-      table.row-border.hover(datatable='ng', dt-options='eventDetailController.dtOptions' dt-column-defs='eventDetailController.dtColumnDefs')
+      table.row-border.hover(datatable='ng', dt-options='eventDetailController.dtOptions', dt-column-defs='eventDetailController.dtColumnDefs' dt-instance='eventDetailController.dtInstance')
         thead 
           tr  
             th Attività
@@ -49,7 +49,7 @@
             th Stato attività
             th Azioni
         tbody
-          tr(ng-repeat='activity in eventDetailController.activities', ng-class="{'text-muted': activity.archived}")
+          tr(ng-if="!activity.archived || eventDetailController.showArchived", ng-repeat='activity in eventDetailController.activities', ng-class="{'text-muted': activity.archived}")
             td
               strong {{activity.name}}
               .clearfix
@@ -64,3 +64,8 @@
                   a(ng-click="eventDetailController.archiveActivity(activity.id)") archivia
                 span(ng-if="!eventDetailController.event.archived && activity.archived") | 
                   a(ng-click="eventDetailController.unarchiveActivity(activity.id)") ripristina
+    .card-body(style="text-align: right")
+      label.mda-checkbox
+        input(type='checkbox', ng-model="eventDetailController.showArchived", ng-click="reloadData();")
+        em.bg-indigo-500
+        | Mostra attività archiviate
