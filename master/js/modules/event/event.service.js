@@ -16,6 +16,7 @@
         this.saveEvent = saveEvent;
         this.archiveEvent = archiveEvent;
         this.unarchiveEvent = unarchiveEvent;
+        this.deleteEvent = deleteEvent;
         var vm = this;
 
         function loadEvent(id, onReady) {
@@ -116,6 +117,24 @@
 
           $http
             .post(eventEndpoint, {archived: false}, config)
+            .then(onReady, onError);
+        }
+
+        function deleteEvent(id, onReady) {
+          var eventsEndpoint = $rootScope.app.apiUrl + 'events/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure sending event data'); };
+
+          $http
+            .delete(eventsEndpoint, config)
             .then(onReady, onError);
         }
 

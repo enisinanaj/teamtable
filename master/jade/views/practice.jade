@@ -11,6 +11,8 @@
           a(ng-href="{{$state.href('app.add_practice', {practiceId: practiceDetail.practice.id})}}") modifica
           |&nbsp;|&nbsp;
           a(ng-click="practiceDetail.archivePractice()") archivia
+          |&nbsp;|&nbsp;
+          a(ng-click="practiceDetail.deletePractice()") elimina
           |]
         span(ng-if="practiceDetail.practice.archived") [
           a(ng-click="practiceDetail.unarchivePractice()") ripristina
@@ -51,6 +53,8 @@
               a(ng-href="{{$state.href('app.single_event', {eventId: event.id})}}") visualizza
               span(ng-if="!practiceDetail.practice.archived && !event.archived") | 
                 a(ng-click="practiceDetail.archiveEvent(event.id)") archivia
+              span(ng-if="!event.archived") | 
+                a(ng-click="practiceDetail.deleteEvent(event.id)") elimina
               span(ng-if="!practiceDetail.practice.archived && event.archived") | 
                 a(ng-click="practiceDetail.unarchiveEvent(event.id)") ripristina
     .card-body(style="text-align: right")

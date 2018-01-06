@@ -154,6 +154,17 @@
             };
           }
 
+          vm.deleteActivity = deleteActivity;
+
+          function deleteActivity() {
+            vm.event = vm.activity.event.id;
+            ActivityService.deleteActivity(vm.activity.id, onDelete);
+
+            function onDelete(data) {              
+              $state.go('app.single_event', {eventId: vm.event});
+            };
+          }
+
           // CONFIGURATION
 
           vm.dtOptions = DTOptionsBuilder.newOptions()

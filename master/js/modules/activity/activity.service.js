@@ -17,6 +17,7 @@
         this.unarchiveActivity = unarchiveActivity;
         this.completeActivity = completeActivity;
         this.reopenActivity = reopenActivity;
+        this.deleteActivity = deleteActivity;
         var vm = this;
 
         function loadActivity(id, onReady) {
@@ -135,6 +136,24 @@
 
           $http
             .post(activitiesEndpoint, {archived: false}, config)
+            .then(onReady, onError);
+        }
+
+        function deleteActivity(id, onReady) {
+          var activitiesEndpoint = $rootScope.app.apiUrl + 'activities/' + id;
+          var config = {
+              headers: {
+                  'Content-Type': 'application/json;',
+                  'token': AuthenticationService.generateToken(),
+                  'apiKey': AUTH['api_key']
+              },
+              cache: false
+          };
+
+          var onError = function() { console.log('Failure sending activity data'); };
+
+          $http
+            .delete(activitiesEndpoint, config)
             .then(onReady, onError);
         }
 

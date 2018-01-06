@@ -91,6 +91,20 @@
             };
           }
 
+          vm.deletePractice = deletePractice;
+
+          function deletePractice() {
+            if (vm.events.length == 0) {
+              PracticeService.deletePractice(vm.practice.id, onDelete);
+            } else {
+              alert("ATTENZIONE: non è possibile eliminare una pratica con eventi ad essa collegati");
+            }
+
+            function onDelete(data) {              
+              $state.go('app.practices_management');
+            };
+          }
+
           vm.archiveEvent = archiveEvent;
 
           function archiveEvent(eventId) {
@@ -109,6 +123,27 @@
             function onArchive(data) {              
               PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
             };
+          }
+
+          vm.deleteEvent = deleteEvent;
+
+          function deleteEvent(eventId) {
+            PracticeService.loadActivities("?event=" + eventId, onLoadActivities);
+
+            function onLoadActivities(activities) {
+              vm.activities = activities.data;           
+            };
+            
+            if (vm.activities.length == 0) {
+              EventService.deleteEvent(eventId, onDelete);
+            } else {
+              alert("ATTENZIONE: non è possibile eliminare un'evento con attività ad esso collegate");
+            }
+
+            function onDelete(data) {              
+              PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
+            };
+            
           }
 
           vm.showArchived = false;
@@ -154,10 +189,10 @@
             .withOption("info", false);
 
           vm.dtColumnDefs = [
-              DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
+              DTColumnDefBuilder.newColumnDef(0).withOption('width', '150px'),
               DTColumnDefBuilder.newColumnDef(1),
               DTColumnDefBuilder.newColumnDef(2).withOption('width', '80px'),
-              DTColumnDefBuilder.newColumnDef(3).withOption('width', '140px')
+              DTColumnDefBuilder.newColumnDef(3).withOption('width', '170px')
           ];
           
         }

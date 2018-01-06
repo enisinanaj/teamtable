@@ -36,6 +36,8 @@ style
             a(ng-href="{{$state.href('app.add_activity', {activityId: activityDetailController.activity.id, eventId: activityDetailController.activity.event.id})}}") modifica
             |  | 
             a(ng-click="activityDetailController.archiveActivity()") archivia
+            |  | 
+            a(ng-click="activityDetailController.deleteActivity()") elimina
             |]
           span(ng-if="activityDetailController.activity.archived && activityDetailController.activity.status != 'COMPLETED'") [
             a(ng-click="activityDetailController.unarchiveActivity()") ripristina

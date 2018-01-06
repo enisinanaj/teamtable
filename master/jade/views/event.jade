@@ -16,6 +16,8 @@
           a(ng-href="{{$state.href('app.add_event', {eventId: eventDetailController.event.id, practiceId: eventDetailController.event.practice.id})}}") modifica
           |  | 
           a(ng-click="eventDetailController.archiveEvent()") archivia
+          |  | 
+          a(ng-click="eventDetailController.deleteEvent()") elimina
           |]
         span(ng-if="eventDetailController.event.archived") [
           a(ng-click="eventDetailController.unarchiveEvent()") ripristina evento
@@ -64,6 +66,8 @@
                   a(ng-click="eventDetailController.archiveActivity(activity.id)") archivia
                 span(ng-if="!eventDetailController.event.archived && activity.archived") | 
                   a(ng-click="eventDetailController.unarchiveActivity(activity.id)") ripristina
+                span(ng-if="!activity.archived") | 
+                  a(ng-click="eventDetailController.deleteActivity(activity.id)") elimina
     .card-body(style="text-align: right")
       label.mda-checkbox
         input(type='checkbox', ng-model="eventDetailController.showArchived", ng-click="reloadData();")

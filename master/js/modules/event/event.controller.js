@@ -195,6 +195,31 @@
              vm.dtInstance._renderer.rerender();             
           }
 
+          vm.deleteEvent = deleteEvent;
+
+          function deleteEvent() {
+            if (vm.activities.length == 0) {
+              vm.practice = vm.event.practice.id;
+              EventService.deleteEvent(vm.event.id, onDelete);
+            } else {
+              alert("ATTENZIONE: non è possibile eliminare un'evento con attività ed esso collegate");
+            }
+
+            function onDelete(data) {              
+              $state.go('app.single_practice', {practiceId: vm.practice});
+            };
+          }
+
+          vm.deleteActivity = deleteActivity;
+
+          function deleteActivity(activityId) {
+            ActivityService.deleteActivity(activityId, onDeleteActivity);
+
+            function onDeleteActivity(data) {
+              EventService.loadActivities("?event=" + $stateParams.eventId, onLoadActivities);
+            };
+          }
+
           // VIEW CONFIGURATION
 
           vm.dtOptions = DTOptionsBuilder.newOptions()
@@ -212,10 +237,10 @@
 
           vm.dtColumnDefs = [
               DTColumnDefBuilder.newColumnDef(0),
-              DTColumnDefBuilder.newColumnDef(1).withOption('width', '160px'),
+              DTColumnDefBuilder.newColumnDef(1).withOption('width', '130px'),
               DTColumnDefBuilder.newColumnDef(2).withOption('width', '80px'),
               DTColumnDefBuilder.newColumnDef(3).withOption('width', '50px'),
-              DTColumnDefBuilder.newColumnDef(4).withOption('width', '150px')
+              DTColumnDefBuilder.newColumnDef(4).withOption('width', '180px')
           ];
           
         }
