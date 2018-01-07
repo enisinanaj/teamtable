@@ -20,6 +20,12 @@
 		        var m = moment(date);
 		        return m.isValid() ? m.format('DD/MM/YYYY') : '';
 		    };
+
+            $mdDateLocaleProvider.parseDate = function(dateString) {
+                moment().locale('it');
+                var m = moment(dateString, "DD/MM/YYYY");
+                return m.isValid() ? m.toDate() : new Date(NaN);
+            };
         };
     };
 
