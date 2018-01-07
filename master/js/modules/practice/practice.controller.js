@@ -131,17 +131,17 @@
             PracticeService.loadActivities("?event=" + eventId, onLoadActivities);
 
             function onLoadActivities(activities) {
-              vm.activities = activities.data;           
-            };
-            
-            if (vm.activities.length == 0) {
-              EventService.deleteEvent(eventId, onDelete);
-            } else {
-              alert("ATTENZIONE: non è possibile eliminare un'evento con attività ad esso collegate");
-            }
+              vm.activities = activities.data;
 
-            function onDelete(data) {              
-              PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
+              if (vm.activities.length == 0) {
+                EventService.deleteEvent(eventId, onDelete);
+              } else {
+                alert("ATTENZIONE: non è possibile eliminare un'evento con attività ad esso collegate");
+              }
+
+              function onDelete(data) {              
+                PracticeService.loadEvents("?practice=" + $stateParams.practiceId, onLoadEvents);
+              };
             };
             
           }
