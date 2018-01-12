@@ -78,7 +78,8 @@
             ])*/
             .withOption("info", false)
             .withOption("lengthChange", false)
-            .withOption("paging", false);
+            .withOption("paging", false)
+            .withOption('order', [1, 'asc']);
 
           vm.dtColumnDefs = [
               DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
