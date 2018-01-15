@@ -7,15 +7,16 @@
         table.row-border.hover(datatable='ng', dt-options='practices.dtOptions', dt-column-defs='practices.dtColumnDefs', dt-instance='practices.dtInstance')
           thead
             tr
-              th Operatore inserimento
               th Pratica
               th Note
+              th Codice Urgenza
           tbody
             tr(ng-if="!practice.archived || practices.showArchived", ng-repeat='practice in practices.elements', ng-class="{'text-muted': practice.archived}")
-              td {{ practice.creator.username }}
               td
                 a(ng-href="{{$state.href('app.single_practice', {practiceId: practice.id})}}") {{ practice.name }}
               td {{ practice.description }}
+              td
+                em.fa.fa-cirlce(style="color: green; font-size: 16px")
 
       .row.card-body
         .col-sm-12.col-xm-12.col-lg-12.col-md-12

@@ -82,9 +82,9 @@
             .withOption('order', [1, 'asc']);
 
           vm.dtColumnDefs = [
-              DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
-              DTColumnDefBuilder.newColumnDef(1).withOption('width', '200px'),
-              DTColumnDefBuilder.newColumnDef(2)
+              DTColumnDefBuilder.newColumnDef(0).withOption('width', '200px'),
+              DTColumnDefBuilder.newColumnDef(1),
+              DTColumnDefBuilder.newColumnDef(2).withOption('width', '60px')
           ];
         }
     }
