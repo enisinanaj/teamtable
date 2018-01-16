@@ -15,8 +15,11 @@
               td
                 a(ng-href="{{$state.href('app.single_practice', {practiceId: practice.id})}}") {{ practice.name }}
               td {{ practice.description }}
-              td
-                em.fa.fa-cirlce(style="color: green; font-size: 16px")
+              td(style="text-align: center;")
+                em.fa.fa-circle.text-danger(ng-if="practice.redUrgency")
+                em.fa.fa-circle.text-warning(ng-if="practice.yellowUrgency")
+                em.fa.fa-circle.text-green(ng-if="practice.greenUrgency")
+
 
       .row.card-body
         .col-sm-12.col-xm-12.col-lg-12.col-md-12
