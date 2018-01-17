@@ -106,7 +106,7 @@
 
             function onSave(data) {
               var id = vm.event.id;
-              
+
               if (vm.event.id == undefined) {
                 var hRef = data.headers()["location"];
                 id = extractId(hRef);
@@ -115,10 +115,10 @@
               if (vm.createActivity) {
                 var newActivity = {
                     name: vm.event.description,
-                    activityType: "EVENT",
+                    activityType: "",
                     assigneeId: vm.activity.assigneeId,
                     expirationDate_dateFormat: vm.event.eventDate,
-                    description: "Attività creata con l'evento: " + vm.event.description,
+                    description: vm.event.description,
                     expirationDate: vm.event.eventDate,
                     creationDate: vm.event.eventDate,
                     eventId: id,
@@ -129,9 +129,9 @@
 
                 function onSaveActivity(data) {
                   var hRef = data.headers()["location"];
-                  id = extractId(hRef);
+                  var actId = extractId(hRef);
                   
-                  $state.go('app.single_activity', {activityId: id})
+                  $state.go('app.add_activity', {activityId: actId, eventId: id})
                 };
 
                 return;
