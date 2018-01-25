@@ -67,9 +67,9 @@
 
           vm.dtColumnDefs = [
               DTColumnDefBuilder.newColumnDef(0).withOption('width', '130px'),
-              DTColumnDefBuilder.newColumnDef(1).withOption('width', '150px'),
-              DTColumnDefBuilder.newColumnDef(2).withOption('width', '230px'),
-              DTColumnDefBuilder.newColumnDef(3)
+              DTColumnDefBuilder.newColumnDef(1),
+              DTColumnDefBuilder.newColumnDef(2).withOption('width', '150px'),
+              DTColumnDefBuilder.newColumnDef(3).withOption('width', '230px')
           ];
         }
     }
