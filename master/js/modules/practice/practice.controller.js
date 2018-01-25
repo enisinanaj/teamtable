@@ -47,6 +47,7 @@
               vm.events[i].redUrgency = false;
               vm.events[i].yellowUrgency = false;
               vm.events[i].greenUrgency = false;
+              vm.events[i].greyUrgency = false;
 
               if (vm.events[i].urgencyCode == 'red') 
                 vm.events[i].redUrgency = true;
@@ -56,7 +57,7 @@
                 vm.events[i].greenUrgency = true;
 
               if ((!vm.events[i].greenUrgency) && (!vm.events[i].yellowUrgency) && (!vm.events[i].redUrgency)) {
-                vm.events[i].greenUrgency = true;
+                vm.events[i].greyUrgency = true;
               }
             }
           };

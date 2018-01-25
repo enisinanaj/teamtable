@@ -118,9 +118,9 @@
                     activityType: "",
                     assigneeId: vm.activity.assigneeId,
                     expirationDate_dateFormat: vm.event.eventDate,
-                    description: vm.event.description,
+                    description: "",
                     expirationDate: vm.event.eventDate,
-                    creationDate: vm.event.eventDate,
+                    creationDate: vm.event.creationDate,
                     eventId: id,
                     status: "OPEN"
                 };

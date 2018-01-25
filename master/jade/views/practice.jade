@@ -52,6 +52,7 @@
                 em.fa.fa-circle.text-danger(ng-if="event.redUrgency")
                 em.fa.fa-circle.text-warning(ng-if="event.yellowUrgency")
                 em.fa.fa-circle.text-green(ng-if="event.greenUrgency")
+                em.fa.fa-circle.text-gray-light(ng-if="event.greyUrgency")
             td(style="text-align:center")
               a(ng-href="{{$state.href('app.single_event', {eventId: event.id})}}") visualizza
               span(ng-if="!practiceDetail.practice.archived && !event.archived") | 
