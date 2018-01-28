@@ -20,5 +20,16 @@
     "sref": "app.practices_management",
     "translate": "sidebar.nav.menu.PRACTICES_MANAGEMENT",
     "icon": "icon-doc"
+  },
+  {
+    "text": "Impostazioni utente",
+    "heading": "true",
+    "translate": "sidebar.heading.USER_SETTINGS"
+  },
+  {
+    "text": "Cambio password",
+    "sref": "app.changepassword",
+    "translate": "sidebar.nav.menu.CHANGE_PASSWORD",
+    "icon": "icon-key"
   }
 ]

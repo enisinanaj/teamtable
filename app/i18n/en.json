@@ -10,7 +10,8 @@
   "sidebar": {
     "WELCOME": "Welcome",
     "heading": {
-      "HEADER": "Main Navigation"
+      "HEADER": "Main Navigation",
+      "USER_SETTINGS": "Impostazioni utente"
     },
     "nav": {
       "SINGLEVIEW": "Single View",
@@ -18,7 +19,8 @@
         "MENU": "Menu",
         "SUBMENU": "Sub Menu",
         "PRACTICES_MANAGEMENT": "Practices",
-        "ADD_PRACTICE": "Add practice"
+        "ADD_PRACTICE": "Add practice",
+        "CHANGE_PASSWORD": "Change password"
       }
     }
   }
