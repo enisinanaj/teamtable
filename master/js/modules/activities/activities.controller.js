@@ -28,8 +28,6 @@
 
           var params = "";
 
-          console.log('hi');
-
           if ($stateParams.urgencyCode != undefined && $stateParams.urgencyCode != null && $stateParams.urgencyCode != "") {
             params = "?urgencyCode=" + $stateParams.urgencyCode;
           }
@@ -41,6 +39,8 @@
 
             for (var i = vm.elements.length - 1; i >= 0; i--) {
               vm.elements[i].id = extractId(vm.elements[i].hRef);
+              vm.elements[i].event.id = extractId(vm.elements[i].event.hRef);
+              vm.elements[i].event.practice.id = extractId(vm.elements[i].event.practice.hRef);
             }
           };
 
@@ -66,9 +66,10 @@
             .withOption("paging", false);
 
           vm.dtColumnDefs = [
-              DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
-              DTColumnDefBuilder.newColumnDef(1).withOption('width', '200px'),
-              DTColumnDefBuilder.newColumnDef(2)
+              DTColumnDefBuilder.newColumnDef(0).withOption('width', '130px'),
+              DTColumnDefBuilder.newColumnDef(1),
+              DTColumnDefBuilder.newColumnDef(2).withOption('width', '150px'),
+              DTColumnDefBuilder.newColumnDef(3).withOption('width', '230px')
           ];
         }
     }

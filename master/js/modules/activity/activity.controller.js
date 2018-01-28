@@ -106,18 +106,20 @@
 
             vm.activity.status = 'OPEN';
 
-            ActivityService.saveActivity(vm.activity, onSave);
+            if (vm.activity.activityType != '') {
+              ActivityService.saveActivity(vm.activity, onSave);
 
-            function onSave(data) {
-              var id = vm.activity.id;
-              
-              if (vm.activity.id == undefined) {
-                var hRef = data.headers()["location"];
-                id = extractId(hRef);
-              }
-              
-              $state.go('app.single_activity', {activityId: id})
-            };
+              function onSave(data) {
+                var id = vm.activity.id;
+                
+                if (vm.activity.id == undefined) {
+                  var hRef = data.headers()["location"];
+                  id = extractId(hRef);
+                }
+                
+                $state.go('app.single_activity', {activityId: id})
+              };
+            }
           }
 
           vm.completeActivity = completeActivity;

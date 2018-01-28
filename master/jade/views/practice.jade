@@ -40,15 +40,19 @@
       table.row-border.hover(datatable='ng', dt-options='practiceDetail.dtOptions', dt-column-defs='practiceDetail.dtColumnDefs', dt-instance='practiceDetail.dtInstance')
         thead
           tr
-            th Operatore inserimento
             th Evento
-            th Data
+            th Data evento
+            th Codice Urgenza
             th Azioni
         tbody
           tr(ng-if="!event.archived || practiceDetail.showArchived", ng-repeat='event in practiceDetail.events', ng-class="{'text-muted': event.archived}")
-            td {{event.creator.username}}
             td {{event.description}}
             td {{event.eventDate}}
+            td(style="text-align: center;")
+                em.fa.fa-circle.text-danger(ng-if="event.redUrgency")
+                em.fa.fa-circle.text-warning(ng-if="event.yellowUrgency")
+                em.fa.fa-circle.text-green(ng-if="event.greenUrgency")
+                em.fa.fa-circle.text-gray-light(ng-if="event.greyUrgency")
             td(style="text-align:center")
               a(ng-href="{{$state.href('app.single_event', {eventId: event.id})}}") visualizza
               span(ng-if="!practiceDetail.practice.archived && !event.archived") | 

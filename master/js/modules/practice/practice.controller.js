@@ -43,6 +43,22 @@
             for (var i = vm.events.length - 1; i >= 0; i--) {
               vm.events[i].id = extractId(vm.events[i].hRef);
               vm.events[i].eventDate = parseEventDate(vm.events[i].eventDate);
+
+              vm.events[i].redUrgency = false;
+              vm.events[i].yellowUrgency = false;
+              vm.events[i].greenUrgency = false;
+              vm.events[i].greyUrgency = false;
+
+              if (vm.events[i].urgencyCode == 'red') 
+                vm.events[i].redUrgency = true;
+              if (vm.events[i].urgencyCode == 'yellow')
+                vm.events[i].yellowUrgency = true;
+              if (vm.events[i].urgencyCode == 'green')
+                vm.events[i].greenUrgency = true;
+
+              if ((!vm.events[i].greenUrgency) && (!vm.events[i].yellowUrgency) && (!vm.events[i].redUrgency)) {
+                vm.events[i].greyUrgency = true;
+              }
             }
           };
 
@@ -186,12 +202,13 @@
             ])*/
             .withOption("lengthChange", false)
             .withOption("paging", false)
-            .withOption("info", false);
+            .withOption("info", false)
+            .withOption('order', [1, 'desc']);
 
           vm.dtColumnDefs = [
-              DTColumnDefBuilder.newColumnDef(0).withOption('width', '150px'),
-              DTColumnDefBuilder.newColumnDef(1),
-              DTColumnDefBuilder.newColumnDef(2).withOption("type", "date-eu").withOption('width', '80px'),
+              DTColumnDefBuilder.newColumnDef(0),
+              DTColumnDefBuilder.newColumnDef(1).withOption("type", "date-eu").withOption('width', '80px'),
+              DTColumnDefBuilder.newColumnDef(2).withOption('width', '100px'),
               DTColumnDefBuilder.newColumnDef(3).withOption('width', '170px')
           ];
           

@@ -20,8 +20,6 @@
 
         activate();
 
-        ////////////////
-
         function activate() {
 
           // Ajax
@@ -48,6 +46,21 @@
 
             for (var i = vm.elements.length - 1; i >= 0; i--) {
               vm.elements[i].id = extractId(vm.elements[i].hRef);
+              vm.elements[i].redUrgency = false;
+              vm.elements[i].yellowUrgency = false;
+              vm.elements[i].greenUrgency = false;
+              vm.elements[i].greyUrgency = false;
+
+              if (vm.elements[i].urgencyCode == 'red') 
+                vm.elements[i].redUrgency = true;
+              if (vm.elements[i].urgencyCode == 'yellow')
+                vm.elements[i].yellowUrgency = true;
+              if (vm.elements[i].urgencyCode == 'green')
+                vm.elements[i].greenUrgency = true;
+
+              if ((!vm.elements[i].greenUrgency) && (!vm.elements[i].yellowUrgency) && (!vm.elements[i].redUrgency)) {
+                vm.elements[i].greyUrgency = true;
+              }
             }
           };
 
@@ -78,12 +91,13 @@
             ])*/
             .withOption("info", false)
             .withOption("lengthChange", false)
-            .withOption("paging", false);
+            .withOption("paging", false)
+            .withOption('order', [0, 'asc']);
 
           vm.dtColumnDefs = [
-              DTColumnDefBuilder.newColumnDef(0).withOption('width', '160px'),
-              DTColumnDefBuilder.newColumnDef(1).withOption('width', '200px'),
-              DTColumnDefBuilder.newColumnDef(2)
+              DTColumnDefBuilder.newColumnDef(0).withOption('width', '200px'),
+              DTColumnDefBuilder.newColumnDef(1),
+              DTColumnDefBuilder.newColumnDef(2).withOption('width', '60px')
           ];
         }
     }

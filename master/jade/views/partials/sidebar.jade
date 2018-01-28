@@ -13,7 +13,7 @@ script(type='text/ng-template', id="sidebar-renderer.html")
 .aside-inner
   nav.sidebar(sidebar="", sidebar-anyclick-close="", ng-class="{'show-scrollbar': app.layout.asideScrollbar}")
     // START sidebar nav
-    ul.nav
+    ul.nav(style="height: 100%; display: flex; flex-direction: column;")
       // START user info
       li.has-user-block
         div(uib-collapse="userBlockVisible", ng-controller="UserBlockController")
@@ -30,6 +30,22 @@ script(type='text/ng-template', id="sidebar-renderer.html")
 
       // Iterates over all sidebar items
       li(ng-class="getMenuItemPropClasses(item)", ng-repeat='item in menuItems', ng-init="pIndex = $index", ng-include="'sidebar-renderer.html'", ng-click="toggleCollapse(pIndex, true)")
+
+      li(style="position: absolute; bottom: 0; align-self: center;")
+        span
+          em.fa.fa-circle.text-danger
+          |  
+          a(ng-href="{{$state.href('app.activities_management_urgency', {urgencyCode: 'red'})}}") rosso
+        |  | 
+        span
+          em.fa.fa-circle.text-warning
+          |  
+          a(ng-href="{{$state.href('app.activities_management_urgency', {urgencyCode: 'yellow'})}}") giallo
+        |  | 
+        span
+          em.fa.fa-circle.text-green
+          |  
+          a(ng-href="{{$state.href('app.activities_management_urgency', {urgencyCode: 'green'})}}") verde
     // END sidebar nav
 
 // END Sidebar (left)

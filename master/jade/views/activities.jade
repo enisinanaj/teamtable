@@ -8,11 +8,15 @@
           thead
             tr
               th Operatore incaricato
+              th Pratica
               th Attività
               th Note
           tbody
             tr(ng-repeat='activity in activities.elements')
               td {{ activity.assignee.username }}
               td
+                a(ng-href="{{$state.href('app.single_practice', {practiceId: activity.event.practice.id})}}") {{ activity.event.practice.name }}
+              td
                 a(ng-href="{{$state.href('app.single_activity', {activityId: activity.id})}}") {{ activity.name }}
               td {{ activity.description }}
+              
