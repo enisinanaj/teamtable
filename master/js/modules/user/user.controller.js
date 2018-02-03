@@ -4,9 +4,9 @@
   angular.module('app.user', [])
       .controller('UserController', UserController);
 
-  UserController.$inject = ['UserProfile', '$rootScope', '$http', '$cookies', '$window', 'AuthenticationService', 'AUTH'];
+  UserController.$inject = ['UserProfile', '$rootScope', '$http', '$cookies', '$window', 'AuthenticationService', 'AUTH', '$state'];
 
-  function UserController(UserProfile, $rootScope, $http, $cookies, $window, AuthenticationService, AUTH) {
+  function UserController(UserProfile, $rootScope, $http, $cookies, $window, AuthenticationService, AUTH, $state) {
     var vm = this;
 
     vm.oldPassword = "";
@@ -35,20 +35,25 @@
               cache: false
           };
 
-          $http.post($rootScope.app.apiUrl + "users/" + $rootScope.user.id + "/passwords", {
-            newPassword: newPassword,
-            oldPassword: oldPassword,
-            newPasswordRepeat: repeatPassword
-          }, config)
-            .then(function(response) {
-              if ( !response.data.hRef ) {
-                vm.result = 'Le password non sono corrette!'
-              }else{
-                vm.result = 'Password cambiata correttamente!'
-              }
-            }, function() {
-              vm.result = 'Le password non sono corrette!';
-          });
+          if (vm.newPassword != vm.repeatPassword) {
+            vm.result = 'Le due password sono diverse tra loro';
+          } else {
+            $http.post($rootScope.app.apiUrl + "users/" + $rootScope.user.id + "/passwords", {
+              newPassword: newPassword,
+              oldPassword: oldPassword,
+              newPasswordRepeat: repeatPassword
+            }, config)
+              .then(function(response) {
+                if ( !response.data.hRef ) {
+                  vm.result = 'Le password non sono corrette!'
+                }else{
+                  alert('Password cambiata correttamente!');
+                  $state.go('app.welcome');
+                }
+              }, function() {
+                vm.result = 'Le password non sono corrette!';
+            });
+          }
         }
     }
   }
