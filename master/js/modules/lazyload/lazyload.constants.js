@@ -26,7 +26,8 @@
                                         'vendor/datatables-buttons/js/buttons.html5.js',
                                         'vendor/datatables-buttons/js/buttons.print.js',
                                         'vendor/angular-datatables/dist/angular-datatables.js',
-                                        'vendor/angular-datatables/dist/plugins/buttons/angular-datatables.buttons.js'],
+                                        'vendor/angular-datatables/dist/plugins/buttons/angular-datatables.buttons.js',
+                                        '//cdn.datatables.net/plug-ins/1.10.16/sorting/date-eu.js'],
                                         serie: true}
           ]
         })
