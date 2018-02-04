@@ -13,6 +13,7 @@
     vm.newPassword = "";
     vm.repeatPassword = "";
     vm.result = "";
+    vm.resultStatus = "";
 
     activate();
 
@@ -37,6 +38,7 @@
 
           if (vm.newPassword != vm.repeatPassword) {
             vm.result = 'Le due password sono diverse tra loro';
+            vm.resultStatus = 'KO';
           } else {
             $http.post($rootScope.app.apiUrl + "users/" + $rootScope.user.id + "/passwords", {
               newPassword: newPassword,
@@ -44,14 +46,11 @@
               newPasswordRepeat: repeatPassword
             }, config)
               .then(function(response) {
-                if ( !response.data.hRef ) {
-                  vm.result = 'Le password non sono corrette!'
-                }else{
-                  alert('Password cambiata correttamente!');
-                  $state.go('app.welcome');
-                }
+                vm.result = 'Password cambiata correttamente!';
+                vm.resultStatus = 'OK';
               }, function() {
                 vm.result = 'Le password non sono corrette!';
+                vm.resultStatus = 'KO';
             });
           }
         }
