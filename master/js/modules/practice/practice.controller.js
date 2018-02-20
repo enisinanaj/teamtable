@@ -44,6 +44,13 @@
               vm.events[i].id = extractId(vm.events[i].hRef);
               vm.events[i].eventDate = parseEventDate(vm.events[i].eventDate);
 
+              if (vm.events[i].description != undefined && vm.events[i].description.length > 45) {
+                vm.events[i].shortDescription = vm.events[i].description.substring(0, 45);
+              } else {
+                vm.events[i].shortDescription = '';
+              }
+
+              vm.events[i].showLongDescription = false;
               vm.events[i].redUrgency = false;
               vm.events[i].yellowUrgency = false;
               vm.events[i].greenUrgency = false;
