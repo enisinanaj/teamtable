@@ -41,6 +41,18 @@
               vm.elements[i].id = extractId(vm.elements[i].hRef);
               vm.elements[i].event.id = extractId(vm.elements[i].event.hRef);
               vm.elements[i].event.practice.id = extractId(vm.elements[i].event.practice.hRef);
+
+              if (vm.elements[i].description != undefined && vm.elements[i].description.length > 55) {
+                vm.elements[i].shortDescription = vm.elements[i].description.substring(0,55);
+              } else {
+                vm.elements[i].shortDescription = '';
+              }
+
+              if (vm.elements[i].name != undefined && vm.elements[i].name.length > 30) {
+                vm.elements[i].shortName = vm.elements[i].name.substring(0,30);
+              } else {
+                vm.elements[i].shortName = '';
+              }
             }
           };
 
