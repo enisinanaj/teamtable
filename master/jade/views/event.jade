@@ -55,7 +55,8 @@
             td
               strong {{activity.name}}
               .clearfix
-              span.text-muted {{activity.description}}
+              span.text-muted(uib-tooltip-html='activity.description', uib-tooltip-placement='top', ng-if='activity.shortDescription.length > 0')  {{activity.shortDescription}}...
+              span.text-muted(ng-if='activity.shortDescription.length == 0')  {{activity.description}}
             td {{activity.activityType}}
             td {{activity.assignee.username}}
             td {{activity.status}}
