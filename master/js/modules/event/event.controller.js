@@ -55,6 +55,12 @@
 
             for (var i = vm.activities.length - 1; i >= 0; i--) {
               vm.activities[i].id = extractId(vm.activities[i].hRef);
+
+              if (vm.activities[i].description != undefined && vm.activities[i].description.length > 55) {
+                vm.activities[i].shortDescription = vm.activities[i].description.substring(0, 55);
+              } else {
+                vm.activities[i].shortDescription = '';
+              }
             }
           }
 

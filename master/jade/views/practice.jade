@@ -46,7 +46,11 @@
             th Azioni
         tbody
           tr(ng-if="!event.archived || practiceDetail.showArchived", ng-repeat='event in practiceDetail.events', ng-class="{'text-muted': event.archived}")
-            td {{event.description}}
+            td
+              div(ng-if="event.shortDescription.length == 0") 
+                a(ng-href="{{$state.href('app.single_event', {eventId: event.id})}}") {{event.description}}
+              div(uib-tooltip-html='event.description', uib-tooltip-placement='top', ng-if="event.shortDescription.length > 0") 
+                a(ng-href="{{$state.href('app.single_event', {eventId: event.id})}}") {{event.shortDescription}}...
             td {{event.eventDate}}
             td(style="text-align: center;")
                 em.fa.fa-circle.text-danger(ng-if="event.redUrgency")
