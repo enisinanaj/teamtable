@@ -17,6 +17,10 @@
               td
                 a(ng-href="{{$state.href('app.single_practice', {practiceId: activity.event.practice.id})}}") {{ activity.event.practice.name }}
               td
-                a(ng-href="{{$state.href('app.single_activity', {activityId: activity.id})}}") {{ activity.name }}
-              td {{ activity.description }}
+                a(ng-href="{{$state.href('app.single_activity', {activityId: activity.id})}}")
+                  div(ng-if="activity.shortName.length > 0", uib-tooltip-html='activity.name', uib-tooltip-placement='top') {{ activity.shortName }}...
+                  div(ng-if="activity.shortName.length == 0") {{ activity.name }}
+              td 
+                div(ng-if="activity.shortDescription.length > 0", uib-tooltip-html='activity.description', uib-tooltip-placement='top') {{ activity.shortDescription }}...
+                div(ng-if="activity.shortDescription.length == 0") {{ activity.description }}
               
