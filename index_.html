@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="it" data-ng-app="angle">
+
+<head>
+   <base href="/">
+   <meta charset="utf-8">
+   <!-- Bootstrap styles-->
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+   <!-- ngMaterial styles-->
+   <!--link rel="stylesheet" href="vendor/angular-material/angular-material.css"-->
+   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker3.min.css">
+   <!-- Application styles-->
+   <link rel="stylesheet" href="app/css/app.css">
+   <!-- Themes-->
+   <link rel="stylesheet" ng-href="app/css/theme-b.css">
+</head>
+
+<body>
+   <div class="wrapper" data-ui-view="" data-autoscroll="false">
+      <section>
+         <div class="content-wrapper ng-scope ng-fadeInUp">
+            <div class="container-md">
+               <div class="card" ng-controller="EventController as addEventController">
+                  <div class="card-heading bg-primary">
+                     <div class="card-title" ng-if="addEventController.event.id == undefined">Esportazione fatture</div>
+                  </div>
+                  <div class="card-body">
+                     <div class="row">
+                        <form>
+                           <div class="col-sm-6 col-md-6 col-lg-4">
+                              <div class="input-group date" data-provide="datepicker">
+                                 <input type="text" class="form-control" name="dateFrom">
+                              </div>
+                           </div>
+                           <div class="col-sm-6 col-md-6 col-lg-4">
+                              <div class="input-group date" data-provide="datepicker">
+                                 <input type="text" class="form-control" name="dateTo">
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-sm-12">
+                                 <button class="pull-right btn btn-primary">Salva</button>
+                              </div>
+                           </div>
+                        </form>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+   </div>
+
+   <script   src="https://code.jquery.com/jquery-3.3.1.min.js"   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous"></script>
+   <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+   <script type="text/javascript">
+      $(".date").datepicker({format: 'dd/mm/yyyy'});
+   </script>
+</body>
+
+</html>
