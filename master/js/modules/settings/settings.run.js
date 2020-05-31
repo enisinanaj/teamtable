@@ -45,7 +45,7 @@
           asideScrollbar: false,
           isCollapsedText: false
         },
-        apiUrl: 'http://localhost:8080/teamtable/api/',
+        apiUrl: 'https://teamtable.e2n.me/teamtable/api/',
         useFullLayout: false,
         hiddenFooter: false,
         offsidebarOpen: false,
